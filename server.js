@@ -237,76 +237,135 @@ function fetchJSON(url) {
   });
 }
 
+// === SCHEDULE CACHE ===
+// Fetched once on startup, refreshed Wednesday nights
+let scheduleCache = {}; // keyed by event ID -> { broadcast, startTime, periodLabel }
+const knownTeams = new Set(Object.values(ESPN_NAME_MAP));
+
+function parseEvent(event) {
+  const comp = event.competitions?.[0];
+  if (!comp || !comp.competitors || comp.competitors.length !== 2) return null;
+
+  const c1 = comp.competitors[0];
+  const c2 = comp.competitors[1];
+  const t1name = resolveTeamName(c1.team?.displayName || c1.team?.shortDisplayName || c1.team?.name || "");
+  const t2name = resolveTeamName(c2.team?.displayName || c2.team?.shortDisplayName || c2.team?.name || "");
+  if (!t1name && !t2name) return null;
+  if (!(knownTeams.has(t1name) || knownTeams.has(t2name))) return null;
+
+  const status = event.status?.type?.name || "UNKNOWN";
+  const statusDetail = event.status?.type?.shortDetail || event.status?.type?.detail || "";
+  const clock = event.status?.displayClock || "";
+  const period = event.status?.period || 0;
+  const startTime = event.date || "";
+
+  let periodLabel = "";
+  if (status === "STATUS_IN_PROGRESS") {
+    if (period === 1) periodLabel = "1st Half";
+    else if (period === 2) periodLabel = "2nd Half";
+    else periodLabel = "OT" + (period > 2 ? (period - 2) : "");
+  } else if (status === "STATUS_HALFTIME") {
+    periodLabel = "Halftime";
+  } else if (status === "STATUS_FINAL" || status === "STATUS_FINAL_OT") {
+    periodLabel = period > 2 ? "Final/OT" : "Final";
+  } else if (status === "STATUS_SCHEDULED" || status === "STATUS_PREGAME") {
+    try {
+      const st = new Date(startTime);
+      const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+      const timeStr = st.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" });
+      const nowCT = new Date().toLocaleDateString("en-US", { timeZone: "America/Chicago" });
+      const gameCT = st.toLocaleDateString("en-US", { timeZone: "America/Chicago" });
+      const dayStr = dayNames[new Date(st.toLocaleDateString("en-US", { timeZone: "America/Chicago" })).getDay()] || "";
+      periodLabel = nowCT === gameCT ? timeStr : dayStr + " " + timeStr;
+    } catch { periodLabel = "Scheduled"; }
+  } else {
+    periodLabel = statusDetail || status;
+  }
+
+  const home = c1.homeAway === "home" ? c1 : c2;
+  const away = c1.homeAway === "home" ? c2 : c1;
+  const homeName = resolveTeamName(home.team?.displayName || home.team?.shortDisplayName || "") || home.team?.abbreviation || "???";
+  const awayName = resolveTeamName(away.team?.displayName || away.team?.shortDisplayName || "") || away.team?.abbreviation || "???";
+
+  return {
+    id: event.id, status, statusDetail, clock, period, periodLabel, startTime,
+    broadcast: comp.broadcasts?.[0]?.names?.[0] || "",
+    away: { name: awayName, score: parseInt(away.score) || 0, seed: SEEDS[awayName] || "" },
+    home: { name: homeName, score: parseInt(home.score) || 0, seed: SEEDS[homeName] || "" },
+    winner: (status === "STATUS_FINAL" || status === "STATUS_FINAL_OT") ? (c1.winner ? (resolveTeamName(c1.team?.displayName||"")||c1.team?.abbreviation||"") : (resolveTeamName(c2.team?.displayName||"")||c2.team?.abbreviation||"")) : null
+  };
+}
+
+async function loadFullSchedule() {
+  console.log("[Schedule] Loading full tournament schedule...");
+  const dates = [];
+  const start = new Date("2026-03-17");
+  const end = new Date("2026-04-07");
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    dates.push(`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`);
+  }
+
+  const newCache = {};
+  for (const date of dates) {
+    try {
+      const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=100&dates=${date}&limit=200`;
+      const data = await fetchJSON(url);
+      for (const event of (data.events || [])) {
+        const parsed = parseEvent(event);
+        if (parsed) newCache[parsed.id] = parsed;
+      }
+    } catch (e) {
+      console.error(`[Schedule] Error fetching ${date}:`, e.message);
+    }
+  }
+  scheduleCache = newCache;
+  console.log(`[Schedule] Cached ${Object.keys(scheduleCache).length} tournament games`);
+}
+
 // === LIVE SCORES ===
 app.get("/api/live", async (q, r) => {
   try {
-    const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?limit=200`;
-    const data = await fetchJSON(url);
-    if (!data.events) return r.json([]);
-
-    const knownTeams = new Set(Object.values(ESPN_NAME_MAP));
-    const live = [];
-
-    for (const event of data.events) {
-      const comp = event.competitions?.[0];
-      if (!comp || !comp.competitors || comp.competitors.length !== 2) continue;
-
-      const c1 = comp.competitors[0];
-      const c2 = comp.competitors[1];
-      const t1raw = c1.team?.displayName || c1.team?.shortDisplayName || c1.team?.name || "";
-      const t2raw = c2.team?.displayName || c2.team?.shortDisplayName || c2.team?.name || "";
-      const t1name = resolveTeamName(t1raw);
-      const t2name = resolveTeamName(t2raw);
-
-      if (!t1name && !t2name) continue;
-      if (!(knownTeams.has(t1name) || knownTeams.has(t2name))) continue;
-
-      const status = event.status?.type?.name || "UNKNOWN";
-      const statusDetail = event.status?.type?.shortDetail || event.status?.type?.detail || "";
-      const clock = event.status?.displayClock || "";
-      const period = event.status?.period || 0;
-      const startTime = event.date || "";
-
-      let periodLabel = "";
-      if (status === "STATUS_IN_PROGRESS") {
-        if (period === 1) periodLabel = "1st Half";
-        else if (period === 2) periodLabel = "2nd Half";
-        else periodLabel = "OT" + (period > 2 ? (period - 2) : "");
-      } else if (status === "STATUS_HALFTIME") {
-        periodLabel = "Halftime";
-      } else if (status === "STATUS_FINAL" || status === "STATUS_FINAL_OT") {
-        periodLabel = period > 2 ? "Final/OT" : "Final";
-      } else if (status === "STATUS_SCHEDULED" || status === "STATUS_PREGAME") {
-        try {
-          const st = new Date(startTime);
-          periodLabel = st.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" });
-        } catch { periodLabel = "Scheduled"; }
-      } else {
-        periodLabel = statusDetail || status;
+    // Quick fetch of current scoreboard for live scores
+    let liveEvents = {};
+    try {
+      const data = await fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?limit=200`);
+      for (const event of (data.events || [])) {
+        const parsed = parseEvent(event);
+        if (parsed) liveEvents[parsed.id] = parsed;
       }
+    } catch (e) { console.error("[Live] Current fetch error:", e.message); }
 
-      const home = c1.homeAway === "home" ? c1 : c2;
-      const away = c1.homeAway === "home" ? c2 : c1;
-      const homeName = resolveTeamName(home.team?.displayName || home.team?.shortDisplayName || "") || home.team?.abbreviation || "???";
-      const awayName = resolveTeamName(away.team?.displayName || away.team?.shortDisplayName || "") || away.team?.abbreviation || "???";
-
-      live.push({
-        id: event.id, status, statusDetail, clock, period, periodLabel, startTime,
-        broadcast: comp.broadcasts?.[0]?.names?.[0] || "",
-        away: { name: awayName, score: parseInt(away.score) || 0, seed: SEEDS[awayName] || "" },
-        home: { name: homeName, score: parseInt(home.score) || 0, seed: SEEDS[homeName] || "" },
-        winner: (status === "STATUS_FINAL" || status === "STATUS_FINAL_OT") ? (c1.winner ? (resolveTeamName(c1.team?.displayName||"")||c1.team?.abbreviation||"") : (resolveTeamName(c2.team?.displayName||"")||c2.team?.abbreviation||"")) : null
-      });
+    // Merge: live data overrides cache (has current scores), cache fills in schedule
+    const merged = { ...scheduleCache };
+    for (const [id, game] of Object.entries(liveEvents)) {
+      merged[id] = game; // live data is fresher
     }
 
-    const order = { STATUS_IN_PROGRESS: 0, STATUS_HALFTIME: 1, STATUS_PREGAME: 2, STATUS_SCHEDULED: 3, STATUS_FINAL: 4, STATUS_FINAL_OT: 4 };
-    live.sort((a, b) => (order[a.status] ?? 9) - (order[b.status] ?? 9));
-    r.json(live);
+    const games = Object.values(merged);
+
+    // Sort: live first, halftime, scheduled (by start time), final last
+    const order = { STATUS_IN_PROGRESS: 0, STATUS_HALFTIME: 1, STATUS_PREGAME: 2, STATUS_SCHEDULED: 2, STATUS_FINAL: 4, STATUS_FINAL_OT: 4 };
+    games.sort((a, b) => {
+      const oa = order[a.status] ?? 9, ob = order[b.status] ?? 9;
+      if (oa !== ob) return oa - ob;
+      return (a.startTime || "").localeCompare(b.startTime || "");
+    });
+
+    r.json(games);
   } catch (e) {
     console.error("[Live]", e.message);
     r.json([]);
   }
 });
+
+// Refresh schedule Wednesday nights at midnight CT
+setInterval(() => {
+  const now = new Date();
+  const ct = new Date(now.toLocaleString("en-US", { timeZone: "America/Chicago" }));
+  if (ct.getDay() === 3 && ct.getHours() === 0 && ct.getMinutes() < 6) {
+    loadFullSchedule();
+  }
+}, 5 * 60 * 1000);
 
 // === ESPN SYNC ===
 async function syncFromESPN() {
@@ -456,7 +515,8 @@ setInterval(async () => {
 }, 5 * 60 * 1000);
 
 setTimeout(async () => {
+  try { await loadFullSchedule(); } catch (e) { console.error("[Init schedule]", e.message); }
   try { await syncFromESPN(); } catch (e) { console.error("[Init sync]", e.message); }
-}, 5000);
+}, 3000);
 
 app.listen(3000, "0.0.0.0", () => console.log("Bracket v3 on :3000"));
