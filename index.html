@@ -211,47 +211,49 @@ var FF_SLOTS=[
   {slot:"PV A&M/Lehigh",teams:["PV A&M","Lehigh"],region:"south",gameIdx:0,seed:16}
 ];
 
-// === HARDCODED BROADCAST SCHEDULE (all times CT) ===
+// === BROADCAST SCHEDULE (all times CT) ===
 var SCHED={
-// R64 Thursday 3/19
 "east-0-0":"Thu 1:50 PM \u00b7 CBS","east-0-1":"Thu 11:15 AM \u00b7 CBS",
+"east-0-2":"Fri 6:10 PM \u00b7 CBS","east-0-3":"Fri 8:45 PM \u00b7 CBS",
 "east-0-4":"Thu 12:30 PM \u00b7 TNT","east-0-5":"Thu 3:05 PM \u00b7 TNT",
+"east-0-6":"Fri 6:25 PM \u00b7 TBS","east-0-7":"Fri 9:00 PM \u00b7 TBS",
+"east-1-0":"Sat 3/21 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"east-1-1":"Sun 3/22 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"east-1-2":"Sat 3/21 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"east-1-3":"Sun 3/22 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"east-2-0":"Fri 3/27 6:10 PM \u00b7 CBS/TBS","east-2-1":"Fri 3/27 ~8:40 PM \u00b7 CBS/TBS",
+"east-3-0":"Sun 3/29 ~3:55 PM \u00b7 CBS",
+"south-0-0":"Fri 8:25 PM \u00b7 TNT","south-0-1":"Fri 5:50 PM \u00b7 TNT",
 "south-0-2":"Thu 2:15 PM \u00b7 truTV","south-0-3":"Thu 11:40 AM \u00b7 truTV",
 "south-0-4":"Thu 5:50 PM \u00b7 TNT","south-0-5":"Thu 8:25 PM \u00b7 TNT",
 "south-0-6":"Thu 6:35 PM \u00b7 truTV","south-0-7":"Thu 9:10 PM \u00b7 truTV",
+"south-1-0":"Sun 3/22 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"south-1-1":"Sat 3/21 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"south-1-2":"Sat 3/21 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"south-1-3":"Sat 3/21 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"south-2-0":"Thu 3/26 6:10 PM \u00b7 CBS/TBS","south-2-1":"Thu 3/26 ~8:40 PM \u00b7 CBS/TBS",
+"south-3-0":"Sat 3/28 5:09 PM \u00b7 TBS",
+"west-0-0":"Fri 12:35 PM \u00b7 TNT","west-0-1":"Fri 3:10 PM \u00b7 TNT",
 "west-0-2":"Thu 12:50 PM \u00b7 TBS","west-0-3":"Thu 3:25 PM \u00b7 TBS",
 "west-0-4":"Thu 6:25 PM \u00b7 TBS","west-0-5":"Thu 9:00 PM \u00b7 TBS",
-"midwest-0-0":"Thu 6:10 PM \u00b7 CBS","midwest-0-1":"Thu 8:45 PM \u00b7 CBS",
-// R64 Friday 3/20
-"east-0-2":"Fri 6:10 PM \u00b7 CBS","east-0-3":"Fri 8:45 PM \u00b7 CBS",
-"east-0-6":"Fri 6:25 PM \u00b7 TBS","east-0-7":"Fri 9:00 PM \u00b7 TBS",
-"south-0-0":"Fri 8:25 PM \u00b7 TNT","south-0-1":"Fri 5:50 PM \u00b7 TNT",
-"west-0-0":"Fri 12:35 PM \u00b7 TNT","west-0-1":"Fri 3:10 PM \u00b7 TNT",
 "west-0-6":"Fri 9:10 PM \u00b7 truTV","west-0-7":"Fri 6:35 PM \u00b7 truTV",
+"west-1-0":"Sun 3/22 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"west-1-1":"Sat 3/21 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"west-1-2":"Sat 3/21 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"west-1-3":"Sun 3/22 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"west-2-0":"Thu 3/26 6:10 PM \u00b7 CBS/TBS","west-2-1":"Thu 3/26 ~8:40 PM \u00b7 CBS/TBS",
+"west-3-0":"Sat 3/28 ~7:49 PM \u00b7 TBS",
+"midwest-0-0":"Thu 6:10 PM \u00b7 CBS","midwest-0-1":"Thu 8:45 PM \u00b7 CBS",
 "midwest-0-2":"Fri 11:40 AM \u00b7 truTV","midwest-0-3":"Fri 2:15 PM \u00b7 truTV",
 "midwest-0-4":"Fri 3:25 PM \u00b7 TBS","midwest-0-5":"Fri 12:50 PM \u00b7 TBS",
 "midwest-0-6":"Fri 11:15 AM \u00b7 CBS","midwest-0-7":"Fri 1:50 PM \u00b7 CBS",
-// R32 Saturday 3/21 (Thursday R64 pairs)
-"east-1-0":"Sat 3/21 \u00b7 CBS/TBS/TNT/truTV","east-1-2":"Sat 3/21 \u00b7 CBS/TBS/TNT/truTV",
-"south-1-1":"Sat 3/21 \u00b7 CBS/TBS/TNT/truTV","south-1-2":"Sat 3/21 \u00b7 CBS/TBS/TNT/truTV","south-1-3":"Sat 3/21 \u00b7 CBS/TBS/TNT/truTV",
-"west-1-1":"Sat 3/21 \u00b7 CBS/TBS/TNT/truTV","west-1-2":"Sat 3/21 \u00b7 CBS/TBS/TNT/truTV",
-"midwest-1-0":"Sat 3/21 \u00b7 CBS/TBS/TNT/truTV",
-// R32 Sunday 3/22 (Friday R64 pairs)
-"east-1-1":"Sun 3/22 \u00b7 CBS/TBS/TNT/truTV","east-1-3":"Sun 3/22 \u00b7 CBS/TBS/TNT/truTV",
-"south-1-0":"Sun 3/22 \u00b7 CBS/TBS/TNT/truTV",
-"west-1-0":"Sun 3/22 \u00b7 CBS/TBS/TNT/truTV","west-1-3":"Sun 3/22 \u00b7 CBS/TBS/TNT/truTV",
-"midwest-1-1":"Sun 3/22 \u00b7 CBS/TBS/TNT/truTV","midwest-1-2":"Sun 3/22 \u00b7 CBS/TBS/TNT/truTV","midwest-1-3":"Sun 3/22 \u00b7 CBS/TBS/TNT/truTV",
-// S16 (Thu 3/26 South+West, Fri 3/27 East+Midwest)
-"south-2-0":"Thu 3/26 6:10 PM \u00b7 CBS/TBS","south-2-1":"Thu 3/26 \u00b7 CBS/TBS",
-"west-2-0":"Thu 3/26 \u00b7 CBS/TBS","west-2-1":"Thu 3/26 \u00b7 CBS/TBS",
-"east-2-0":"Fri 3/27 6:10 PM \u00b7 CBS/TBS","east-2-1":"Fri 3/27 \u00b7 CBS/TBS",
-"midwest-2-0":"Fri 3/27 \u00b7 CBS/TBS","midwest-2-1":"Fri 3/27 \u00b7 CBS/TBS",
-// E8 (Sat 3/28 South+West on TBS, Sun 3/29 East+Midwest on CBS)
-"south-3-0":"Sat 3/28 5:09 PM \u00b7 TBS","west-3-0":"Sat 3/28 \u00b7 TBS",
-"east-3-0":"Sun 3/29 1:15 PM \u00b7 CBS","midwest-3-0":"Sun 3/29 \u00b7 CBS",
-// F4
-"finalFour-0-0":"Sat 4/4 5:09 PM \u00b7 TBS","finalFour-0-1":"Sat 4/4 \u00b7 TBS",
-// Championship
+"midwest-1-0":"Sat 3/21 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"midwest-1-1":"Sun 3/22 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"midwest-1-2":"Sun 3/22 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"midwest-1-3":"Sun 3/22 11:10 AM+ \u00b7 CBS/TBS/TNT/truTV",
+"midwest-2-0":"Fri 3/27 6:10 PM \u00b7 CBS/TBS","midwest-2-1":"Fri 3/27 ~8:40 PM \u00b7 CBS/TBS",
+"midwest-3-0":"Sun 3/29 1:15 PM \u00b7 CBS",
+"finalFour-0-0":"Sat 4/4 5:09 PM \u00b7 TBS","finalFour-0-1":"Sat 4/4 ~7:49 PM \u00b7 TBS",
 "finalFour-1-0":"Mon 4/6 7:50 PM \u00b7 TBS"
 };
 
