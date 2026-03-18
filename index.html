@@ -606,7 +606,7 @@ function firstFourHTML(){
       h+='</div>';
     }else if(isLive){
       // Live
-      var statusText=liveStatusText(lg);
+      var statusText=liveStatusText(lg);if(lg.broadcast)statusText+=" \u00b7 "+lg.broadcast;
       h+='<div style="background:rgba(74,222,128,0.04);border:1px solid var(--green);border-radius:6px;padding:6px 10px;min-width:140px;font-size:11px;text-align:center">';
       h+='<div style="font-size:8px;color:var(--green);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;font-weight:700">'+statusText+'</div>';
       h+='<div style="display:flex;justify-content:space-between;color:var(--text)"><span>'+ff.seed+' '+ff.teams[0]+'</span><span style="font-family:var(--font-display);font-weight:700">'+liveTeamScore(lg,ff.teams[0])+'</span></div>';
@@ -614,8 +614,9 @@ function firstFourHTML(){
       h+='</div>';
     }else if(isScheduled){
       // Scheduled
+      var schInfo=lg.periodLabel;if(lg.broadcast)schInfo+=" \u00b7 "+lg.broadcast;
       h+='<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-width:140px;font-size:11px;text-align:center">';
-      h+='<div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px">'+lg.periodLabel+'</div>';
+      h+='<div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px">'+schInfo+'</div>';
       h+='<div style="color:var(--text)">'+ff.seed+' '+ff.teams[0]+'</div>';
       h+='<div style="color:var(--text)">'+ff.seed+' '+ff.teams[1]+'</div>';
       h+='</div>';
@@ -634,15 +635,12 @@ function firstFourHTML(){
 // === LIVE GAME LOOKUP ===
 function getLiveGame(t1,t2){
   if(!S.liveGames||!S.liveGames.length||!t1||!t2)return null;
+  // Skip unresolved combo slots - First Four banner handles those
+  if(t1.indexOf("/")>=0||t2.indexOf("/")>=0)return null;
   for(var i=0;i<S.liveGames.length;i++){
     var g=S.liveGames[i];
     var a=g.away.name,hm=g.home.name;
     if((a===t1&&hm===t2)||(a===t2&&hm===t1))return g;
-    // Also match resolved names against combo slots
-    for(var j=0;j<FF_SLOTS.length;j++){
-      var sl=FF_SLOTS[j];
-      if((t1===sl.slot||t2===sl.slot)&&((a===sl.teams[0]&&hm===sl.teams[1])||(a===sl.teams[1]&&hm===sl.teams[0])))return g;
-    }
   }
   return null;
 }
