@@ -18,8 +18,6 @@ const FIRST_FOUR = [
   { slot: "Texas/NC State", teams: ["Texas","NC State"], region: "west", gameIdx: 4, seed: 11 },
   { slot: "PV A&M/Lehigh", teams: ["PV A&M","Lehigh"], region: "south", gameIdx: 0, seed: 16 }
 ];
-
-// All First Four team names (for filtering)
 const FF_TEAM_NAMES = new Set();
 FIRST_FOUR.forEach(ff => { ff.teams.forEach(t => FF_TEAM_NAMES.add(t)); });
 
@@ -117,8 +115,7 @@ app.post("/api/archive", (q, r) => {
   const players = R("players.json", []);
   const allPicks = {}, allTB = {};
   for (const n of players) { allPicks[n] = R("picks_" + n + ".json", {}); allTB[n] = R("tb_" + n + ".json", { score: null }); }
-  const archive = { year, archivedAt: new Date().toISOString(), players, picks: allPicks, tiebreakers: allTB, results: R("results.json", {}), scores: R("game_scores.json", {}), firstFour: R("first_four.json", {}), state: R("state.json", { locked: false }) };
-  fs.writeFileSync(path.join(archiveDir, year + ".json"), JSON.stringify(archive, null, 2));
+  fs.writeFileSync(path.join(archiveDir, year + ".json"), JSON.stringify({ year, archivedAt: new Date().toISOString(), players, picks: allPicks, tiebreakers: allTB, results: R("results.json", {}), scores: R("game_scores.json", {}), firstFour: R("first_four.json", {}), state: R("state.json", { locked: false }) }, null, 2));
   r.json({ ok: true, year });
 });
 app.get("/api/archives", (q, r) => {
@@ -215,7 +212,6 @@ function resolveTeamName(espnName) {
   return null;
 }
 
-// Get resolved bracket with First Four winners substituted
 function getResolvedBracket(firstFour) {
   const resolved = JSON.parse(JSON.stringify(BRACKET));
   for (const ffGame of FIRST_FOUR) {
@@ -223,9 +219,7 @@ function getResolvedBracket(firstFour) {
       const winner = firstFour[ffGame.slot].winner;
       const games = resolved[ffGame.region];
       for (let t = 0; t < 2; t++) {
-        if (games[ffGame.gameIdx][t] === ffGame.slot) {
-          games[ffGame.gameIdx][t] = winner;
-        }
+        if (games[ffGame.gameIdx][t] === ffGame.slot) games[ffGame.gameIdx][t] = winner;
       }
       SEEDS[winner] = ffGame.seed;
     }
@@ -252,23 +246,20 @@ app.get("/api/live", async (q, r) => {
     const data = await fetchJSON(url);
     if (!data.events) return r.json([]);
 
-    // All known team names (from our name map values - these ARE the tournament teams)
     const knownTeams = new Set(Object.values(ESPN_NAME_MAP));
-
     const live = [];
+
     for (const event of data.events) {
       const comp = event.competitions?.[0];
       if (!comp || !comp.competitors || comp.competitors.length !== 2) continue;
 
       const c1 = comp.competitors[0];
       const c2 = comp.competitors[1];
-      // Try multiple name fields
       const t1raw = c1.team?.displayName || c1.team?.shortDisplayName || c1.team?.name || "";
       const t2raw = c2.team?.displayName || c2.team?.shortDisplayName || c2.team?.name || "";
       const t1name = resolveTeamName(t1raw);
       const t2name = resolveTeamName(t2raw);
 
-      // Include if at least one team is in our tournament
       if (!t1name && !t2name) continue;
       if (!(knownTeams.has(t1name) || knownTeams.has(t2name))) continue;
 
@@ -288,7 +279,6 @@ app.get("/api/live", async (q, r) => {
       } else if (status === "STATUS_FINAL" || status === "STATUS_FINAL_OT") {
         periodLabel = period > 2 ? "Final/OT" : "Final";
       } else if (status === "STATUS_SCHEDULED" || status === "STATUS_PREGAME") {
-        // Show scheduled start time
         try {
           const st = new Date(startTime);
           periodLabel = st.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" });
@@ -303,13 +293,7 @@ app.get("/api/live", async (q, r) => {
       const awayName = resolveTeamName(away.team?.displayName || away.team?.shortDisplayName || "") || away.team?.abbreviation || "???";
 
       live.push({
-        id: event.id,
-        status,
-        statusDetail,
-        clock,
-        period,
-        periodLabel,
-        startTime,
+        id: event.id, status, statusDetail, clock, period, periodLabel, startTime,
         broadcast: comp.broadcasts?.[0]?.names?.[0] || "",
         away: { name: awayName, score: parseInt(away.score) || 0, seed: SEEDS[awayName] || "" },
         home: { name: homeName, score: parseInt(home.score) || 0, seed: SEEDS[homeName] || "" },
@@ -319,7 +303,6 @@ app.get("/api/live", async (q, r) => {
 
     const order = { STATUS_IN_PROGRESS: 0, STATUS_HALFTIME: 1, STATUS_PREGAME: 2, STATUS_SCHEDULED: 3, STATUS_FINAL: 4, STATUS_FINAL_OT: 4 };
     live.sort((a, b) => (order[a.status] ?? 9) - (order[b.status] ?? 9));
-
     r.json(live);
   } catch (e) {
     console.error("[Live]", e.message);
@@ -327,6 +310,7 @@ app.get("/api/live", async (q, r) => {
   }
 });
 
+// === ESPN SYNC ===
 async function syncFromESPN() {
   const results = R("results.json", {});
   const gameScores = R("game_scores.json", {});
@@ -362,9 +346,7 @@ async function syncFromESPN() {
         const winnerScore = parseInt(winner.score) || 0;
         const loserScore = parseInt(loser.score) || 0;
 
-        // ============================
         // STEP 1: Check First Four FIRST
-        // ============================
         let isFirstFourGame = false;
         for (const ffGame of FIRST_FOUR) {
           const t1 = ffGame.teams[0], t2 = ffGame.teams[1];
@@ -372,8 +354,7 @@ async function syncFromESPN() {
             isFirstFourGame = true;
             if (!firstFour[ffGame.slot]) {
               firstFour[ffGame.slot] = {
-                winner: winnerName, loser: loserName,
-                winnerScore, loserScore,
+                winner: winnerName, loser: loserName, winnerScore, loserScore,
                 t1, t2,
                 t1score: t1 === winnerName ? winnerScore : loserScore,
                 t2score: t2 === winnerName ? winnerScore : loserScore
@@ -386,35 +367,26 @@ async function syncFromESPN() {
           }
         }
 
-        // ============================
-        // STEP 2: If First Four game, SKIP main bracket
-        // ============================
+        // STEP 2: If First Four, SKIP main bracket
         if (isFirstFourGame) continue;
 
-        // ============================
-        // STEP 3: Check main bracket using RESOLVED names
-        // ============================
+        // STEP 3: Main bracket with RESOLVED names
         const resolvedBracket = getResolvedBracket(firstFour);
 
         for (const [region, games] of Object.entries(resolvedBracket)) {
           if (!results[region]) results[region] = {};
           if (!gameScores[region]) gameScores[region] = {};
 
-          // R64 — only match if BOTH resolved team names match winner+loser
+          // R64 — skip unresolved combo slots
           for (let i = 0; i < games.length; i++) {
             const [t1, t2] = games[i];
-            // Skip unresolved combo slots
             if (t1.includes("/") || t2.includes("/")) continue;
-
             if ((winnerName === t1 && loserName === t2) || (winnerName === t2 && loserName === t1)) {
               if (!results[region][0]) results[region][0] = {};
               if (!gameScores[region][0]) gameScores[region][0] = {};
               if (!results[region][0][i]) {
                 results[region][0][i] = winnerName;
-                gameScores[region][0][i] = {
-                  t1, t1score: t1 === winnerName ? winnerScore : loserScore,
-                  t2, t2score: t2 === winnerName ? winnerScore : loserScore
-                };
+                gameScores[region][0][i] = { t1, t1score: t1 === winnerName ? winnerScore : loserScore, t2, t2score: t2 === winnerName ? winnerScore : loserScore };
                 updated = true;
                 console.log(`[ESPN] R64 ${region}: ${winnerName} ${winnerScore}-${loserScore} ${loserName}`);
               }
@@ -432,12 +404,8 @@ async function syncFromESPN() {
                 if (!gameScores[region][rd]) gameScores[region][rd] = {};
                 if (!results[region][rd][g]) {
                   results[region][rd][g] = winnerName;
-                  gameScores[region][rd][g] = {
-                    t1, t1score: t1 === winnerName ? winnerScore : loserScore,
-                    t2, t2score: t2 === winnerName ? winnerScore : loserScore
-                  };
+                  gameScores[region][rd][g] = { t1, t1score: t1 === winnerName ? winnerScore : loserScore, t2, t2score: t2 === winnerName ? winnerScore : loserScore };
                   updated = true;
-                  console.log(`[ESPN] R${rd+1} ${region}: ${winnerName} ${winnerScore}-${loserScore} ${loserName}`);
                 }
               }
             }
@@ -445,39 +413,27 @@ async function syncFromESPN() {
         }
 
         // Final Four
-        const regionChamps = ["east","south","west","midwest"].map(r => results[r]?.[3]?.[0]);
+        const rc = ["east","south","west","midwest"].map(r => results[r]?.[3]?.[0]);
         if (!results.finalFour) results.finalFour = {};
         if (!gameScores.finalFour) gameScores.finalFour = {};
         // Semi 1
-        if (regionChamps[0] && regionChamps[1] && ((winnerName === regionChamps[0] && loserName === regionChamps[1]) || (winnerName === regionChamps[1] && loserName === regionChamps[0]))) {
+        if (rc[0] && rc[1] && ((winnerName === rc[0] && loserName === rc[1]) || (winnerName === rc[1] && loserName === rc[0]))) {
           if (!results.finalFour[0]) results.finalFour[0] = {};
           if (!gameScores.finalFour[0]) gameScores.finalFour[0] = {};
-          if (!results.finalFour[0][0]) {
-            results.finalFour[0][0] = winnerName;
-            gameScores.finalFour[0][0] = { t1: regionChamps[0], t1score: regionChamps[0]===winnerName?winnerScore:loserScore, t2: regionChamps[1], t2score: regionChamps[1]===winnerName?winnerScore:loserScore };
-            updated = true;
-          }
+          if (!results.finalFour[0][0]) { results.finalFour[0][0] = winnerName; gameScores.finalFour[0][0] = { t1: rc[0], t1score: rc[0]===winnerName?winnerScore:loserScore, t2: rc[1], t2score: rc[1]===winnerName?winnerScore:loserScore }; updated = true; }
         }
         // Semi 2
-        if (regionChamps[2] && regionChamps[3] && ((winnerName === regionChamps[2] && loserName === regionChamps[3]) || (winnerName === regionChamps[3] && loserName === regionChamps[2]))) {
+        if (rc[2] && rc[3] && ((winnerName === rc[2] && loserName === rc[3]) || (winnerName === rc[3] && loserName === rc[2]))) {
           if (!results.finalFour[0]) results.finalFour[0] = {};
           if (!gameScores.finalFour[0]) gameScores.finalFour[0] = {};
-          if (!results.finalFour[0][1]) {
-            results.finalFour[0][1] = winnerName;
-            gameScores.finalFour[0][1] = { t1: regionChamps[2], t1score: regionChamps[2]===winnerName?winnerScore:loserScore, t2: regionChamps[3], t2score: regionChamps[3]===winnerName?winnerScore:loserScore };
-            updated = true;
-          }
+          if (!results.finalFour[0][1]) { results.finalFour[0][1] = winnerName; gameScores.finalFour[0][1] = { t1: rc[2], t1score: rc[2]===winnerName?winnerScore:loserScore, t2: rc[3], t2score: rc[3]===winnerName?winnerScore:loserScore }; updated = true; }
         }
         // Championship
-        const semi1 = results.finalFour?.[0]?.[0], semi2 = results.finalFour?.[0]?.[1];
-        if (semi1 && semi2 && ((winnerName === semi1 && loserName === semi2) || (winnerName === semi2 && loserName === semi1))) {
+        const s1 = results.finalFour?.[0]?.[0], s2 = results.finalFour?.[0]?.[1];
+        if (s1 && s2 && ((winnerName === s1 && loserName === s2) || (winnerName === s2 && loserName === s1))) {
           if (!results.finalFour[1]) results.finalFour[1] = {};
           if (!gameScores.finalFour[1]) gameScores.finalFour[1] = {};
-          if (!results.finalFour[1][0]) {
-            results.finalFour[1][0] = winnerName;
-            gameScores.finalFour[1][0] = { t1: semi1, t1score: semi1===winnerName?winnerScore:loserScore, t2: semi2, t2score: semi2===winnerName?winnerScore:loserScore };
-            updated = true;
-          }
+          if (!results.finalFour[1][0]) { results.finalFour[1][0] = winnerName; gameScores.finalFour[1][0] = { t1: s1, t1score: s1===winnerName?winnerScore:loserScore, t2: s2, t2score: s2===winnerName?winnerScore:loserScore }; updated = true; }
         }
       }
     } catch (e) {
@@ -485,11 +441,7 @@ async function syncFromESPN() {
     }
   }
 
-  if (updated) {
-    W("results.json", results);
-    W("game_scores.json", gameScores);
-    W("first_four.json", firstFour);
-  }
+  if (updated) { W("results.json", results); W("game_scores.json", gameScores); W("first_four.json", firstFour); }
   return { updated };
 }
 
