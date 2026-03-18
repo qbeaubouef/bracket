@@ -173,7 +173,7 @@ const ESPN_NAME_MAP = {
   "Arkansas Razorbacks":"Arkansas","Arkansas":"Arkansas",
   "Hawaii Rainbow Warriors":"Hawaii","Hawai'i":"Hawaii","Hawaii":"Hawaii",
   "BYU Cougars":"BYU","BYU":"BYU",
-  "Texas Longhorns":"Texas","NC State Wolfpack":"NC State","NC State":"NC State","Texas":"Texas",
+  "Texas Longhorns":"Texas","NC State Wolfpack":"NC State","NC State":"NC State","NCSU":"NC State","North Carolina State":"NC State","N.C. State":"NC State","Texas":"Texas",
   "Gonzaga Bulldogs":"Gonzaga","Gonzaga":"Gonzaga",
   "Kennesaw State Owls":"Kennesaw State","Kennesaw St":"Kennesaw State","Kennesaw State":"Kennesaw State",
   "Miami Hurricanes":"Miami FL","Miami (FL)":"Miami FL","Miami FL":"Miami FL",
@@ -240,9 +240,7 @@ function fetchJSON(url) {
 // === LIVE SCORES ===
 app.get("/api/live", async (q, r) => {
   try {
-    const today = new Date();
-    const dateStr = `${today.getFullYear()}${String(today.getMonth()+1).padStart(2,"0")}${String(today.getDate()).padStart(2,"0")}`;
-    const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=100&dates=${dateStr}&limit=200`;
+    const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?limit=200`;
     const data = await fetchJSON(url);
     if (!data.events) return r.json([]);
 
