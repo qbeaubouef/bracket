@@ -2,17 +2,25 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-
 const app = express();
 const D = "/data";
 
-app.use(express.json());
+app.use(express.json({limit:"10mb"}));
 app.use(express.static(path.join(__dirname, "public")));
 
 const R = (f, d) => { try { return JSON.parse(fs.readFileSync(path.join(D, f), "utf8")); } catch { return d; } };
 const W = (f, d) => { fs.mkdirSync(D, { recursive: true }); fs.writeFileSync(path.join(D, f), JSON.stringify(d, null, 2)); };
 
-// --- Core API ---
+// === FIRST FOUR CONFIG ===
+// Maps play-in slot name to bracket position
+const FIRST_FOUR = [
+  { slot: "UMBC/Howard", teams: ["UMBC","Howard"], region: "midwest", gameIdx: 0, seed: 16 },
+  { slot: "Miami OH/SMU", teams: ["Miami OH","SMU"], region: "midwest", gameIdx: 4, seed: 11 },
+  { slot: "Texas/NC State", teams: ["Texas","NC State"], region: "west", gameIdx: 4, seed: 11 },
+  { slot: "PV A&M/Lehigh", teams: ["PV A&M","Lehigh"], region: "south", gameIdx: 0, seed: 16 }
+];
+
+// === CORE API ===
 app.get("/api/players", (q, r) => r.json(R("players.json", [])));
 app.post("/api/players", (q, r) => {
   const { name } = q.body;
@@ -35,13 +43,10 @@ app.get("/api/all-picks", (q, r) => {
   for (const n of p) a[n] = R("picks_" + n + ".json", {});
   r.json(a);
 });
-
-// --- Game Scores (separate from results/winners) ---
-// Format: { "east": { "0": { "0": {"t1":"Duke","t1score":78,"t2":"Siena","t2score":65} } } }
 app.get("/api/scores", (q, r) => r.json(R("game_scores.json", {})));
 app.post("/api/scores", (q, r) => { W("game_scores.json", q.body); r.json({ ok: true }); });
 
-// --- Tiebreaker (combined final score guess per player) ---
+// === TIEBREAKER ===
 app.get("/api/tiebreaker/:n", (q, r) => r.json(R("tb_" + q.params.n + ".json", { score: null })));
 app.post("/api/tiebreaker/:n", (q, r) => {
   if (R("state.json", { locked: false }).locked) return r.status(403).json({ error: "Locked" });
@@ -53,7 +58,146 @@ app.get("/api/all-tiebreakers", (q, r) => {
   r.json(a);
 });
 
-// --- ESPN Name Map ---
+// === FIRST FOUR ===
+app.get("/api/first-four", (q, r) => r.json(R("first_four.json", {})));
+app.post("/api/first-four", (q, r) => { W("first_four.json", q.body); r.json({ ok: true }); });
+
+// === SEEDS ===
+const SEEDS = {};
+const REGION_DATA = {
+  east:[[1,"Duke",16,"Siena"],[8,"Ohio State",9,"TCU"],[5,"St. John's",12,"Northern Iowa"],[4,"Kansas",13,"Cal Baptist"],[6,"Louisville",11,"South Florida"],[3,"Michigan State",14,"North Dakota St."],[7,"UCLA",10,"UCF"],[2,"UConn",15,"Furman"]],
+  south:[[1,"Florida",16,"PV A&M/Lehigh"],[8,"Clemson",9,"Iowa"],[5,"Vanderbilt",12,"McNeese"],[4,"Nebraska",13,"Troy"],[6,"North Carolina",11,"VCU"],[3,"Illinois",14,"Penn"],[7,"Saint Mary's",10,"Texas A&M"],[2,"Houston",15,"Idaho"]],
+  west:[[1,"Arizona",16,"LIU"],[8,"Villanova",9,"Utah State"],[5,"Wisconsin",12,"High Point"],[4,"Arkansas",13,"Hawaii"],[6,"BYU",11,"Texas/NC State"],[3,"Gonzaga",14,"Kennesaw State"],[7,"Miami FL",10,"Missouri"],[2,"Purdue",15,"Queens"]],
+  midwest:[[1,"Michigan",16,"UMBC/Howard"],[8,"Georgia",9,"Saint Louis"],[5,"Texas Tech",12,"Akron"],[4,"Alabama",13,"Hofstra"],[6,"Tennessee",11,"Miami OH/SMU"],[3,"Virginia",14,"Wright State"],[7,"Kentucky",10,"Santa Clara"],[2,"Iowa State",15,"Tennessee State"]]
+};
+for (const games of Object.values(REGION_DATA)) {
+  for (const [s1, t1, s2, t2] of games) { SEEDS[t1] = s1; SEEDS[t2] = s2; }
+}
+app.get("/api/seeds", (q, r) => r.json(SEEDS));
+
+// === EXPORT/IMPORT ===
+// Export single player
+app.get("/api/export/:n", (q, r) => {
+  const n = q.params.n;
+  r.json({
+    name: n,
+    picks: R("picks_" + n + ".json", {}),
+    tiebreaker: R("tb_" + n + ".json", { score: null }),
+    exportedAt: new Date().toISOString()
+  });
+});
+
+// Import single player
+app.post("/api/import/:n", (q, r) => {
+  const n = q.params.n;
+  const { picks, tiebreaker } = q.body;
+  if (picks) W("picks_" + n + ".json", picks);
+  if (tiebreaker) W("tb_" + n + ".json", tiebreaker);
+  // Ensure player exists
+  const p = R("players.json", []);
+  if (!p.includes(n)) { p.push(n); W("players.json", p); }
+  r.json({ ok: true });
+});
+
+// Export ALL data
+app.get("/api/export-all", (q, r) => {
+  const players = R("players.json", []);
+  const allPicks = {};
+  const allTB = {};
+  for (const n of players) {
+    allPicks[n] = R("picks_" + n + ".json", {});
+    allTB[n] = R("tb_" + n + ".json", { score: null });
+  }
+  r.json({
+    year: 2026,
+    exportedAt: new Date().toISOString(),
+    players,
+    picks: allPicks,
+    tiebreakers: allTB,
+    results: R("results.json", {}),
+    scores: R("game_scores.json", {}),
+    firstFour: R("first_four.json", {}),
+    state: R("state.json", { locked: false })
+  });
+});
+
+// Import ALL data
+app.post("/api/import-all", (q, r) => {
+  const d = q.body;
+  if (d.players) W("players.json", d.players);
+  if (d.results) W("results.json", d.results);
+  if (d.scores) W("game_scores.json", d.scores);
+  if (d.firstFour) W("first_four.json", d.firstFour);
+  if (d.state) W("state.json", d.state);
+  if (d.picks) {
+    for (const [n, p] of Object.entries(d.picks)) W("picks_" + n + ".json", p);
+  }
+  if (d.tiebreakers) {
+    for (const [n, t] of Object.entries(d.tiebreakers)) W("tb_" + n + ".json", t);
+  }
+  r.json({ ok: true });
+});
+
+// === ARCHIVE ===
+app.post("/api/archive", async (q, r) => {
+  const year = q.body.year || new Date().getFullYear();
+  const archiveDir = path.join(D, "archives");
+  fs.mkdirSync(archiveDir, { recursive: true });
+  // Build full export
+  const players = R("players.json", []);
+  const allPicks = {}, allTB = {};
+  for (const n of players) {
+    allPicks[n] = R("picks_" + n + ".json", {});
+    allTB[n] = R("tb_" + n + ".json", { score: null });
+  }
+  const archive = {
+    year,
+    archivedAt: new Date().toISOString(),
+    players,
+    picks: allPicks,
+    tiebreakers: allTB,
+    results: R("results.json", {}),
+    scores: R("game_scores.json", {}),
+    firstFour: R("first_four.json", {}),
+    state: R("state.json", { locked: false })
+  };
+  fs.writeFileSync(path.join(archiveDir, year + ".json"), JSON.stringify(archive, null, 2));
+  r.json({ ok: true, year });
+});
+
+app.get("/api/archives", (q, r) => {
+  const archiveDir = path.join(D, "archives");
+  try {
+    const files = fs.readdirSync(archiveDir).filter(f => f.endsWith(".json"));
+    const years = files.map(f => parseInt(f.replace(".json", ""))).filter(n => !isNaN(n)).sort((a, b) => b - a);
+    r.json(years);
+  } catch { r.json([]); }
+});
+
+app.get("/api/archive/:year", (q, r) => {
+  const f = path.join(D, "archives", q.params.year + ".json");
+  try { r.json(JSON.parse(fs.readFileSync(f, "utf8"))); }
+  catch { r.status(404).json({ error: "Not found" }); }
+});
+
+// Reset for new year (keeps archives)
+app.post("/api/new-year", (q, r) => {
+  // Archive current first
+  const players = R("players.json", []);
+  // Clear all player data
+  for (const n of players) {
+    try { fs.unlinkSync(path.join(D, "picks_" + n + ".json")); } catch {}
+    try { fs.unlinkSync(path.join(D, "tb_" + n + ".json")); } catch {}
+  }
+  W("players.json", []);
+  W("results.json", {});
+  W("game_scores.json", {});
+  W("first_four.json", {});
+  W("state.json", { locked: false });
+  r.json({ ok: true });
+});
+
+// === ESPN SYNC ===
 const ESPN_NAME_MAP = {
   "Duke Blue Devils":"Duke","Duke":"Duke","Siena Saints":"Siena","Siena":"Siena",
   "Ohio State Buckeyes":"Ohio State","Ohio St":"Ohio State","Ohio State":"Ohio State",
@@ -61,7 +205,7 @@ const ESPN_NAME_MAP = {
   "St. John's Red Storm":"St. John's","St. John's (NY)":"St. John's","St. John's":"St. John's",
   "Northern Iowa Panthers":"Northern Iowa","N Iowa":"Northern Iowa","Northern Iowa":"Northern Iowa","UNI":"Northern Iowa",
   "Kansas Jayhawks":"Kansas","Kansas":"Kansas",
-  "Cal Baptist Lancers":"Cal Baptist","Cal Baptist":"Cal Baptist","California Baptist":"Cal Baptist",
+  "Cal Baptist Lancers":"Cal Baptist","Cal Baptist":"Cal Baptist","California Baptist":"Cal Baptist","CBU":"Cal Baptist",
   "Louisville Cardinals":"Louisville","Louisville":"Louisville",
   "South Florida Bulls":"South Florida","USF":"South Florida","South Florida":"South Florida",
   "Michigan State Spartans":"Michigan State","Michigan St":"Michigan State","Michigan State":"Michigan State",
@@ -70,7 +214,8 @@ const ESPN_NAME_MAP = {
   "UConn Huskies":"UConn","Connecticut":"UConn","UConn":"UConn",
   "Furman Paladins":"Furman","Furman":"Furman",
   "Florida Gators":"Florida","Florida":"Florida",
-  "Prairie View A&M Panthers":"PV A&M/Lehigh","Prairie View":"PV A&M/Lehigh","Lehigh":"PV A&M/Lehigh","Lehigh Mountain Hawks":"PV A&M/Lehigh",
+  "Prairie View A&M Panthers":"PV A&M","Prairie View":"PV A&M","Prairie View A&M":"PV A&M",
+  "Lehigh Mountain Hawks":"Lehigh","Lehigh":"Lehigh",
   "Clemson Tigers":"Clemson","Clemson":"Clemson","Iowa Hawkeyes":"Iowa","Iowa":"Iowa",
   "Vanderbilt Commodores":"Vanderbilt","Vanderbilt":"Vanderbilt",
   "McNeese Cowboys":"McNeese","McNeese":"McNeese","McNeese State":"McNeese","McNeese St":"McNeese",
@@ -89,20 +234,22 @@ const ESPN_NAME_MAP = {
   "Arkansas Razorbacks":"Arkansas","Arkansas":"Arkansas",
   "Hawaii Rainbow Warriors":"Hawaii","Hawai'i":"Hawaii","Hawaii":"Hawaii",
   "BYU Cougars":"BYU","BYU":"BYU",
-  "Texas Longhorns":"Texas/NC State","NC State Wolfpack":"Texas/NC State","NC State":"Texas/NC State","Texas":"Texas/NC State",
+  "Texas Longhorns":"Texas","NC State Wolfpack":"NC State","NC State":"NC State","Texas":"Texas",
   "Gonzaga Bulldogs":"Gonzaga","Gonzaga":"Gonzaga",
   "Kennesaw State Owls":"Kennesaw State","Kennesaw St":"Kennesaw State","Kennesaw State":"Kennesaw State",
   "Miami Hurricanes":"Miami FL","Miami (FL)":"Miami FL","Miami FL":"Miami FL",
   "Missouri Tigers":"Missouri","Missouri":"Missouri","Purdue Boilermakers":"Purdue","Purdue":"Purdue",
   "Queens Royals":"Queens","Queens (NC)":"Queens","Queens":"Queens",
   "Michigan Wolverines":"Michigan","Michigan":"Michigan",
-  "UMBC Retrievers":"UMBC/Howard","Howard Bison":"UMBC/Howard","UMBC":"UMBC/Howard","Howard":"UMBC/Howard",
+  "UMBC Retrievers":"UMBC","UMBC":"UMBC",
+  "Howard Bison":"Howard","Howard":"Howard",
   "Georgia Bulldogs":"Georgia","Georgia":"Georgia",
   "Saint Louis Billikens":"Saint Louis","St. Louis":"Saint Louis","Saint Louis":"Saint Louis",
   "Texas Tech Red Raiders":"Texas Tech","Texas Tech":"Texas Tech","Akron Zips":"Akron","Akron":"Akron",
   "Alabama Crimson Tide":"Alabama","Alabama":"Alabama","Hofstra Pride":"Hofstra","Hofstra":"Hofstra",
   "Tennessee Volunteers":"Tennessee","Tennessee":"Tennessee",
-  "Miami (OH) RedHawks":"Miami OH/SMU","Miami (OH)":"Miami OH/SMU","SMU Mustangs":"Miami OH/SMU","SMU":"Miami OH/SMU",
+  "Miami (OH) RedHawks":"Miami OH","Miami (OH)":"Miami OH","Miami RedHawks":"Miami OH",
+  "SMU Mustangs":"SMU","SMU":"SMU",
   "Virginia Cavaliers":"Virginia","Virginia":"Virginia",
   "Wright State Raiders":"Wright State","Wright St":"Wright State","Wright State":"Wright State",
   "Kentucky Wildcats":"Kentucky","Kentucky":"Kentucky",
@@ -118,44 +265,41 @@ const BRACKET = {
   midwest:[["Michigan","UMBC/Howard"],["Georgia","Saint Louis"],["Texas Tech","Akron"],["Alabama","Hofstra"],["Tennessee","Miami OH/SMU"],["Virginia","Wright State"],["Kentucky","Santa Clara"],["Iowa State","Tennessee State"]]
 };
 
-// Seed map: team name -> seed number
-const SEEDS = {};
-for (const [rk, reg] of Object.entries(BRACKET)) {
-  for (const [t1, t2] of reg) {
-    // Seeds are embedded in REGIONS data; we need to derive from the bracket
-  }
-}
-// Actually build seed map from the full region data
-const REGION_DATA = {
-  east:[[1,"Duke",16,"Siena"],[8,"Ohio State",9,"TCU"],[5,"St. John's",12,"Northern Iowa"],[4,"Kansas",13,"Cal Baptist"],[6,"Louisville",11,"South Florida"],[3,"Michigan State",14,"North Dakota St."],[7,"UCLA",10,"UCF"],[2,"UConn",15,"Furman"]],
-  south:[[1,"Florida",16,"PV A&M/Lehigh"],[8,"Clemson",9,"Iowa"],[5,"Vanderbilt",12,"McNeese"],[4,"Nebraska",13,"Troy"],[6,"North Carolina",11,"VCU"],[3,"Illinois",14,"Penn"],[7,"Saint Mary's",10,"Texas A&M"],[2,"Houston",15,"Idaho"]],
-  west:[[1,"Arizona",16,"LIU"],[8,"Villanova",9,"Utah State"],[5,"Wisconsin",12,"High Point"],[4,"Arkansas",13,"Hawaii"],[6,"BYU",11,"Texas/NC State"],[3,"Gonzaga",14,"Kennesaw State"],[7,"Miami FL",10,"Missouri"],[2,"Purdue",15,"Queens"]],
-  midwest:[[1,"Michigan",16,"UMBC/Howard"],[8,"Georgia",9,"Saint Louis"],[5,"Texas Tech",12,"Akron"],[4,"Alabama",13,"Hofstra"],[6,"Tennessee",11,"Miami OH/SMU"],[3,"Virginia",14,"Wright State"],[7,"Kentucky",10,"Santa Clara"],[2,"Iowa State",15,"Tennessee State"]]
-};
-for (const games of Object.values(REGION_DATA)) {
-  for (const [s1, t1, s2, t2] of games) {
-    SEEDS[t1] = s1;
-    SEEDS[t2] = s2;
-  }
-}
-
-// Serve seed map to frontend
-app.get("/api/seeds", (q, r) => r.json(SEEDS));
-
 function resolveTeamName(espnName) {
+  if (!espnName) return null;
   if (ESPN_NAME_MAP[espnName]) return ESPN_NAME_MAP[espnName];
-  const lower = espnName.toLowerCase();
   for (const [key, val] of Object.entries(ESPN_NAME_MAP)) {
-    if (key.toLowerCase() === lower) return val;
+    if (key.toLowerCase() === espnName.toLowerCase()) return val;
   }
-  const firstWord = espnName.split(" ")[0];
-  if (ESPN_NAME_MAP[firstWord]) return ESPN_NAME_MAP[firstWord];
   return null;
+}
+
+// Get resolved bracket (with First Four winners substituted)
+function getResolvedBracket() {
+  const ff = R("first_four.json", {});
+  const resolved = JSON.parse(JSON.stringify(BRACKET));
+  for (const ffGame of FIRST_FOUR) {
+    if (ff[ffGame.slot]?.winner) {
+      const winner = ff[ffGame.slot].winner;
+      // Update the bracket slot
+      const games = resolved[ffGame.region];
+      const idx = ffGame.gameIdx;
+      // The play-in team is either games[idx][0] or games[idx][1]
+      for (let t = 0; t < 2; t++) {
+        if (games[idx][t] === ffGame.slot) {
+          games[idx][t] = winner;
+        }
+      }
+      // Also update seeds
+      SEEDS[winner] = ffGame.seed;
+    }
+  }
+  return resolved;
 }
 
 function fetchJSON(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, { headers: { "User-Agent": "BracketApp/2.0" } }, (res) => {
+    https.get(url, { headers: { "User-Agent": "BracketApp/3.0" } }, (res) => {
       let data = "";
       res.on("data", (chunk) => data += chunk);
       res.on("end", () => { try { resolve(JSON.parse(data)); } catch (e) { reject(e); } });
@@ -166,6 +310,7 @@ function fetchJSON(url) {
 async function syncFromESPN() {
   const results = R("results.json", {});
   const gameScores = R("game_scores.json", {});
+  const firstFour = R("first_four.json", {});
   let updated = false;
 
   const dates = [];
@@ -186,7 +331,6 @@ async function syncFromESPN() {
         if (event.status?.type?.name !== "STATUS_FINAL") continue;
         const competitors = event.competitions?.[0]?.competitors;
         if (!competitors || competitors.length !== 2) continue;
-
         const winner = competitors.find(c => c.winner === true);
         const loser = competitors.find(c => !c.winner);
         if (!winner || !loser) continue;
@@ -198,25 +342,54 @@ async function syncFromESPN() {
         const winnerScore = parseInt(winner.score) || 0;
         const loserScore = parseInt(loser.score) || 0;
 
-        // Place result in bracket
-        for (const [region, games] of Object.entries(BRACKET)) {
+        // Check First Four games
+        for (const ffGame of FIRST_FOUR) {
+          if (!firstFour[ffGame.slot]) {
+            const t1 = ffGame.teams[0], t2 = ffGame.teams[1];
+            if ((winnerName === t1 && loserName === t2) || (winnerName === t2 && loserName === t1)) {
+              firstFour[ffGame.slot] = {
+                winner: winnerName,
+                loser: loserName,
+                winnerScore, loserScore,
+                t1, t2,
+                t1score: t1 === winnerName ? winnerScore : loserScore,
+                t2score: t2 === winnerName ? winnerScore : loserScore
+              };
+              SEEDS[winnerName] = ffGame.seed;
+              updated = true;
+              console.log(`[ESPN] First Four: ${winnerName} ${winnerScore}-${loserScore} ${loserName}`);
+            }
+          }
+        }
+
+        // Use resolved bracket (First Four winners substituted in)
+        const resolvedBracket = getResolvedBracket();
+
+        // Check main bracket games
+        for (const [region, games] of Object.entries(resolvedBracket)) {
           if (!results[region]) results[region] = {};
           if (!gameScores[region]) gameScores[region] = {};
 
           // R64
           for (let i = 0; i < games.length; i++) {
             const [t1, t2] = games[i];
-            if ((winnerName === t1 || winnerName === t2) && (loserName === t1 || loserName === t2)) {
+            // Match: winner and loser are both in this game slot
+            // Also handle case where pick was made with combo name
+            const w = winnerName, l = loserName;
+            const matchesT1 = (w === t1 || (FIRST_FOUR.some(ff => ff.slot === t1) && ff_winner_matches(t1, w, firstFour)));
+            const matchesT2 = (l === t2 || l === t1) && (w === t1 || w === t2);
+            
+            if ((w === t1 || w === t2) && (l === t1 || l === t2)) {
               if (!results[region][0]) results[region][0] = {};
               if (!gameScores[region][0]) gameScores[region][0] = {};
               if (!results[region][0][i]) {
-                results[region][0][i] = winnerName;
+                results[region][0][i] = w;
                 gameScores[region][0][i] = {
-                  t1: t1, t1score: t1 === winnerName ? winnerScore : loserScore,
-                  t2: t2, t2score: t2 === winnerName ? winnerScore : loserScore
+                  t1, t1score: t1 === w ? winnerScore : loserScore,
+                  t2, t2score: t2 === w ? winnerScore : loserScore
                 };
                 updated = true;
-                console.log(`[ESPN] R64 ${region}: ${winnerName} ${winnerScore}-${loserScore} ${loserName}`);
+                console.log(`[ESPN] R64 ${region}: ${w} ${winnerScore}-${loserScore} ${l}`);
               }
             }
           }
@@ -233,8 +406,8 @@ async function syncFromESPN() {
                 if (!results[region][rd][g]) {
                   results[region][rd][g] = winnerName;
                   gameScores[region][rd][g] = {
-                    t1: t1, t1score: t1 === winnerName ? winnerScore : loserScore,
-                    t2: t2, t2score: t2 === winnerName ? winnerScore : loserScore
+                    t1, t1score: t1 === winnerName ? winnerScore : loserScore,
+                    t2, t2score: t2 === winnerName ? winnerScore : loserScore
                   };
                   updated = true;
                   console.log(`[ESPN] R${rd+1} ${region}: ${winnerName} ${winnerScore}-${loserScore} ${loserName}`);
@@ -249,7 +422,6 @@ async function syncFromESPN() {
         if (!results.finalFour) results.finalFour = {};
         if (!gameScores.finalFour) gameScores.finalFour = {};
 
-        // Semi 1: East vs South
         if (regionChamps[0] && regionChamps[1]) {
           if ((winnerName === regionChamps[0] && loserName === regionChamps[1]) || (winnerName === regionChamps[1] && loserName === regionChamps[0])) {
             if (!results.finalFour[0]) results.finalFour[0] = {};
@@ -261,7 +433,6 @@ async function syncFromESPN() {
             }
           }
         }
-        // Semi 2: West vs Midwest
         if (regionChamps[2] && regionChamps[3]) {
           if ((winnerName === regionChamps[2] && loserName === regionChamps[3]) || (winnerName === regionChamps[3] && loserName === regionChamps[2])) {
             if (!results.finalFour[0]) results.finalFour[0] = {};
@@ -273,7 +444,6 @@ async function syncFromESPN() {
             }
           }
         }
-        // Championship
         const semi1 = results.finalFour?.[0]?.[0], semi2 = results.finalFour?.[0]?.[1];
         if (semi1 && semi2 && ((winnerName === semi1 && loserName === semi2) || (winnerName === semi2 && loserName === semi1))) {
           if (!results.finalFour[1]) results.finalFour[1] = {};
@@ -293,9 +463,14 @@ async function syncFromESPN() {
   if (updated) {
     W("results.json", results);
     W("game_scores.json", gameScores);
-    console.log("[ESPN] Results and scores updated.");
+    W("first_four.json", firstFour);
+    console.log("[ESPN] Updated.");
   }
-  return { updated, results };
+  return { updated };
+}
+
+function ff_winner_matches(slot, name, ff) {
+  return ff[slot]?.winner === name;
 }
 
 app.get("/api/sync", async (q, r) => {
@@ -311,9 +486,8 @@ setInterval(async () => {
   }
 }, 5 * 60 * 1000);
 
-// Initial sync
 setTimeout(async () => {
   try { await syncFromESPN(); } catch (e) { console.error("[Init sync]", e.message); }
 }, 5000);
 
-app.listen(3000, "0.0.0.0", () => console.log("Bracket app v2 on port 3000"));
+app.listen(3000, "0.0.0.0", () => console.log("Bracket app v3 on port 3000"));
