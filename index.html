@@ -373,8 +373,8 @@ function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim){
   else if(sel&&isElim)c+=" sel elim";
   else if(sel)c+=" sel";
   var sdH=sd?'<span class="sd">'+sd+'</span>':"";
-  var gs=getScore(rg,rd,ix);var scH="";
-  if(gs){var my=gs.t1===tm?gs.t1score:gs.t2===tm?gs.t2score:null;if(my!=null)scH='<span class="sc">'+my+'</span>';}
+  var scH="";
+  if(rs){var gs=getScore(rg,rd,ix);if(gs){var my=gs.t1===tm?gs.t1score:gs.t2===tm?gs.t2score:null;if(my!=null)scH='<span class="sc">'+my+'</span>';}}
   var ckH=cor?'<span class="ck">\u2713</span>':inc?'<span class="ck">\u2717</span>':(sel&&isElim?'<span class="ck">\u2717</span>':"");
   var dis=(S.locked||ro())?"disabled":"";
   return'<button class="'+c+'" '+dis+' onclick="setPick(\''+esc(rg)+'\','+rd+','+ix+',\''+esc(tm)+'\')">'+sdH+tm+scH+ckH+'</button>';
@@ -486,8 +486,8 @@ function dtr(tm,pk,rs,rg,rd,ix,elim){
   var isElim=!cor&&!inc&&elim&&elim.has(tm);
   var c="tr";if(cor)c+=" correct";else if(inc)c+=" incorrect";else if(sel&&isElim)c+=" picked elim";else if(sel)c+=" picked";
   if(S.locked||ro())c+=" locked";
-  var gs=getScore(rg,rd,ix);var scH="";
-  if(gs){var my=gs.t1===tm?gs.t1score:gs.t2===tm?gs.t2score:null;if(my!=null)scH='<span class="tsc">'+my+'</span>';}
+  var scH="";
+  if(rs){var gs=getScore(rg,rd,ix);if(gs){var my=gs.t1===tm?gs.t1score:gs.t2===tm?gs.t2score:null;if(my!=null)scH='<span class="tsc">'+my+'</span>';}}
   var ckH=cor?"<span class='tc'>\u2713</span>":inc?"<span class='tc'>\u2717</span>":(sel&&isElim?"<span class='tc'>\u2717</span>":"");
   var cl=(S.locked||ro())?"":'onclick="setPick(\''+esc(rg)+'\','+rd+','+ix+',\''+esc(tm)+'\')"';
   return'<div class="'+c+'" '+cl+'>'+(sd2?'<span class="ts">'+sd2+'</span>':'')+'<span class="tn">'+tm+'</span>'+scH+ckH+'</div>';
