@@ -435,7 +435,16 @@ function mobRegion(rk){
       var g=cur[i];
       var lg=getLiveGame(g.t1,g.t2);
       var isLive=lg&&(lg.status==="STATUS_IN_PROGRESS"||lg.status==="STATUS_HALFTIME");
-      if(isLive&&!rdR[i])h+='<div style="font-size:9px;color:var(--green);font-weight:600;text-align:center;padding:1px 0;display:flex;align-items:center;justify-content:center;gap:4px"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.5s infinite"></span>'+liveStatusText(lg)+'</div>';
+      var isScheduled=lg&&(lg.status==="STATUS_SCHEDULED"||lg.status==="STATUS_PREGAME");
+      var isFinal=lg&&(lg.status==="STATUS_FINAL"||lg.status==="STATUS_FINAL_OT");
+      // Game info line
+      if(isLive&&!rdR[i]){
+        var st=liveStatusText(lg);if(lg.broadcast)st+=" \u00b7 "+lg.broadcast;
+        h+='<div style="font-size:9px;color:var(--green);font-weight:600;text-align:center;padding:1px 0;display:flex;align-items:center;justify-content:center;gap:4px"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.5s infinite"></span>'+st+'</div>';
+      }else if(isScheduled&&!rdR[i]){
+        var info=lg.periodLabel;if(lg.broadcast)info+=" \u00b7 "+lg.broadcast;
+        h+='<div style="font-size:9px;color:var(--muted);text-align:center;padding:1px 0">'+info+'</div>';
+      }
       h+='<div class="game-row">'+pickHTML(g.t1,seed(g.t1),rdP[i],rdR[i],rk,rd,i,elim,lg)+pickHTML(g.t2,seed(g.t2),rdP[i],rdR[i],rk,rd,i,elim,lg)+'</div>';
     }
     h+='</div>';
@@ -543,8 +552,9 @@ function deskRegion(rk,rtl){
   var reg=REGIONS[rk],p=ap(),rP=p[rk]||{},rR=S.results[rk]||{};var elim=getEliminated(S.results);
   var rounds=[];var cur=reg.games.map(function(g){return{s1:g[0],t1:resolveTeam(g[1]),s2:g[2],t2:resolveTeam(g[3])}});
   for(var rd=0;rd<4;rd++){var rdP=rP[rd]||{},rdR=rR[rd]||{};var gm="";
-    for(var i=0;i<cur.length;i++){var g=cur[i];var lg=getLiveGame(g.t1,g.t2);var isLive=lg&&(lg.status==="STATUS_IN_PROGRESS"||lg.status==="STATUS_HALFTIME");
-      if(isLive&&!rdR[i])gm+='<div style="font-size:7px;color:var(--green);text-align:center;font-weight:600;padding:1px 0">\u{25CF} '+liveStatusText(lg)+'</div>';
+    for(var i=0;i<cur.length;i++){var g=cur[i];var lg=getLiveGame(g.t1,g.t2);var isLive=lg&&(lg.status==="STATUS_IN_PROGRESS"||lg.status==="STATUS_HALFTIME");var isScheduled=lg&&(lg.status==="STATUS_SCHEDULED"||lg.status==="STATUS_PREGAME");
+      if(isLive&&!rdR[i]){var st=liveStatusText(lg);if(lg.broadcast)st+=" \u00b7 "+lg.broadcast;gm+='<div style="font-size:7px;color:var(--green);text-align:center;font-weight:600;padding:1px 0">\u{25CF} '+st+'</div>';}
+      else if(isScheduled&&!rdR[i]){var info=lg.periodLabel;if(lg.broadcast)info+=" \u00b7 "+lg.broadcast;gm+='<div style="font-size:7px;color:var(--muted);text-align:center;padding:1px 0">'+info+'</div>';}
       gm+='<div class="bg'+(isLive&&!rdR[i]?" live":"")+'">'+dtr(g.t1,rdP[i],rdR[i],rk,rd,i,elim,lg)+dtr(g.t2,rdP[i],rdR[i],rk,rd,i,elim,lg)+'</div>';}
     rounds.push('<div class="round-col"><div class="round-col-header">'+RNS[rd]+' \u00b7 '+PTS[rd]+'pts</div>'+gm+'</div>');
     var nx=[];for(var i2=0;i2<cur.length;i2+=2)nx.push({t1:rdP[i2]||null,t2:rdP[i2+1]||null});cur=nx;
