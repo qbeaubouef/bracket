@@ -304,9 +304,24 @@ async function init(){
     S.screen="app";
   }
   render();
-  // Poll results + live games
+  // Auto-lock at first R64 tip: March 19 2026 12:15 PM ET
+  (function checkAutoLock(){
+    if(S.locked)return;
+    var lockTime=new Date("2026-03-19T12:15:00-04:00");
+    if(new Date()>=lockTime){
+      S.locked=true;
+      $api("POST","/api/state",{locked:true}).then(function(){
+        S.msg="\u{1F512} Brackets auto-locked! R64 tipping off!";render();
+        setTimeout(function(){S.msg="";render();},5000);
+      });
+    }else{
+      var ms=lockTime-new Date();
+      if(ms>0&&ms<86400000)setTimeout(checkAutoLock,Math.min(ms,60000));
+    }
+  })();
+  // Poll results only when locked
   setInterval(async function(){if(!S.locked)return;try{var r=await $api("GET","/api/results");var sc=await $api("GET","/api/scores");var ff=await $api("GET","/api/first-four");if(JSON.stringify(r)!==JSON.stringify(S.results)||JSON.stringify(ff)!==JSON.stringify(S.ff)){S.results=r;S.scores=sc;S.ff=ff;render();}}catch(e){}},30000);
-  // Poll live scores less aggressively
+  // Poll live scores
   async function refreshLive(){try{S.liveGames=await $api("GET","/api/live");renderLive();}catch(e){}}
   refreshLive();
   setInterval(refreshLive,60000);
@@ -333,13 +348,23 @@ function setPick(rg,rd,ix,tm){
 }
 async function saveTB(){var v=parseInt(document.getElementById("tbi").value);if(!isNaN(v)&&v>0){S.tiebreaker=v;await $api("POST","/api/tiebreaker/"+encodeURIComponent(S.user),{score:v});S.msg="Tiebreaker saved!";render();setTimeout(function(){S.msg="";render();},2000);}}
 async function saveTB2(){var v=parseInt(document.getElementById("tbi2").value);if(!isNaN(v)&&v>0){S.tiebreaker=v;await $api("POST","/api/tiebreaker/"+encodeURIComponent(S.user),{score:v});S.msg="Tiebreaker saved!";render();setTimeout(function(){S.msg="";render();},2000);}}
-async function doSync(){S.msg="Syncing...";render();try{await $api("GET","/api/sync");S.results=await $api("GET","/api/results");S.scores=await $api("GET","/api/scores");S.ff=await $api("GET","/api/first-four");S.msg="Synced!";S.lastSync=new Date().toLocaleTimeString();}catch(e){S.msg="Sync error.";}render();setTimeout(function(){S.msg="";render();},3000);}
+async function doSync(){S.msg="Syncing...";render();try{await $api("GET","/api/sync");S.results=await $api("GET","/api/results");S.scores=await $api("GET","/api/scores");S.ff=await $api("GET","/api/first-four");S.msg="Synced!";S.lastSync=new Date().toLocaleTimeString();try{S.liveGames=await $api("GET","/api/live");}catch(e){}}catch(e){S.msg="Sync error.";}render();setTimeout(function(){S.msg="";render();},3000);}
 async function toggleLock(){S.locked=!S.locked;await $api("POST","/api/state",{locked:S.locked});render();}
 async function manualResult(rg,rd,ix,tm){if(!S.results[rg])S.results[rg]={};if(!S.results[rg][rd])S.results[rg][rd]={};S.results[rg][rd][ix]=tm;await $api("POST","/api/results",S.results);render();}
 async function resetResults(){S.results={};S.scores={};await $api("POST","/api/results",{});await $api("POST","/api/scores",{});S.msg="Results cleared.";render();setTimeout(function(){S.msg="";render();},2000);}
 async function deletePlayer(n){await $api("POST","/api/picks/"+encodeURIComponent(n),{});S.msg="Cleared "+n;if(S.user===n)switchUser();render();setTimeout(function(){S.msg="";render();},3000);}
 
 // SCORE STRIP
+// === NAG BANNER ===
+function nagBannerHTML(){
+  if(S.viewing||ro())return"";
+  var p=S.picks;
+  var champ=p.finalFour&&p.finalFour[1]&&p.finalFour[1][0];
+  if(!champ)return""; // No champion picked yet
+  if(S.tiebreaker)return""; // Already set
+  return'<div style="background:rgba(232,168,56,0.12);border-bottom:1px solid rgba(232,168,56,0.25);padding:10px 14px;text-align:center;cursor:pointer" onclick="S.tab=\'f4\';S.deskTab=\'bracket\';render()"><span style="font-family:var(--font-display);font-size:12px;color:var(--accent);letter-spacing:1px">\u{26A0}\uFE0F ALMOST DONE! Enter your tiebreaker (combined final score) to complete your bracket \u2192</span></div>';
+}
+
 function scoreStripHTML(){
   var sb=scoreBreakdown(ap(),S.results);
   var h='<div class="score-strip">';
@@ -675,7 +700,7 @@ function render(){
 
   var dc="";if(S.deskTab==="bracket")dc='<div class="bracket-wrap"><div class="bracket-side">'+deskRegion("east",false)+deskRegion("south",false)+'</div><div class="bracket-center">'+deskFF()+'</div><div class="bracket-side">'+deskRegion("west",true)+deskRegion("midwest",true)+'</div></div>';else if(S.deskTab==="admin")dc='<div style="max-width:500px;margin:20px auto;padding:0 16px">'+mobAdmin()+'</div>';else if(S.deskTab==="board")dc='<div id="db" style="max-width:500px;margin:20px auto;padding:0 16px"><div style="text-align:center;padding:20px;color:var(--muted)">Loading...</div></div>';
 
-  document.getElementById("app").innerHTML='<div class="topbar"><div><div class="topbar-brand">Beaubouef Bracket \'26</div><div class="topbar-user">'+S.user+'</div></div><div class="topbar-right">'+badges+'<button class="btn-sm" onclick="exportMyPicks()" title="Export my picks">\u{1F4E5}</button><button class="btn-sm" onclick="importMyPicks()" title="Import picks">\u{1F4E4}</button><button class="btn-sm" onclick="switchUser()">Switch</button></div></div>'+(S.msg?'<div class="msg-bar">'+S.msg+'</div>':"")+firstFourHTML()+liveGamesHTML()+scoreStripHTML()+viewChipsHTML()+'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><div class="mobile-view"><div class="mob-tabs">'+mt+'</div><div class="mob-content" id="tc">'+mc+'</div></div><div class="desktop-bracket"><div class="desk-nav">'+dn+'<button class="desk-nav-btn" onclick="doSync()" style="margin-left:20px">\u{1F504} ESPN</button></div>'+dc+'</div><div class="footer">'+cnt+'/63 ('+pct+'%)'+(S.viewing?" \u2014 "+S.viewing:"")+'</div>';
+  document.getElementById("app").innerHTML='<div class="topbar"><div><div class="topbar-brand">Beaubouef Bracket \'26</div><div class="topbar-user">'+S.user+'</div></div><div class="topbar-right">'+badges+'<button class="btn-sm" onclick="exportMyPicks()" title="Export my picks">\u{1F4E5}</button><button class="btn-sm" onclick="importMyPicks()" title="Import picks">\u{1F4E4}</button><button class="btn-sm" onclick="switchUser()">Switch</button></div></div>'+(S.msg?'<div class="msg-bar">'+S.msg+'</div>':"")+nagBannerHTML()+firstFourHTML()+liveGamesHTML()+scoreStripHTML()+viewChipsHTML()+'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><div class="mobile-view"><div class="mob-tabs">'+mt+'</div><div class="mob-content" id="tc">'+mc+'</div></div><div class="desktop-bracket"><div class="desk-nav">'+dn+'<button class="desk-nav-btn" onclick="doSync()" style="margin-left:20px">\u{1F504} ESPN</button></div>'+dc+'</div><div class="footer">'+cnt+'/63 ('+pct+'%)'+(S.viewing?" \u2014 "+S.viewing:"")+'</div>';
 
   if(S.tab==="board")renderBoard("tc");
   if(S.deskTab==="board")renderBoard("db");
