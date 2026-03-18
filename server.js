@@ -243,6 +243,90 @@ function fetchJSON(url) {
   });
 }
 
+// === LIVE SCORES ===
+app.get("/api/live", async (q, r) => {
+  try {
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}${String(today.getMonth()+1).padStart(2,"0")}${String(today.getDate()).padStart(2,"0")}`;
+    const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=100&dates=${dateStr}&limit=200`;
+    const data = await fetchJSON(url);
+    if (!data.events) return r.json([]);
+
+    // All known team names (from our name map values - these ARE the tournament teams)
+    const knownTeams = new Set(Object.values(ESPN_NAME_MAP));
+
+    const live = [];
+    for (const event of data.events) {
+      const comp = event.competitions?.[0];
+      if (!comp || !comp.competitors || comp.competitors.length !== 2) continue;
+
+      const c1 = comp.competitors[0];
+      const c2 = comp.competitors[1];
+      // Try multiple name fields
+      const t1raw = c1.team?.displayName || c1.team?.shortDisplayName || c1.team?.name || "";
+      const t2raw = c2.team?.displayName || c2.team?.shortDisplayName || c2.team?.name || "";
+      const t1name = resolveTeamName(t1raw);
+      const t2name = resolveTeamName(t2raw);
+
+      // Include if at least one team is in our tournament
+      if (!t1name && !t2name) continue;
+      if (!(knownTeams.has(t1name) || knownTeams.has(t2name))) continue;
+
+      const status = event.status?.type?.name || "UNKNOWN";
+      const statusDetail = event.status?.type?.shortDetail || event.status?.type?.detail || "";
+      const clock = event.status?.displayClock || "";
+      const period = event.status?.period || 0;
+      const startTime = event.date || "";
+
+      let periodLabel = "";
+      if (status === "STATUS_IN_PROGRESS") {
+        if (period === 1) periodLabel = "1st Half";
+        else if (period === 2) periodLabel = "2nd Half";
+        else periodLabel = "OT" + (period > 2 ? (period - 2) : "");
+      } else if (status === "STATUS_HALFTIME") {
+        periodLabel = "Halftime";
+      } else if (status === "STATUS_FINAL" || status === "STATUS_FINAL_OT") {
+        periodLabel = period > 2 ? "Final/OT" : "Final";
+      } else if (status === "STATUS_SCHEDULED" || status === "STATUS_PREGAME") {
+        // Show scheduled start time
+        try {
+          const st = new Date(startTime);
+          periodLabel = st.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" });
+        } catch { periodLabel = "Scheduled"; }
+      } else {
+        periodLabel = statusDetail || status;
+      }
+
+      const home = c1.homeAway === "home" ? c1 : c2;
+      const away = c1.homeAway === "home" ? c2 : c1;
+      const homeName = resolveTeamName(home.team?.displayName || home.team?.shortDisplayName || "") || home.team?.abbreviation || "???";
+      const awayName = resolveTeamName(away.team?.displayName || away.team?.shortDisplayName || "") || away.team?.abbreviation || "???";
+
+      live.push({
+        id: event.id,
+        status,
+        statusDetail,
+        clock,
+        period,
+        periodLabel,
+        startTime,
+        broadcast: comp.broadcasts?.[0]?.names?.[0] || "",
+        away: { name: awayName, score: parseInt(away.score) || 0, seed: SEEDS[awayName] || "" },
+        home: { name: homeName, score: parseInt(home.score) || 0, seed: SEEDS[homeName] || "" },
+        winner: (status === "STATUS_FINAL" || status === "STATUS_FINAL_OT") ? (c1.winner ? (resolveTeamName(c1.team?.displayName||"")||c1.team?.abbreviation||"") : (resolveTeamName(c2.team?.displayName||"")||c2.team?.abbreviation||"")) : null
+      });
+    }
+
+    const order = { STATUS_IN_PROGRESS: 0, STATUS_HALFTIME: 1, STATUS_PREGAME: 2, STATUS_SCHEDULED: 3, STATUS_FINAL: 4, STATUS_FINAL_OT: 4 };
+    live.sort((a, b) => (order[a.status] ?? 9) - (order[b.status] ?? 9));
+
+    r.json(live);
+  } catch (e) {
+    console.error("[Live]", e.message);
+    r.json([]);
+  }
+});
+
 async function syncFromESPN() {
   const results = R("results.json", {});
   const gameScores = R("game_scores.json", {});
