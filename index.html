@@ -18,6 +18,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .gate{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;text-align:center}
 .gate-emoji{font-size:56px;margin-bottom:8px;animation:bounce 2s infinite}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 .gate-sub{font-family:var(--font-display);font-size:13px;font-weight:500;letter-spacing:4px;color:var(--accent);text-transform:uppercase}
 .gate-title{font-family:var(--font-display);font-size:32px;font-weight:700;margin:4px 0 28px;letter-spacing:2px}
 .gate input{width:100%;max-width:300px;padding:14px 18px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#fff;font-size:16px;text-align:center;outline:none;transition:border-color 0.2s;margin-bottom:10px}
@@ -199,7 +200,7 @@ var RNS=["R64","R32","S16","E8"];
 var PTS=[10,20,40,80,160,320];
 var RDL=["R64","R32","S16","E8","F4","Champ"];
 
-var S={screen:"pin",user:null,viewing:null,viewPicks:{},picks:{},results:{},scores:{},ff:{},tiebreaker:null,players:[],locked:false,isAdmin:false,tab:"east",deskTab:"bracket",saving:false,msg:"",lastSync:null};
+var S={screen:"pin",user:null,viewing:null,viewPicks:{},picks:{},results:{},scores:{},ff:{},liveGames:[],tiebreaker:null,players:[],locked:false,isAdmin:false,tab:"east",deskTab:"bracket",saving:false,msg:"",lastSync:null};
 var FF_SLOTS=[
   {slot:"UMBC/Howard",teams:["UMBC","Howard"],region:"midwest",gameIdx:0,seed:16},
   {slot:"Miami OH/SMU",teams:["Miami OH","SMU"],region:"midwest",gameIdx:4,seed:11},
@@ -303,7 +304,12 @@ async function init(){
     S.screen="app";
   }
   render();
-  setInterval(async function(){try{var r=await $api("GET","/api/results");var sc=await $api("GET","/api/scores");var ff=await $api("GET","/api/first-four");if(JSON.stringify(r)!==JSON.stringify(S.results)||JSON.stringify(ff)!==JSON.stringify(S.ff)){S.results=r;S.scores=sc;S.ff=ff;render();}}catch(e){}},30000);
+  // Poll results + live games
+  setInterval(async function(){if(!S.locked)return;try{var r=await $api("GET","/api/results");var sc=await $api("GET","/api/scores");var ff=await $api("GET","/api/first-four");if(JSON.stringify(r)!==JSON.stringify(S.results)||JSON.stringify(ff)!==JSON.stringify(S.ff)){S.results=r;S.scores=sc;S.ff=ff;render();}}catch(e){}},30000);
+  // Poll live scores less aggressively
+  async function refreshLive(){try{S.liveGames=await $api("GET","/api/live");renderLive();}catch(e){}}
+  refreshLive();
+  setInterval(refreshLive,60000);
 }
 
 function checkPin(){if(document.getElementById("pi").value===ENTRY_PIN){sessionStorage.setItem("bp","1");S.screen="login";render();}else{document.getElementById("pe").textContent="Wrong PIN.";}}
@@ -546,7 +552,49 @@ function firstFourHTML(){
   return h;
 }
 
-// === EXPORT/IMPORT ===
+// === LIVE GAMES ===
+function liveGamesHTML(){
+  if(!S.liveGames||!S.liveGames.length)return'<div id="live-ticker"></div>';
+  var h='<div id="live-ticker" style="background:var(--bg);border-bottom:1px solid var(--border);padding:8px 10px">';
+  h+='<div style="text-align:center;font-family:var(--font-display);font-size:10px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.5s infinite"></span>Live Games</div>';
+  h+='<div style="display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px">';
+  S.liveGames.forEach(function(g){
+    var isFinal=g.status==="STATUS_FINAL";
+    var isLive=g.status==="STATUS_IN_PROGRESS"||g.status==="STATUS_HALFTIME";
+    var borderColor=isLive?"var(--green)":isFinal?"var(--border)":"var(--border)";
+    var bgColor=isLive?"rgba(74,222,128,0.04)":"var(--card)";
+    h+='<div style="background:'+bgColor+';border:1px solid '+borderColor+';border-radius:6px;padding:6px 10px;min-width:140px;flex-shrink:0;font-size:11px">';
+    // Status line
+    var statusColor=isLive?"var(--green)":isFinal?"var(--muted)":"var(--muted)";
+    var statusText=g.periodLabel;
+    if(isLive&&g.clock)statusText=g.periodLabel+" \u00b7 "+g.clock;
+    if(g.broadcast)statusText+=" \u00b7 "+g.broadcast;
+    h+='<div style="font-size:8px;color:'+statusColor+';text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;font-weight:600;white-space:nowrap">'+statusText+'</div>';
+    // Away team
+    var awayBold=isFinal&&g.winner===g.away.name;
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;'+(awayBold?"font-weight:700;color:var(--text)":"color:var(--muted)")+'">';
+    h+='<span>'+(g.away.seed?'<span style="opacity:0.4;font-size:9px">'+g.away.seed+' </span>':"")+g.away.name+'</span>';
+    h+='<span style="font-family:var(--font-display);font-weight:700;min-width:24px;text-align:right">'+g.away.score+'</span></div>';
+    // Home team
+    var homeBold=isFinal&&g.winner===g.home.name;
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;'+(homeBold?"font-weight:700;color:var(--text)":"color:var(--muted)")+'">';
+    h+='<span>'+(g.home.seed?'<span style="opacity:0.4;font-size:9px">'+g.home.seed+' </span>':"")+g.home.name+'</span>';
+    h+='<span style="font-family:var(--font-display);font-weight:700;min-width:24px;text-align:right">'+g.home.score+'</span></div>';
+    h+='</div>';
+  });
+  h+='</div></div>';
+  return h;
+}
+
+// Update just the live ticker without full re-render
+function renderLive(){
+  var el=document.getElementById("live-ticker");
+  if(!el)return;
+  var parent=el.parentNode;
+  var temp=document.createElement("div");
+  temp.innerHTML=liveGamesHTML();
+  if(temp.firstChild)parent.replaceChild(temp.firstChild,el);
+}
 async function exportMyPicks(){
   var data=await $api("GET","/api/export/"+encodeURIComponent(S.user));
   var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
@@ -627,7 +675,7 @@ function render(){
 
   var dc="";if(S.deskTab==="bracket")dc='<div class="bracket-wrap"><div class="bracket-side">'+deskRegion("east",false)+deskRegion("south",false)+'</div><div class="bracket-center">'+deskFF()+'</div><div class="bracket-side">'+deskRegion("west",true)+deskRegion("midwest",true)+'</div></div>';else if(S.deskTab==="admin")dc='<div style="max-width:500px;margin:20px auto;padding:0 16px">'+mobAdmin()+'</div>';else if(S.deskTab==="board")dc='<div id="db" style="max-width:500px;margin:20px auto;padding:0 16px"><div style="text-align:center;padding:20px;color:var(--muted)">Loading...</div></div>';
 
-  document.getElementById("app").innerHTML='<div class="topbar"><div><div class="topbar-brand">Beaubouef Bracket \'26</div><div class="topbar-user">'+S.user+'</div></div><div class="topbar-right">'+badges+'<button class="btn-sm" onclick="exportMyPicks()" title="Export my picks">\u{1F4E5}</button><button class="btn-sm" onclick="importMyPicks()" title="Import picks">\u{1F4E4}</button><button class="btn-sm" onclick="switchUser()">Switch</button></div></div>'+(S.msg?'<div class="msg-bar">'+S.msg+'</div>':"")+firstFourHTML()+scoreStripHTML()+viewChipsHTML()+'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><div class="mobile-view"><div class="mob-tabs">'+mt+'</div><div class="mob-content" id="tc">'+mc+'</div></div><div class="desktop-bracket"><div class="desk-nav">'+dn+'<button class="desk-nav-btn" onclick="doSync()" style="margin-left:20px">\u{1F504} ESPN</button></div>'+dc+'</div><div class="footer">'+cnt+'/63 ('+pct+'%)'+(S.viewing?" \u2014 "+S.viewing:"")+'</div>';
+  document.getElementById("app").innerHTML='<div class="topbar"><div><div class="topbar-brand">Beaubouef Bracket \'26</div><div class="topbar-user">'+S.user+'</div></div><div class="topbar-right">'+badges+'<button class="btn-sm" onclick="exportMyPicks()" title="Export my picks">\u{1F4E5}</button><button class="btn-sm" onclick="importMyPicks()" title="Import picks">\u{1F4E4}</button><button class="btn-sm" onclick="switchUser()">Switch</button></div></div>'+(S.msg?'<div class="msg-bar">'+S.msg+'</div>':"")+firstFourHTML()+liveGamesHTML()+scoreStripHTML()+viewChipsHTML()+'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><div class="mobile-view"><div class="mob-tabs">'+mt+'</div><div class="mob-content" id="tc">'+mc+'</div></div><div class="desktop-bracket"><div class="desk-nav">'+dn+'<button class="desk-nav-btn" onclick="doSync()" style="margin-left:20px">\u{1F504} ESPN</button></div>'+dc+'</div><div class="footer">'+cnt+'/63 ('+pct+'%)'+(S.viewing?" \u2014 "+S.viewing:"")+'</div>';
 
   if(S.tab==="board")renderBoard("tc");
   if(S.deskTab==="board")renderBoard("db");
