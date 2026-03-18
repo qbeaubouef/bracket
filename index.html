@@ -152,7 +152,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .mobile-view{display:none!important}.desktop-bracket{display:block!important}
 .bracket-wrap{display:grid;grid-template-columns:1fr auto 1fr;gap:0;padding:8px 12px;max-width:1600px;margin:0 auto}
 .bracket-side{display:flex;flex-direction:column;gap:20px}
-.bracket-center{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:200px;padding:0 10px}
+.bracket-center{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:240px;padding:0 16px}
 .region-label{font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-align:center;padding:6px 0;margin-bottom:4px}
 .rounds{display:flex;align-items:stretch}.rounds.rtl{flex-direction:row-reverse}
 .round-col{display:flex;flex-direction:column;justify-content:space-around;min-width:130px;padding:0 3px}
@@ -176,9 +176,9 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .bg .tr.picked .ts{opacity:0.7}
 .ff-center{text-align:center}
 .ff-title{font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-.ff-game{margin-bottom:10px}
-.ff-game-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
-.champion-display{margin-top:12px;padding:12px 16px;background:var(--accent);border-radius:8px}
+.ff-game{margin-bottom:16px}
+.ff-game-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;line-height:1.4}
+.champion-display{margin-top:16px;padding:14px 18px;background:var(--accent);border-radius:8px}
 .champion-display .label{font-family:var(--font-display);font-size:9px;letter-spacing:2px;color:var(--accent2);opacity:0.7;text-transform:uppercase}
 .champion-display .name{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent2);margin-top:2px}
 .desk-nav{display:flex;align-items:center;justify-content:center;gap:12px;padding:4px 0;background:var(--surface);border-bottom:1px solid var(--border)}
@@ -605,10 +605,12 @@ function deskRegion(rk,rtl){
   var rounds=[];var cur=reg.games.map(function(g){return{s1:g[0],t1:resolveTeam(g[1]),s2:g[2],t2:resolveTeam(g[3])}});
   for(var rd=0;rd<4;rd++){var rdP=rP[rd]||{},rdR=rR[rd]||{};var gm="";
     for(var i=0;i<cur.length;i++){var g=cur[i];var lg=getLiveGame(g.t1,g.t2);var isLive=lg&&(lg.status==="STATUS_IN_PROGRESS"||lg.status==="STATUS_HALFTIME");var isScheduled=lg&&(lg.status==="STATUS_SCHEDULED"||lg.status==="STATUS_PREGAME");
-      if(isLive&&!rdR[i]){var st=liveStatusText(lg);if(lg.broadcast)st+=" \u00b7 "+lg.broadcast;gm+='<div style="font-size:7px;color:var(--green);text-align:center;font-weight:600;padding:1px 0">\u{25CF} '+st+'</div>';}
-      else if(isScheduled&&!rdR[i]){var info=lg.periodLabel;if(lg.broadcast)info+=" \u00b7 "+lg.broadcast;gm+='<div style="font-size:7px;color:var(--muted);text-align:center;padding:1px 0">'+info+'</div>';}
-      else if(!rdR[i]){var sch=getSchedule(rk,rd,i);if(sch)gm+='<div style="font-size:7px;color:var(--muted);text-align:center;padding:1px 0">'+sch+'</div>';}
-      gm+='<div class="bg'+(isLive&&!rdR[i]?" live":"")+'">'+dtr(g.t1,rdP[i],rdR[i],rk,rd,i,elim,lg)+dtr(g.t2,rdP[i],rdR[i],rk,rd,i,elim,lg)+'</div>';}
+      // Build schedule label to go INSIDE the game box
+      var schLabel="";
+      if(isLive&&!rdR[i]){var st=liveStatusText(lg);if(lg.broadcast)st+=" \u00b7 "+lg.broadcast;schLabel='<div style="font-size:7px;color:var(--green);text-align:center;font-weight:600;padding:2px 4px;border-bottom:1px solid rgba(74,222,128,0.15)">\u{25CF} '+st+'</div>';}
+      else if(isScheduled&&!rdR[i]){var info=lg.periodLabel;if(lg.broadcast)info+=" \u00b7 "+lg.broadcast;schLabel='<div style="font-size:7px;color:var(--muted);text-align:center;padding:2px 4px;border-bottom:1px solid var(--border)">'+info+'</div>';}
+      else if(!rdR[i]){var sch=getSchedule(rk,rd,i);if(sch)schLabel='<div style="font-size:7px;color:var(--muted);text-align:center;padding:2px 4px;border-bottom:1px solid var(--border)">'+sch+'</div>';}
+      gm+='<div class="bg'+(isLive&&!rdR[i]?" live":"")+'">'+schLabel+dtr(g.t1,rdP[i],rdR[i],rk,rd,i,elim,lg)+dtr(g.t2,rdP[i],rdR[i],rk,rd,i,elim,lg)+'</div>';}
     rounds.push('<div class="round-col"><div class="round-col-header">'+RNS[rd]+' \u00b7 '+PTS[rd]+'pts</div>'+gm+'</div>');
     var nx=[];for(var i2=0;i2<cur.length;i2+=2)nx.push({t1:rdP[i2]||null,t2:rdP[i2+1]||null});cur=nx;
   }
