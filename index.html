@@ -95,6 +95,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .pick.lose{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.25);color:var(--red);font-weight:700}
 .pick.elim{opacity:0.25;text-decoration:line-through}
 .pick.sel.elim{background:var(--card);color:var(--muted);border-color:var(--border)}
+.pick.live{border-color:var(--green);background:rgba(74,222,128,0.04)}
 .pick .ck{margin-left:auto;font-size:10px;flex-shrink:0}
 .pick .sc{margin-left:auto;font-size:9px;opacity:0.6;font-weight:400;flex-shrink:0}
 .pick:disabled{cursor:default}
@@ -164,6 +165,8 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .bg .tr.correct{background:rgba(74,222,128,0.1);color:var(--green);font-weight:700}
 .bg .tr.incorrect{background:rgba(239,68,68,0.08);color:var(--red);font-weight:700}
 .bg .tr.elim{opacity:0.25;text-decoration:line-through}
+.bg .tr.live{background:rgba(74,222,128,0.04)}
+.bg.live{border-color:var(--green)}
 .bg .tr.locked{cursor:default}
 .bg .ts{font-size:9px;color:var(--muted);min-width:16px;text-align:right}
 .bg .tn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -392,7 +395,7 @@ function viewChipsHTML(){
 }
 
 // MOBILE PICK BUTTON
-function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim){
+function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim,live){
   if(!tm)return'<button class="pick" disabled><span style="color:var(--muted)">TBD</span></button>';
   var cor=rs&&pk===rs&&pk===tm;
   var inc=rs&&pk&&pk!==rs&&pk===tm;
@@ -403,9 +406,15 @@ function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim){
   else if(inc)c+=" lose";
   else if(sel&&isElim)c+=" sel elim";
   else if(sel)c+=" sel";
+  // Live game: green border
+  var isLive=live&&(live.status==="STATUS_IN_PROGRESS"||live.status==="STATUS_HALFTIME");
+  if(isLive&&!rs)c+=" live";
   var sdH=sd?'<span class="sd">'+sd+'</span>':"";
   var scH="";
+  // Show final score from stored results
   if(rs){var gs=getScore(rg,rd,ix);if(gs){var my=gs.t1===tm?gs.t1score:gs.t2===tm?gs.t2score:null;if(my!=null)scH='<span class="sc">'+my+'</span>';}}
+  // Show live score if game in progress
+  else if(live&&isLive){var ls=liveTeamScore(live,tm);if(ls!=null)scH='<span class="sc" style="color:var(--green)">'+ls+'</span>';}
   var ckH=cor?'<span class="ck">\u2713</span>':inc?'<span class="ck">\u2717</span>':(sel&&isElim?'<span class="ck">\u2717</span>':"");
   var dis=(S.locked||ro())?"disabled":"";
   return'<button class="'+c+'" '+dis+' onclick="setPick(\''+esc(rg)+'\','+rd+','+ix+',\''+esc(tm)+'\')">'+sdH+tm+scH+ckH+'</button>';
@@ -424,7 +433,10 @@ function mobRegion(rk){
     h+='<div class="rd-group"><div class="rd-label" style="color:'+reg.color+'">'+RN[rd]+' <span class="rd-pts">'+PTS[rd]+' pts</span></div>';
     for(var i=0;i<cur.length;i++){
       var g=cur[i];
-      h+='<div class="game-row">'+pickHTML(g.t1,seed(g.t1),rdP[i],rdR[i],rk,rd,i,elim)+pickHTML(g.t2,seed(g.t2),rdP[i],rdR[i],rk,rd,i,elim)+'</div>';
+      var lg=getLiveGame(g.t1,g.t2);
+      var isLive=lg&&(lg.status==="STATUS_IN_PROGRESS"||lg.status==="STATUS_HALFTIME");
+      if(isLive&&!rdR[i])h+='<div style="font-size:9px;color:var(--green);font-weight:600;text-align:center;padding:1px 0;display:flex;align-items:center;justify-content:center;gap:4px"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.5s infinite"></span>'+liveStatusText(lg)+'</div>';
+      h+='<div class="game-row">'+pickHTML(g.t1,seed(g.t1),rdP[i],rdR[i],rk,rd,i,elim,lg)+pickHTML(g.t2,seed(g.t2),rdP[i],rdR[i],rk,rd,i,elim,lg)+'</div>';
     }
     h+='</div>';
     var nx=[];for(var i2=0;i2<cur.length;i2+=2)nx.push({t1:rdP[i2]||null,t2:rdP[i2+1]||null});cur=nx;
@@ -511,14 +523,17 @@ function mobAdmin(){
 }
 
 // DESKTOP
-function dtr(tm,pk,rs,rg,rd,ix,elim){
+function dtr(tm,pk,rs,rg,rd,ix,elim,live){
   if(!tm)return'<div class="tr tbd"><span class="tn">TBD</span></div>';
   var sd2=seed(tm);var cor=rs&&pk===rs&&pk===tm,inc=rs&&pk&&pk!==rs&&pk===tm,sel=pk===tm;
   var isElim=!cor&&!inc&&elim&&elim.has(tm);
+  var isLive=live&&(live.status==="STATUS_IN_PROGRESS"||live.status==="STATUS_HALFTIME");
   var c="tr";if(cor)c+=" correct";else if(inc)c+=" incorrect";else if(sel&&isElim)c+=" picked elim";else if(sel)c+=" picked";
+  if(isLive&&!rs)c+=" live";
   if(S.locked||ro())c+=" locked";
   var scH="";
   if(rs){var gs=getScore(rg,rd,ix);if(gs){var my=gs.t1===tm?gs.t1score:gs.t2===tm?gs.t2score:null;if(my!=null)scH='<span class="tsc">'+my+'</span>';}}
+  else if(live&&isLive){var ls=liveTeamScore(live,tm);if(ls!=null)scH='<span class="tsc" style="color:var(--green)">'+ls+'</span>';}
   var ckH=cor?"<span class='tc'>\u2713</span>":inc?"<span class='tc'>\u2717</span>":(sel&&isElim?"<span class='tc'>\u2717</span>":"");
   var cl=(S.locked||ro())?"":'onclick="setPick(\''+esc(rg)+'\','+rd+','+ix+',\''+esc(tm)+'\')"';
   return'<div class="'+c+'" '+cl+'>'+(sd2?'<span class="ts">'+sd2+'</span>':'')+'<span class="tn">'+tm+'</span>'+scH+ckH+'</div>';
@@ -528,7 +543,9 @@ function deskRegion(rk,rtl){
   var reg=REGIONS[rk],p=ap(),rP=p[rk]||{},rR=S.results[rk]||{};var elim=getEliminated(S.results);
   var rounds=[];var cur=reg.games.map(function(g){return{s1:g[0],t1:resolveTeam(g[1]),s2:g[2],t2:resolveTeam(g[3])}});
   for(var rd=0;rd<4;rd++){var rdP=rP[rd]||{},rdR=rR[rd]||{};var gm="";
-    for(var i=0;i<cur.length;i++){var g=cur[i];gm+='<div class="bg">'+dtr(g.t1,rdP[i],rdR[i],rk,rd,i,elim)+dtr(g.t2,rdP[i],rdR[i],rk,rd,i,elim)+'</div>';}
+    for(var i=0;i<cur.length;i++){var g=cur[i];var lg=getLiveGame(g.t1,g.t2);var isLive=lg&&(lg.status==="STATUS_IN_PROGRESS"||lg.status==="STATUS_HALFTIME");
+      if(isLive&&!rdR[i])gm+='<div style="font-size:7px;color:var(--green);text-align:center;font-weight:600;padding:1px 0">\u{25CF} '+liveStatusText(lg)+'</div>';
+      gm+='<div class="bg'+(isLive&&!rdR[i]?" live":"")+'">'+dtr(g.t1,rdP[i],rdR[i],rk,rd,i,elim,lg)+dtr(g.t2,rdP[i],rdR[i],rk,rd,i,elim,lg)+'</div>';}
     rounds.push('<div class="round-col"><div class="round-col-header">'+RNS[rd]+' \u00b7 '+PTS[rd]+'pts</div>'+gm+'</div>');
     var nx=[];for(var i2=0;i2<cur.length;i2+=2)nx.push({t1:rdP[i2]||null,t2:rdP[i2+1]||null});cur=nx;
   }
@@ -553,23 +570,50 @@ function deskFF(){
 
 // === FIRST FOUR BANNER ===
 function firstFourHTML(){
-  var anyUnresolved=false;
-  for(var i=0;i<FF_SLOTS.length;i++){if(!S.ff[FF_SLOTS[i].slot])anyUnresolved=true;}
-  if(!anyUnresolved&&Object.keys(S.ff).length===0)return""; // No data yet at all
+  var anyUnresolved=false;var anyLive=false;
+  for(var i=0;i<FF_SLOTS.length;i++){
+    if(!S.ff[FF_SLOTS[i].slot])anyUnresolved=true;
+    var lg=getLiveGame(FF_SLOTS[i].teams[0],FF_SLOTS[i].teams[1]);
+    if(lg&&(lg.status==="STATUS_IN_PROGRESS"||lg.status==="STATUS_HALFTIME"))anyLive=true;
+  }
+  if(!anyUnresolved&&Object.keys(S.ff).length===0&&!anyLive)return"";
   var h='<div style="background:var(--surface);border-bottom:1px solid var(--border);padding:8px 12px">';
-  h+='<div style="text-align:center;font-family:var(--font-display);font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">First Four \u2014 Dayton, OH</div>';
+  h+='<div style="text-align:center;font-family:var(--font-display);font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">';
+  if(anyLive)h+='<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px;animation:pulse 1.5s infinite;vertical-align:middle"></span>';
+  h+='First Four \u2014 Dayton, OH</div>';
   h+='<div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap">';
   for(var i=0;i<FF_SLOTS.length;i++){
     var ff=FF_SLOTS[i];var result=S.ff[ff.slot];
+    var lg=getLiveGame(ff.teams[0],ff.teams[1]);
+    var isLive=lg&&(lg.status==="STATUS_IN_PROGRESS"||lg.status==="STATUS_HALFTIME");
+    var isScheduled=lg&&(lg.status==="STATUS_SCHEDULED"||lg.status==="STATUS_PREGAME");
     if(result&&result.winner){
-      h+='<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-width:120px;font-size:11px;text-align:center">';
-      h+='<div style="color:var(--green);font-weight:700">'+result.winner+'</div>';
-      h+='<div style="color:var(--muted);font-size:9px">'+result.t1+' '+result.t1score+' \u2013 '+result.t2score+' '+result.t2+' \u2714</div>';
+      // Final
+      h+='<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-width:140px;font-size:11px;text-align:center">';
+      h+='<div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px">Final \u2714</div>';
+      h+='<div style="display:flex;justify-content:space-between;font-weight:'+(result.winner===result.t1?"700":"400")+';color:'+(result.winner===result.t1?"var(--green)":"var(--muted)")+'"><span>'+ff.seed+' '+result.t1+'</span><span>'+result.t1score+'</span></div>';
+      h+='<div style="display:flex;justify-content:space-between;font-weight:'+(result.winner===result.t2?"700":"400")+';color:'+(result.winner===result.t2?"var(--green)":"var(--muted)")+'"><span>'+ff.seed+' '+result.t2+'</span><span>'+result.t2score+'</span></div>';
+      h+='</div>';
+    }else if(isLive){
+      // Live
+      var statusText=liveStatusText(lg);
+      h+='<div style="background:rgba(74,222,128,0.04);border:1px solid var(--green);border-radius:6px;padding:6px 10px;min-width:140px;font-size:11px;text-align:center">';
+      h+='<div style="font-size:8px;color:var(--green);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;font-weight:700">'+statusText+'</div>';
+      h+='<div style="display:flex;justify-content:space-between;color:var(--text)"><span>'+ff.seed+' '+ff.teams[0]+'</span><span style="font-family:var(--font-display);font-weight:700">'+liveTeamScore(lg,ff.teams[0])+'</span></div>';
+      h+='<div style="display:flex;justify-content:space-between;color:var(--text)"><span>'+ff.seed+' '+ff.teams[1]+'</span><span style="font-family:var(--font-display);font-weight:700">'+liveTeamScore(lg,ff.teams[1])+'</span></div>';
+      h+='</div>';
+    }else if(isScheduled){
+      // Scheduled
+      h+='<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-width:140px;font-size:11px;text-align:center">';
+      h+='<div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px">'+lg.periodLabel+'</div>';
+      h+='<div style="color:var(--text)">'+ff.seed+' '+ff.teams[0]+'</div>';
+      h+='<div style="color:var(--text)">'+ff.seed+' '+ff.teams[1]+'</div>';
       h+='</div>';
     }else{
-      h+='<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-width:120px;font-size:11px;text-align:center">';
+      // Pending / no data
+      h+='<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-width:140px;font-size:11px;text-align:center">';
+      h+='<div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px">Pending</div>';
       h+='<div style="color:var(--muted)">'+ff.seed+' '+ff.teams[0]+' vs '+ff.teams[1]+'</div>';
-      h+='<div style="color:var(--muted);font-size:9px">Pending</div>';
       h+='</div>';
     }
   }
@@ -577,49 +621,45 @@ function firstFourHTML(){
   return h;
 }
 
-// === LIVE GAMES ===
-function liveGamesHTML(){
-  if(!S.liveGames||!S.liveGames.length)return'<div id="live-ticker"></div>';
-  var h='<div id="live-ticker" style="background:var(--bg);border-bottom:1px solid var(--border);padding:8px 10px">';
-  h+='<div style="text-align:center;font-family:var(--font-display);font-size:10px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.5s infinite"></span>Live Games</div>';
-  h+='<div style="display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px">';
-  S.liveGames.forEach(function(g){
-    var isFinal=g.status==="STATUS_FINAL";
-    var isLive=g.status==="STATUS_IN_PROGRESS"||g.status==="STATUS_HALFTIME";
-    var borderColor=isLive?"var(--green)":isFinal?"var(--border)":"var(--border)";
-    var bgColor=isLive?"rgba(74,222,128,0.04)":"var(--card)";
-    h+='<div style="background:'+bgColor+';border:1px solid '+borderColor+';border-radius:6px;padding:6px 10px;min-width:140px;flex-shrink:0;font-size:11px">';
-    // Status line
-    var statusColor=isLive?"var(--green)":isFinal?"var(--muted)":"var(--muted)";
-    var statusText=g.periodLabel;
-    if(isLive&&g.clock)statusText=g.periodLabel+" \u00b7 "+g.clock;
-    if(g.broadcast)statusText+=" \u00b7 "+g.broadcast;
-    h+='<div style="font-size:8px;color:'+statusColor+';text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;font-weight:600;white-space:nowrap">'+statusText+'</div>';
-    // Away team
-    var awayBold=isFinal&&g.winner===g.away.name;
-    h+='<div style="display:flex;justify-content:space-between;align-items:center;'+(awayBold?"font-weight:700;color:var(--text)":"color:var(--muted)")+'">';
-    h+='<span>'+(g.away.seed?'<span style="opacity:0.4;font-size:9px">'+g.away.seed+' </span>':"")+g.away.name+'</span>';
-    h+='<span style="font-family:var(--font-display);font-weight:700;min-width:24px;text-align:right">'+g.away.score+'</span></div>';
-    // Home team
-    var homeBold=isFinal&&g.winner===g.home.name;
-    h+='<div style="display:flex;justify-content:space-between;align-items:center;'+(homeBold?"font-weight:700;color:var(--text)":"color:var(--muted)")+'">';
-    h+='<span>'+(g.home.seed?'<span style="opacity:0.4;font-size:9px">'+g.home.seed+' </span>':"")+g.home.name+'</span>';
-    h+='<span style="font-family:var(--font-display);font-weight:700;min-width:24px;text-align:right">'+g.home.score+'</span></div>';
-    h+='</div>';
-  });
-  h+='</div></div>';
-  return h;
+// === LIVE GAME LOOKUP ===
+function getLiveGame(t1,t2){
+  if(!S.liveGames||!S.liveGames.length||!t1||!t2)return null;
+  for(var i=0;i<S.liveGames.length;i++){
+    var g=S.liveGames[i];
+    var a=g.away.name,hm=g.home.name;
+    if((a===t1&&hm===t2)||(a===t2&&hm===t1))return g;
+    // Also match resolved names against combo slots
+    for(var j=0;j<FF_SLOTS.length;j++){
+      var sl=FF_SLOTS[j];
+      if((t1===sl.slot||t2===sl.slot)&&((a===sl.teams[0]&&hm===sl.teams[1])||(a===sl.teams[1]&&hm===sl.teams[0])))return g;
+    }
+  }
+  return null;
+}
+function liveStatusText(g){
+  if(!g)return"";
+  var isLive=g.status==="STATUS_IN_PROGRESS"||g.status==="STATUS_HALFTIME";
+  if(isLive){var t=g.periodLabel;if(g.clock)t+=" \u00b7 "+g.clock;return t;}
+  if(g.status==="STATUS_SCHEDULED"||g.status==="STATUS_PREGAME")return g.periodLabel||"Scheduled";
+  return g.periodLabel||"";
+}
+function liveTeamScore(g,teamName){
+  if(!g)return null;
+  if(g.away.name===teamName)return g.away.score;
+  if(g.home.name===teamName)return g.home.score;
+  // Check FF sub-team names
+  for(var i=0;i<FF_SLOTS.length;i++){
+    var sl=FF_SLOTS[i];
+    if(teamName===sl.slot){
+      if(g.away.name===sl.teams[0]||g.away.name===sl.teams[1])return g.away.score;
+      if(g.home.name===sl.teams[0]||g.home.name===sl.teams[1])return g.home.score;
+    }
+  }
+  return null;
 }
 
-// Update just the live ticker without full re-render
-function renderLive(){
-  var el=document.getElementById("live-ticker");
-  if(!el)return;
-  var parent=el.parentNode;
-  var temp=document.createElement("div");
-  temp.innerHTML=liveGamesHTML();
-  if(temp.firstChild)parent.replaceChild(temp.firstChild,el);
-}
+// Refresh live data without full re-render
+function renderLive(){render();}
 async function exportMyPicks(){
   var data=await $api("GET","/api/export/"+encodeURIComponent(S.user));
   var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
@@ -700,7 +740,7 @@ function render(){
 
   var dc="";if(S.deskTab==="bracket")dc='<div class="bracket-wrap"><div class="bracket-side">'+deskRegion("east",false)+deskRegion("south",false)+'</div><div class="bracket-center">'+deskFF()+'</div><div class="bracket-side">'+deskRegion("west",true)+deskRegion("midwest",true)+'</div></div>';else if(S.deskTab==="admin")dc='<div style="max-width:500px;margin:20px auto;padding:0 16px">'+mobAdmin()+'</div>';else if(S.deskTab==="board")dc='<div id="db" style="max-width:500px;margin:20px auto;padding:0 16px"><div style="text-align:center;padding:20px;color:var(--muted)">Loading...</div></div>';
 
-  document.getElementById("app").innerHTML='<div class="topbar"><div><div class="topbar-brand">Beaubouef Bracket \'26</div><div class="topbar-user">'+S.user+'</div></div><div class="topbar-right">'+badges+'<button class="btn-sm" onclick="exportMyPicks()" title="Export my picks">\u{1F4E5}</button><button class="btn-sm" onclick="importMyPicks()" title="Import picks">\u{1F4E4}</button><button class="btn-sm" onclick="switchUser()">Switch</button></div></div>'+(S.msg?'<div class="msg-bar">'+S.msg+'</div>':"")+nagBannerHTML()+firstFourHTML()+liveGamesHTML()+scoreStripHTML()+viewChipsHTML()+'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><div class="mobile-view"><div class="mob-tabs">'+mt+'</div><div class="mob-content" id="tc">'+mc+'</div></div><div class="desktop-bracket"><div class="desk-nav">'+dn+'<button class="desk-nav-btn" onclick="doSync()" style="margin-left:20px">\u{1F504} ESPN</button></div>'+dc+'</div><div class="footer">'+cnt+'/63 ('+pct+'%)'+(S.viewing?" \u2014 "+S.viewing:"")+'</div>';
+  document.getElementById("app").innerHTML='<div class="topbar"><div><div class="topbar-brand">Beaubouef Bracket \'26</div><div class="topbar-user">'+S.user+'</div></div><div class="topbar-right">'+badges+'<button class="btn-sm" onclick="exportMyPicks()" title="Export my picks">\u{1F4E5}</button><button class="btn-sm" onclick="importMyPicks()" title="Import picks">\u{1F4E4}</button><button class="btn-sm" onclick="switchUser()">Switch</button></div></div>'+(S.msg?'<div class="msg-bar">'+S.msg+'</div>':"")+nagBannerHTML()+firstFourHTML()+scoreStripHTML()+viewChipsHTML()+'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><div class="mobile-view"><div class="mob-tabs">'+mt+'</div><div class="mob-content" id="tc">'+mc+'</div></div><div class="desktop-bracket"><div class="desk-nav">'+dn+'<button class="desk-nav-btn" onclick="doSync()" style="margin-left:20px">\u{1F504} ESPN</button></div>'+dc+'</div><div class="footer">'+cnt+'/63 ('+pct+'%)'+(S.viewing?" \u2014 "+S.viewing:"")+'</div>';
 
   if(S.tab==="board")renderBoard("tc");
   if(S.deskTab==="board")renderBoard("db");
