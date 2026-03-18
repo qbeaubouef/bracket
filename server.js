@@ -358,13 +358,14 @@ app.get("/api/live", async (q, r) => {
   }
 });
 
-// Refresh schedule Wednesday nights at midnight CT
-setInterval(() => {
-  const now = new Date();
-  const ct = new Date(now.toLocaleString("en-US", { timeZone: "America/Chicago" }));
-  if (ct.getDay() === 3 && ct.getHours() === 0 && ct.getMinutes() < 6) {
-    loadFullSchedule();
-  }
+// Refresh schedule cache at midnight CT
+setInterval(async () => {
+  try {
+    const ct = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Chicago" }));
+    if (ct.getHours() === 0 && ct.getMinutes() < 6) {
+      await loadFullSchedule();
+    }
+  } catch (e) { console.error("[Schedule refresh]", e.message); }
 }, 5 * 60 * 1000);
 
 // === ESPN SYNC ===
