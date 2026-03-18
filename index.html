@@ -199,7 +199,13 @@ var RNS=["R64","R32","S16","E8"];
 var PTS=[10,20,40,80,160,320];
 var RDL=["R64","R32","S16","E8","F4","Champ"];
 
-var S={screen:"pin",user:null,viewing:null,viewPicks:{},picks:{},results:{},scores:{},tiebreaker:null,players:[],locked:false,isAdmin:false,tab:"east",deskTab:"bracket",saving:false,msg:"",lastSync:null};
+var S={screen:"pin",user:null,viewing:null,viewPicks:{},picks:{},results:{},scores:{},ff:{},tiebreaker:null,players:[],locked:false,isAdmin:false,tab:"east",deskTab:"bracket",saving:false,msg:"",lastSync:null};
+var FF_SLOTS=[
+  {slot:"UMBC/Howard",teams:["UMBC","Howard"],region:"midwest",gameIdx:0,seed:16},
+  {slot:"Miami OH/SMU",teams:["Miami OH","SMU"],region:"midwest",gameIdx:4,seed:11},
+  {slot:"Texas/NC State",teams:["Texas","NC State"],region:"west",gameIdx:4,seed:11},
+  {slot:"PV A&M/Lehigh",teams:["PV A&M","Lehigh"],region:"south",gameIdx:0,seed:16}
+];
 
 function $api(m,u,b){var o={method:m,headers:{"Content-Type":"application/json"}};if(b)o.body=JSON.stringify(b);return fetch(u,o).then(function(r){return r.json()});}
 
@@ -237,6 +243,29 @@ function seed(tm){return SD[tm]||"";}
 function ap(){return S.viewing?S.viewPicks:S.picks;}
 function ro(){return!!S.viewing;}
 function esc(s){return s.replace(/'/g,"\\'");}
+// Resolve play-in team names: "UMBC/Howard" -> "Howard" if resolved
+function resolveTeam(tm){
+  if(!tm)return tm;
+  for(var i=0;i<FF_SLOTS.length;i++){
+    if(tm===FF_SLOTS[i].slot&&S.ff[FF_SLOTS[i].slot]&&S.ff[FF_SLOTS[i].slot].winner){
+      var w=S.ff[FF_SLOTS[i].slot].winner;
+      SD[w]=FF_SLOTS[i].seed;
+      return w;
+    }
+  }
+  return tm;
+}
+// Check if a pick matches (handles combo name matching resolved name)
+function pickMatches(pick,team){
+  if(!pick||!team)return false;
+  if(pick===team)return true;
+  // Check if pick was combo name and team is the resolved winner
+  for(var i=0;i<FF_SLOTS.length;i++){
+    if(pick===FF_SLOTS[i].slot&&S.ff[FF_SLOTS[i].slot]&&S.ff[FF_SLOTS[i].slot].winner===team)return true;
+    if(team===FF_SLOTS[i].slot&&S.ff[FF_SLOTS[i].slot]&&S.ff[FF_SLOTS[i].slot].winner===pick)return true;
+  }
+  return false;
+}
 
 // CHAMPION COLOR
 function applyColors(){
@@ -263,6 +292,7 @@ async function init(){
   S.players=await $api("GET","/api/players");
   S.results=await $api("GET","/api/results");
   try{S.scores=await $api("GET","/api/scores");}catch(e){S.scores={};}
+  try{S.ff=await $api("GET","/api/first-four");}catch(e){S.ff={};}
   var st=await $api("GET","/api/state");S.locked=st.locked||false;
   if(sessionStorage.getItem("bp")==="1")S.screen="login";
   if(sessionStorage.getItem("ba")==="1")S.isAdmin=true;
@@ -273,7 +303,7 @@ async function init(){
     S.screen="app";
   }
   render();
-  setInterval(async function(){try{var r=await $api("GET","/api/results");var sc=await $api("GET","/api/scores");if(JSON.stringify(r)!==JSON.stringify(S.results)){S.results=r;S.scores=sc;render();}}catch(e){}},30000);
+  setInterval(async function(){try{var r=await $api("GET","/api/results");var sc=await $api("GET","/api/scores");var ff=await $api("GET","/api/first-four");if(JSON.stringify(r)!==JSON.stringify(S.results)||JSON.stringify(ff)!==JSON.stringify(S.ff)){S.results=r;S.scores=sc;S.ff=ff;render();}}catch(e){}},30000);
 }
 
 function checkPin(){if(document.getElementById("pi").value===ENTRY_PIN){sessionStorage.setItem("bp","1");S.screen="login";render();}else{document.getElementById("pe").textContent="Wrong PIN.";}}
@@ -297,7 +327,7 @@ function setPick(rg,rd,ix,tm){
 }
 async function saveTB(){var v=parseInt(document.getElementById("tbi").value);if(!isNaN(v)&&v>0){S.tiebreaker=v;await $api("POST","/api/tiebreaker/"+encodeURIComponent(S.user),{score:v});S.msg="Tiebreaker saved!";render();setTimeout(function(){S.msg="";render();},2000);}}
 async function saveTB2(){var v=parseInt(document.getElementById("tbi2").value);if(!isNaN(v)&&v>0){S.tiebreaker=v;await $api("POST","/api/tiebreaker/"+encodeURIComponent(S.user),{score:v});S.msg="Tiebreaker saved!";render();setTimeout(function(){S.msg="";render();},2000);}}
-async function doSync(){S.msg="Syncing...";render();try{await $api("GET","/api/sync");S.results=await $api("GET","/api/results");S.scores=await $api("GET","/api/scores");S.msg="Synced!";S.lastSync=new Date().toLocaleTimeString();}catch(e){S.msg="Sync error.";}render();setTimeout(function(){S.msg="";render();},3000);}
+async function doSync(){S.msg="Syncing...";render();try{await $api("GET","/api/sync");S.results=await $api("GET","/api/results");S.scores=await $api("GET","/api/scores");S.ff=await $api("GET","/api/first-four");S.msg="Synced!";S.lastSync=new Date().toLocaleTimeString();}catch(e){S.msg="Sync error.";}render();setTimeout(function(){S.msg="";render();},3000);}
 async function toggleLock(){S.locked=!S.locked;await $api("POST","/api/state",{locked:S.locked});render();}
 async function manualResult(rg,rd,ix,tm){if(!S.results[rg])S.results[rg]={};if(!S.results[rg][rd])S.results[rg][rd]={};S.results[rg][rd][ix]=tm;await $api("POST","/api/results",S.results);render();}
 async function resetResults(){S.results={};S.scores={};await $api("POST","/api/results",{});await $api("POST","/api/scores",{});S.msg="Results cleared.";render();setTimeout(function(){S.msg="";render();},2000);}
@@ -357,7 +387,7 @@ function mobRegion(rk){
   var ch=rP[3]&&rP[3][0];
   if(ch){var ce=elim.has(ch);h+='<div class="sec-sub"'+(ce?' style="text-decoration:line-through;opacity:0.4"':'')+'>'+(S.viewing||"Your")+' pick: '+seed(ch)+' '+ch+'</div>';}
   h+='</div>';
-  var cur=reg.games.map(function(g){return{s1:g[0],t1:g[1],s2:g[2],t2:g[3]}});
+  var cur=reg.games.map(function(g){return{s1:g[0],t1:resolveTeam(g[1]),s2:g[2],t2:resolveTeam(g[3])}});
   for(var rd=0;rd<4;rd++){
     var rdP=rP[rd]||{},rdR=rR[rd]||{};
     h+='<div class="rd-group"><div class="rd-label" style="color:'+reg.color+'">'+RN[rd]+' <span class="rd-pts">'+PTS[rd]+' pts</span></div>';
@@ -432,8 +462,20 @@ function mobAdmin(){
   h+='<div style="margin-top:16px"><div style="font-size:13px;font-weight:700;margin-bottom:8px">Players ('+S.players.length+')</div>';
   S.players.forEach(function(p){h+='<div style="display:flex;align-items:center;padding:6px 10px;background:var(--card);border-radius:6px;margin-bottom:3px;font-size:12px;color:rgba(255,255,255,0.6)"><span style="flex:1">'+p+'</span><button class="del-btn" onclick="showConfirm(\'Delete\',\'Clear picks for '+esc(p)+'?\',function(){deletePlayer(\''+esc(p)+'\');})">\u2717</button></div>';});
   h+='</div>';
+  // Export/Import
+  h+='<div style="margin-top:20px"><div style="font-size:13px;font-weight:700;margin-bottom:8px">Data Management</div>';
+  h+='<div style="display:flex;gap:6px;margin-bottom:6px"><button class="admin-btn" style="flex:1;background:linear-gradient(135deg,#6366f1,#4f46e5);margin:0" onclick="exportAll()">\u{1F4E5} Export All Data</button><button class="admin-btn" style="flex:1;background:linear-gradient(135deg,#8b5cf6,#7c3aed);margin:0" onclick="importAll()">\u{1F4E4} Import All Data</button></div>';
+  h+='</div>';
+  // Archive
+  h+='<div style="margin-top:20px"><div style="font-size:13px;font-weight:700;margin-bottom:8px">Archive / New Year</div>';
+  h+='<div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.4">Archive saves the entire tournament to a file. Start new year clears everything for next year\'s bracket.</div>';
+  h+='<div style="display:flex;gap:6px;margin-bottom:6px"><button class="admin-btn" style="flex:1;background:linear-gradient(135deg,#059669,#047857);margin:0" onclick="archiveYear()">\u{1F3C6} Archive This Year</button><button class="admin-btn admin-danger" style="flex:1;margin:0" onclick="startNewYear()">\u{1F195} Start New Year</button></div>';
+  h+='<div id="archive-list" style="margin-top:8px"></div>';
+  h+='</div>';
+  // Load archive list
+  setTimeout(async function(){try{var years=await $api("GET","/api/archives");var el=document.getElementById("archive-list");if(el&&years.length){var ah="<div style=\'font-size:11px;color:var(--muted);margin-bottom:4px\'>Past tournaments:</div>";years.forEach(function(y){ah+="<button class=\'pick\' style=\'margin-bottom:3px;justify-content:center\' onclick=\'viewArchive("+y+")\'>"+y+" \u{1F4E5}</button>";});el.innerHTML=ah;}}catch(e){}},200);
   h+='<div style="margin-top:20px"><div style="font-size:13px;font-weight:700;margin-bottom:8px">Manual Results</div>';
-  RK.forEach(function(rk){var reg=REGIONS[rk],rR=S.results[rk]||{};var cur=reg.games.map(function(g){return{t1:g[1],t2:g[3]}});var shown=false;for(var rd=0;rd<4;rd++){var rdR=rR[rd]||{};for(var i=0;i<cur.length;i++){var g=cur[i];if(!g.t1||!g.t2)continue;if(!rdR[i]&&!shown){h+='<div style="display:flex;gap:4px;margin-bottom:4px;align-items:center"><span style="font-size:10px;color:'+reg.color+';width:48px;font-weight:700;font-family:var(--font-display)">'+reg.name+'</span><button class="pick" style="flex:1;font-size:11px;padding:5px" onclick="manualResult(\''+rk+'\','+rd+','+i+',\''+esc(g.t1)+'\')">'+g.t1+'</button><button class="pick" style="flex:1;font-size:11px;padding:5px" onclick="manualResult(\''+rk+'\','+rd+','+i+',\''+esc(g.t2)+'\')">'+g.t2+'</button></div>';shown=true;}}var nx=[];for(var i2=0;i2<cur.length;i2+=2)nx.push({t1:rdR[i2]||null,t2:rdR[i2+1]||null});cur=nx;}});
+  RK.forEach(function(rk){var reg=REGIONS[rk],rR=S.results[rk]||{};var cur=reg.games.map(function(g){return{t1:resolveTeam(g[1]),t2:resolveTeam(g[3])}});var shown=false;for(var rd=0;rd<4;rd++){var rdR=rR[rd]||{};for(var i=0;i<cur.length;i++){var g=cur[i];if(!g.t1||!g.t2)continue;if(!rdR[i]&&!shown){h+='<div style="display:flex;gap:4px;margin-bottom:4px;align-items:center"><span style="font-size:10px;color:'+reg.color+';width:48px;font-weight:700;font-family:var(--font-display)">'+reg.name+'</span><button class="pick" style="flex:1;font-size:11px;padding:5px" onclick="manualResult(\''+rk+'\','+rd+','+i+',\''+esc(g.t1)+'\')">'+g.t1+'</button><button class="pick" style="flex:1;font-size:11px;padding:5px" onclick="manualResult(\''+rk+'\','+rd+','+i+',\''+esc(g.t2)+'\')">'+g.t2+'</button></div>';shown=true;}}var nx=[];for(var i2=0;i2<cur.length;i2+=2)nx.push({t1:rdR[i2]||null,t2:rdR[i2+1]||null});cur=nx;}});
   h+='</div>';return h;
 }
 
@@ -453,7 +495,7 @@ function dtr(tm,pk,rs,rg,rd,ix,elim){
 
 function deskRegion(rk,rtl){
   var reg=REGIONS[rk],p=ap(),rP=p[rk]||{},rR=S.results[rk]||{};var elim=getEliminated(S.results);
-  var rounds=[];var cur=reg.games.map(function(g){return{s1:g[0],t1:g[1],s2:g[2],t2:g[3]}});
+  var rounds=[];var cur=reg.games.map(function(g){return{s1:g[0],t1:resolveTeam(g[1]),s2:g[2],t2:resolveTeam(g[3])}});
   for(var rd=0;rd<4;rd++){var rdP=rP[rd]||{},rdR=rR[rd]||{};var gm="";
     for(var i=0;i<cur.length;i++){var g=cur[i];gm+='<div class="bg">'+dtr(g.t1,rdP[i],rdR[i],rk,rd,i,elim)+dtr(g.t2,rdP[i],rdR[i],rk,rd,i,elim)+'</div>';}
     rounds.push('<div class="round-col"><div class="round-col-header">'+RNS[rd]+' \u00b7 '+PTS[rd]+'pts</div>'+gm+'</div>');
@@ -478,6 +520,95 @@ function deskFF(){
   h+='</div>';return h;
 }
 
+// === FIRST FOUR BANNER ===
+function firstFourHTML(){
+  var anyUnresolved=false;
+  for(var i=0;i<FF_SLOTS.length;i++){if(!S.ff[FF_SLOTS[i].slot])anyUnresolved=true;}
+  if(!anyUnresolved&&Object.keys(S.ff).length===0)return""; // No data yet at all
+  var h='<div style="background:var(--surface);border-bottom:1px solid var(--border);padding:8px 12px">';
+  h+='<div style="text-align:center;font-family:var(--font-display);font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">First Four \u2014 Dayton, OH</div>';
+  h+='<div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap">';
+  for(var i=0;i<FF_SLOTS.length;i++){
+    var ff=FF_SLOTS[i];var result=S.ff[ff.slot];
+    if(result&&result.winner){
+      h+='<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-width:120px;font-size:11px;text-align:center">';
+      h+='<div style="color:var(--green);font-weight:700">'+result.winner+'</div>';
+      h+='<div style="color:var(--muted);font-size:9px">'+result.t1+' '+result.t1score+' \u2013 '+result.t2score+' '+result.t2+' \u2714</div>';
+      h+='</div>';
+    }else{
+      h+='<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-width:120px;font-size:11px;text-align:center">';
+      h+='<div style="color:var(--muted)">'+ff.seed+' '+ff.teams[0]+' vs '+ff.teams[1]+'</div>';
+      h+='<div style="color:var(--muted);font-size:9px">Pending</div>';
+      h+='</div>';
+    }
+  }
+  h+='</div></div>';
+  return h;
+}
+
+// === EXPORT/IMPORT ===
+async function exportMyPicks(){
+  var data=await $api("GET","/api/export/"+encodeURIComponent(S.user));
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=S.user.replace(/ /g,"_")+"_bracket_2026.json";a.click();
+  S.msg="Exported!";render();setTimeout(function(){S.msg="";render();},2000);
+}
+function importMyPicks(){
+  var input=document.createElement("input");input.type="file";input.accept=".json";
+  input.onchange=async function(e){
+    var file=e.target.files[0];if(!file)return;
+    var text=await file.text();try{
+      var data=JSON.parse(text);
+      await $api("POST","/api/import/"+encodeURIComponent(S.user),data);
+      S.picks=await $api("GET","/api/picks/"+encodeURIComponent(S.user));
+      if(data.tiebreaker)S.tiebreaker=data.tiebreaker.score;
+      S.msg="Imported!";render();setTimeout(function(){S.msg="";render();},2000);
+    }catch(er){S.msg="Invalid file.";render();setTimeout(function(){S.msg="";render();},2000);}
+  };input.click();
+}
+async function exportAll(){
+  var data=await $api("GET","/api/export-all");
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="beaubouef_bracket_2026_all.json";a.click();
+  S.msg="Exported all!";render();setTimeout(function(){S.msg="";render();},2000);
+}
+function importAll(){
+  var input=document.createElement("input");input.type="file";input.accept=".json";
+  input.onchange=async function(e){
+    var file=e.target.files[0];if(!file)return;
+    var text=await file.text();try{
+      var data=JSON.parse(text);
+      await $api("POST","/api/import-all",data);
+      S.players=await $api("GET","/api/players");
+      S.results=await $api("GET","/api/results");
+      S.scores=await $api("GET","/api/scores");
+      S.msg="Imported all!";render();setTimeout(function(){S.msg="";render();},2000);
+    }catch(er){S.msg="Invalid file.";render();setTimeout(function(){S.msg="";render();},2000);}
+  };input.click();
+}
+
+// === ARCHIVE ===
+async function archiveYear(){
+  var year=prompt("Archive as year:","2026");if(!year)return;
+  await $api("POST","/api/archive",{year:parseInt(year)});
+  S.msg="Archived as "+year+"!";render();setTimeout(function(){S.msg="";render();},2000);
+}
+async function startNewYear(){
+  if(!confirm("This will clear all current data (archive first!). Continue?"))return;
+  await $api("POST","/api/new-year");
+  S.players=[];S.results={};S.scores={};S.ff={};S.picks={};S.user=null;
+  sessionStorage.clear();S.screen="pin";
+  S.msg="Fresh start!";render();setTimeout(function(){S.msg="";render();},2000);
+}
+async function viewArchive(year){
+  var data=await $api("GET","/api/archive/"+year);
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="beaubouef_bracket_"+year+".json";a.click();
+}
+
 // MAIN RENDER
 function render(){
   applyColors();
@@ -496,7 +627,7 @@ function render(){
 
   var dc="";if(S.deskTab==="bracket")dc='<div class="bracket-wrap"><div class="bracket-side">'+deskRegion("east",false)+deskRegion("south",false)+'</div><div class="bracket-center">'+deskFF()+'</div><div class="bracket-side">'+deskRegion("west",true)+deskRegion("midwest",true)+'</div></div>';else if(S.deskTab==="admin")dc='<div style="max-width:500px;margin:20px auto;padding:0 16px">'+mobAdmin()+'</div>';else if(S.deskTab==="board")dc='<div id="db" style="max-width:500px;margin:20px auto;padding:0 16px"><div style="text-align:center;padding:20px;color:var(--muted)">Loading...</div></div>';
 
-  document.getElementById("app").innerHTML='<div class="topbar"><div><div class="topbar-brand">Beaubouef Bracket \'26</div><div class="topbar-user">'+S.user+'</div></div><div class="topbar-right">'+badges+'<button class="btn-sm" onclick="switchUser()">Switch</button></div></div>'+(S.msg?'<div class="msg-bar">'+S.msg+'</div>':"")+scoreStripHTML()+viewChipsHTML()+'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><div class="mobile-view"><div class="mob-tabs">'+mt+'</div><div class="mob-content" id="tc">'+mc+'</div></div><div class="desktop-bracket"><div class="desk-nav">'+dn+'<button class="desk-nav-btn" onclick="doSync()" style="margin-left:20px">\u{1F504} ESPN</button></div>'+dc+'</div><div class="footer">'+cnt+'/63 ('+pct+'%)'+(S.viewing?" \u2014 "+S.viewing:"")+'</div>';
+  document.getElementById("app").innerHTML='<div class="topbar"><div><div class="topbar-brand">Beaubouef Bracket \'26</div><div class="topbar-user">'+S.user+'</div></div><div class="topbar-right">'+badges+'<button class="btn-sm" onclick="exportMyPicks()" title="Export my picks">\u{1F4E5}</button><button class="btn-sm" onclick="importMyPicks()" title="Import picks">\u{1F4E4}</button><button class="btn-sm" onclick="switchUser()">Switch</button></div></div>'+(S.msg?'<div class="msg-bar">'+S.msg+'</div>':"")+firstFourHTML()+scoreStripHTML()+viewChipsHTML()+'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><div class="mobile-view"><div class="mob-tabs">'+mt+'</div><div class="mob-content" id="tc">'+mc+'</div></div><div class="desktop-bracket"><div class="desk-nav">'+dn+'<button class="desk-nav-btn" onclick="doSync()" style="margin-left:20px">\u{1F504} ESPN</button></div>'+dc+'</div><div class="footer">'+cnt+'/63 ('+pct+'%)'+(S.viewing?" \u2014 "+S.viewing:"")+'</div>';
 
   if(S.tab==="board")renderBoard("tc");
   if(S.deskTab==="board")renderBoard("db");
