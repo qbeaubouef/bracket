@@ -205,6 +205,8 @@ const BRACKET = {
 
 function resolveTeamName(espnName) {
   if (!espnName) return null;
+  // Normalize curly/smart apostrophes to straight
+  espnName = espnName.replace(/[\u2018\u2019\u2032\u02BB]/g, "'");
   if (ESPN_NAME_MAP[espnName]) return ESPN_NAME_MAP[espnName];
   for (const [key, val] of Object.entries(ESPN_NAME_MAP)) {
     if (key.toLowerCase() === espnName.toLowerCase()) return val;
