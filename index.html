@@ -443,7 +443,17 @@ function viewChipsHTML(){
 }
 
 // MOBILE PICK BUTTON
-function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim,live){
+function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim,live,actualTm){
+  // Option C: if user's pick is eliminated and actual advancing team is different, show strikethrough → actual
+  if(tm&&actualTm&&tm!==actualTm&&elim&&elim.has(tm)){
+    var asd=seed(actualTm);
+    return'<button class="pick" style="border-color:rgba(239,68,68,0.2)" disabled><span style="text-decoration:line-through;color:var(--red);opacity:0.5;font-size:10px">'+tm+'</span><span style="color:var(--muted);font-size:9px;margin:0 2px">\u2192</span><span style="color:var(--text);font-weight:600">'+(asd?'<span class="sd">'+asd+'</span>':'')+actualTm+'</span><span class="sc">\u2014</span></button>';
+  }
+  // If no user pick but actual team exists, show actual with muted style
+  if(!tm&&actualTm){
+    var asd2=seed(actualTm);
+    return'<button class="pick" style="border-left:2px solid var(--muted)" disabled>'+(asd2?'<span class="sd">'+asd2+'</span>':'')+actualTm+'<span class="sc">\u2014</span></button>';
+  }
   if(!tm)return'<button class="pick" disabled><span style="color:var(--muted)">TBD</span></button>';
   var cor=rs&&pk===rs&&pk===tm;
   var inc=rs&&pk&&pk!==rs&&pk===tm;
@@ -454,16 +464,12 @@ function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim,live){
   else if(inc)c+=" lose";
   else if(sel&&isElim)c+=" sel elim";
   else if(sel)c+=" sel";
-  // Live game: green border
   var isLive=live&&(live.status==="STATUS_IN_PROGRESS"||live.status==="STATUS_HALFTIME");
   if(isLive&&!rs)c+=" live";
   var sdH=sd?'<span class="sd">'+sd+'</span>':"";
   var scH="";
-  // Show final score from stored results
   if(rs){var gs=getScore(rg,rd,ix);if(gs){var my=gs.t1===tm?gs.t1score:gs.t2===tm?gs.t2score:null;if(my!=null)scH='<span class="sc">'+my+'</span>';}}
-  // Show live score if game in progress
   else if(live&&isLive){var ls=liveTeamScore(live,tm);if(ls!=null)scH='<span class="sc" style="color:var(--green)">'+ls+'</span>';}
-  // Em-dash for unplayed
   else{scH='<span class="sc">\u2014</span>';}
   var ckH=cor?'<span class="ck">\u2713</span>':inc?'<span class="ck">\u2717</span>':(sel&&isElim?'<span class="ck">\u2717</span>':"");
   var dis=(S.locked||ro())?"disabled":"";
@@ -478,15 +484,18 @@ function mobRegion(rk){
   if(ch){var ce=elim.has(ch);h+='<div class="sec-sub"'+(ce?' style="text-decoration:line-through;opacity:0.4"':'')+'>'+(S.viewing||"Your")+' pick: '+seed(ch)+' '+ch+'</div>';}
   h+='</div>';
   var cur=reg.games.map(function(g){return{s1:g[0],t1:resolveTeam(g[1]),s2:g[2],t2:resolveTeam(g[3])}});
+  var actualCur=null; // null for R64 (teams are the bracket teams)
   for(var rd=0;rd<4;rd++){
     var rdP=rP[rd]||{},rdR=rR[rd]||{};
     h+='<div class="rd-group"><div class="rd-label" style="color:'+reg.color+'">'+RN[rd]+' <span class="rd-pts">'+PTS[rd]+' pts</span></div>';
     for(var i=0;i<cur.length;i++){
       var g=cur[i];
-      var lg=getLiveGame(g.t1,g.t2);
+      // Actual advancing teams for this slot (from results of previous round)
+      var at1=actualCur?actualCur[i].t1:g.t1;
+      var at2=actualCur?actualCur[i].t2:g.t2;
+      var lg=getLiveGame(at1||g.t1,at2||g.t2);
       var isLive=lg&&(lg.status==="STATUS_IN_PROGRESS"||lg.status==="STATUS_HALFTIME");
       var isScheduled=lg&&(lg.status==="STATUS_SCHEDULED"||lg.status==="STATUS_PREGAME");
-      var isFinal=lg&&(lg.status==="STATUS_FINAL"||lg.status==="STATUS_FINAL_OT");
       // Game info line
       if(isLive&&!rdR[i]){
         var st=liveStatusText(lg);if(lg.broadcast)st+=" \u00b7 "+lg.broadcast;
@@ -498,10 +507,16 @@ function mobRegion(rk){
         var sch=getSchedule(rk,rd,i);
         if(sch)h+='<div style="font-size:9px;color:var(--muted);text-align:center;padding:1px 0">'+sch+'</div>';
       }
-      h+='<div class="game-row">'+pickHTML(g.t1,seed(g.t1),rdP[i],rdR[i],rk,rd,i,elim,lg)+pickHTML(g.t2,seed(g.t2),rdP[i],rdR[i],rk,rd,i,elim,lg)+'</div>';
+      h+='<div class="game-row">'+pickHTML(g.t1,seed(g.t1),rdP[i],rdR[i],rk,rd,i,elim,lg,at1!==g.t1?at1:null)+pickHTML(g.t2,seed(g.t2),rdP[i],rdR[i],rk,rd,i,elim,lg,at2!==g.t2?at2:null)+'</div>';
     }
     h+='</div>';
-    var nx=[];for(var i2=0;i2<cur.length;i2+=2)nx.push({t1:rdP[i2]||null,t2:rdP[i2+1]||null});cur=nx;
+    // Advance: user picks for next round, actual results for next round
+    var nx=[],nxActual=[];
+    for(var i2=0;i2<cur.length;i2+=2){
+      nx.push({t1:rdP[i2]||null,t2:rdP[i2+1]||null});
+      nxActual.push({t1:rdR[i2]||null,t2:rdR[i2+1]||null});
+    }
+    cur=nx;actualCur=nxActual;
   }
   return h;
 }
@@ -585,7 +600,16 @@ function mobAdmin(){
 }
 
 // DESKTOP
-function dtr(tm,pk,rs,rg,rd,ix,elim,live){
+function dtr(tm,pk,rs,rg,rd,ix,elim,live,actualTm){
+  // Option C: user's pick eliminated, actual winner different
+  if(tm&&actualTm&&tm!==actualTm&&elim&&elim.has(tm)){
+    var asd=seed(actualTm);
+    return'<div class="tr" style="border-left:2px solid rgba(239,68,68,0.3)"><span style="text-decoration:line-through;color:var(--red);opacity:0.5;font-size:10px">'+tm+'</span><span style="color:var(--muted);font-size:8px;margin:0 2px">\u2192</span>'+(asd?'<span class="ts">'+asd+'</span>':'')+'<span class="tn" style="color:var(--text);font-weight:600">'+actualTm+'</span><span class="tsc">\u2014</span></div>';
+  }
+  if(!tm&&actualTm){
+    var asd2=seed(actualTm);
+    return'<div class="tr" style="border-left:2px solid var(--muted)">'+(asd2?'<span class="ts">'+asd2+'</span>':'')+'<span class="tn">'+actualTm+'</span><span class="tsc">\u2014</span></div>';
+  }
   if(!tm)return'<div class="tr tbd"><span class="tn">TBD</span></div>';
   var sd2=seed(tm);var cor=rs&&pk===rs&&pk===tm,inc=rs&&pk&&pk!==rs&&pk===tm,sel=pk===tm;
   var isElim=!cor&&!inc&&elim&&elim.has(tm);
@@ -605,16 +629,19 @@ function dtr(tm,pk,rs,rg,rd,ix,elim,live){
 function deskRegion(rk,rtl){
   var reg=REGIONS[rk],p=ap(),rP=p[rk]||{},rR=S.results[rk]||{};var elim=getEliminated(S.results);
   var rounds=[];var cur=reg.games.map(function(g){return{s1:g[0],t1:resolveTeam(g[1]),s2:g[2],t2:resolveTeam(g[3])}});
+  var actualCur=null;
   for(var rd=0;rd<4;rd++){var rdP=rP[rd]||{},rdR=rR[rd]||{};var gm="";
-    for(var i=0;i<cur.length;i++){var g=cur[i];var lg=getLiveGame(g.t1,g.t2);var isLive=lg&&(lg.status==="STATUS_IN_PROGRESS"||lg.status==="STATUS_HALFTIME");var isScheduled=lg&&(lg.status==="STATUS_SCHEDULED"||lg.status==="STATUS_PREGAME");
-      // Build schedule label to go INSIDE the game box
+    for(var i=0;i<cur.length;i++){var g=cur[i];
+      var at1=actualCur?actualCur[i].t1:g.t1;
+      var at2=actualCur?actualCur[i].t2:g.t2;
+      var lg=getLiveGame(at1||g.t1,at2||g.t2);var isLive=lg&&(lg.status==="STATUS_IN_PROGRESS"||lg.status==="STATUS_HALFTIME");var isScheduled=lg&&(lg.status==="STATUS_SCHEDULED"||lg.status==="STATUS_PREGAME");
       var schLabel="";
       if(isLive&&!rdR[i]){var st=liveStatusText(lg);if(lg.broadcast)st+=" \u00b7 "+lg.broadcast;schLabel='<div style="font-size:7px;color:var(--green);text-align:center;font-weight:600;padding:2px 4px;border-bottom:1px solid rgba(74,222,128,0.15)">\u{25CF} '+st+'</div>';}
       else if(isScheduled&&!rdR[i]){var info=lg.periodLabel;if(lg.broadcast)info+=" \u00b7 "+lg.broadcast;schLabel='<div style="font-size:7px;color:var(--muted);text-align:center;padding:2px 4px;border-bottom:1px solid var(--border)">'+info+'</div>';}
       else if(!rdR[i]){var sch=getSchedule(rk,rd,i);if(sch)schLabel='<div style="font-size:7px;color:var(--muted);text-align:center;padding:2px 4px;border-bottom:1px solid var(--border)">'+sch+'</div>';}
-      gm+='<div class="bg'+(isLive&&!rdR[i]?" live":"")+'">'+schLabel+dtr(g.t1,rdP[i],rdR[i],rk,rd,i,elim,lg)+dtr(g.t2,rdP[i],rdR[i],rk,rd,i,elim,lg)+'</div>';}
+      gm+='<div class="bg'+(isLive&&!rdR[i]?" live":"")+'">'+schLabel+dtr(g.t1,rdP[i],rdR[i],rk,rd,i,elim,lg,at1!==g.t1?at1:null)+dtr(g.t2,rdP[i],rdR[i],rk,rd,i,elim,lg,at2!==g.t2?at2:null)+'</div>';}
     rounds.push('<div class="round-col"><div class="round-col-header">'+RNS[rd]+' \u00b7 '+PTS[rd]+'pts</div>'+gm+'</div>');
-    var nx=[];for(var i2=0;i2<cur.length;i2+=2)nx.push({t1:rdP[i2]||null,t2:rdP[i2+1]||null});cur=nx;
+    var nx=[],nxActual=[];for(var i2=0;i2<cur.length;i2+=2){nx.push({t1:rdP[i2]||null,t2:rdP[i2+1]||null});nxActual.push({t1:rdR[i2]||null,t2:rdR[i2+1]||null});}cur=nx;actualCur=nxActual;
   }
   return'<div style="position:relative"><div class="region-label" style="color:'+reg.color+'">'+reg.emoji+' '+reg.name+'</div><div class="rounds'+(rtl?" rtl":"")+'">'+rounds.join("")+'</div></div>';
 }
