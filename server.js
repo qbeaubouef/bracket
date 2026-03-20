@@ -161,7 +161,7 @@ const ESPN_NAME_MAP = {
   "Nebraska Cornhuskers":"Nebraska","Nebraska":"Nebraska","Troy Trojans":"Troy","Troy":"Troy",
   "North Carolina Tar Heels":"North Carolina","UNC":"North Carolina","North Carolina":"North Carolina",
   "VCU Rams":"VCU","VCU":"VCU","Illinois Fighting Illini":"Illinois","Illinois":"Illinois",
-  "Penn Quakers":"Penn","Pennsylvania":"Penn","Penn":"Penn",
+  "Penn Quakers":"Penn","Pennsylvania Quakers":"Penn","Pennsylvania":"Penn","Penn":"Penn",
   "Saint Mary's Gaels":"Saint Mary's","Saint Mary's (CA)":"Saint Mary's","St. Mary's":"Saint Mary's","Saint Mary's":"Saint Mary's",
   "Texas A&M Aggies":"Texas A&M","Texas A&M":"Texas A&M",
   "Houston Cougars":"Houston","Houston":"Houston","Idaho Vandals":"Idaho","Idaho":"Idaho",
@@ -506,8 +506,12 @@ async function syncFromESPN() {
 }
 
 app.get("/api/sync", async (q, r) => {
-  try { r.json({ ok: true, updated: (await syncFromESPN()).updated }); }
-  catch (e) { r.status(500).json({ error: e.message }); }
+  try {
+    const result = await syncFromESPN();
+    // Refresh schedule cache when results update (picks up newly published R32+ times)
+    if (result.updated) { loadFullSchedule().catch(e => console.error("[Schedule refresh on sync]", e.message)); }
+    r.json({ ok: true, updated: result.updated });
+  } catch (e) { r.status(500).json({ error: e.message }); }
 });
 
 setInterval(async () => {
