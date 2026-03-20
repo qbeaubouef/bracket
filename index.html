@@ -345,6 +345,8 @@ function hideConfirm(){document.getElementById("confirm-modal").className="hidde
 
 // INIT
 async function init(){
+  // Fetch config (ESPN colors) — merge with hardcoded TC as fallback
+  try{var cfg=await $api("GET","/api/config");if(cfg.teamColors){for(var tm in cfg.teamColors){var c=cfg.teamColors[tm];TC[tm]=[c.primary,c.text||"#fff",c.secondary||c.primary];}}}catch(e){}
   S.players=await $api("GET","/api/players");
   S.results=await $api("GET","/api/results");
   try{S.scores=await $api("GET","/api/scores");}catch(e){S.scores={};}
