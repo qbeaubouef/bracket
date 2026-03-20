@@ -96,6 +96,8 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .pick.elim{opacity:0.25;text-decoration:line-through}
 .pick.sel.elim{background:var(--card);color:var(--muted);border-color:var(--border)}
 .pick.live{border-color:var(--green);background:rgba(74,222,128,0.04)}
+.pick.bust{background:rgba(255,255,255,0.04);border-left:2px solid rgba(239,68,68,0.4);color:rgba(255,255,255,0.55);font-weight:600}
+.bust-tag{font-size:7px;padding:1px 5px;border-radius:3px;font-weight:700;letter-spacing:0.5px;margin-left:auto;flex-shrink:0;background:rgba(239,68,68,0.12);color:var(--red)}
 .pick .ck{margin-left:auto;font-size:10px;flex-shrink:0}
 .pick .sc{margin-left:auto;font-size:9px;opacity:0.6;font-weight:400;flex-shrink:0}
 .pick:disabled{cursor:default}
@@ -166,6 +168,8 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .bg .tr.incorrect{background:rgba(239,68,68,0.08);color:var(--red);font-weight:700}
 .bg .tr.elim{opacity:0.25;text-decoration:line-through}
 .bg .tr.live{background:rgba(74,222,128,0.04)}
+.bg .tr.bust{background:rgba(255,255,255,0.04);border-left:2px solid rgba(239,68,68,0.4);color:rgba(255,255,255,0.55);font-weight:600}
+.bust-tag-d{font-size:7px;padding:1px 4px;border-radius:3px;font-weight:700;letter-spacing:0.5px;margin-left:auto;flex-shrink:0;background:rgba(239,68,68,0.12);color:var(--red)}
 .bg.live{border-color:var(--green)}
 .bg .tr.locked{cursor:default}
 .bg .ts{font-size:9px;color:var(--muted);min-width:16px;text-align:right}
@@ -444,15 +448,15 @@ function viewChipsHTML(){
 
 // MOBILE PICK BUTTON
 function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim,live,actualTm){
-  // Option C: if user's pick is eliminated and actual advancing team is different, show strikethrough → actual
+  // BUST: user's pick is eliminated, actual advancing team is different — show actual team with BUST
   if(tm&&actualTm&&tm!==actualTm&&elim&&elim.has(tm)){
     var asd=seed(actualTm);
-    return'<button class="pick" style="border-color:rgba(239,68,68,0.2)" disabled><span style="text-decoration:line-through;color:var(--red);opacity:0.5;font-size:10px">'+tm+'</span><span style="color:var(--muted);font-size:9px;margin:0 2px">\u2192</span><span style="color:var(--text);font-weight:600">'+(asd?'<span class="sd">'+asd+'</span>':'')+actualTm+'</span><span class="sc">\u2014</span></button>';
+    return'<button class="pick bust" disabled>'+(asd?'<span class="sd">'+asd+'</span>':'')+actualTm+'<span class="bust-tag">BUST</span></button>';
   }
-  // If no user pick but actual team exists, show actual with muted style
+  // No user pick but actual team exists
   if(!tm&&actualTm){
     var asd2=seed(actualTm);
-    return'<button class="pick" style="border-left:2px solid var(--muted)" disabled>'+(asd2?'<span class="sd">'+asd2+'</span>':'')+actualTm+'<span class="sc">\u2014</span></button>';
+    return'<button class="pick bust" disabled>'+(asd2?'<span class="sd">'+asd2+'</span>':'')+actualTm+'<span class="bust-tag">BUST</span></button>';
   }
   if(!tm)return'<button class="pick" disabled><span style="color:var(--muted)">TBD</span></button>';
   var cor=rs&&pk===rs&&pk===tm;
@@ -601,14 +605,14 @@ function mobAdmin(){
 
 // DESKTOP
 function dtr(tm,pk,rs,rg,rd,ix,elim,live,actualTm){
-  // Option C: user's pick eliminated, actual winner different
+  // BUST: user's pick eliminated, actual advancing team different
   if(tm&&actualTm&&tm!==actualTm&&elim&&elim.has(tm)){
     var asd=seed(actualTm);
-    return'<div class="tr" style="border-left:2px solid rgba(239,68,68,0.3)"><span style="text-decoration:line-through;color:var(--red);opacity:0.5;font-size:10px">'+tm+'</span><span style="color:var(--muted);font-size:8px;margin:0 2px">\u2192</span>'+(asd?'<span class="ts">'+asd+'</span>':'')+'<span class="tn" style="color:var(--text);font-weight:600">'+actualTm+'</span><span class="tsc">\u2014</span></div>';
+    return'<div class="tr bust">'+(asd?'<span class="ts">'+asd+'</span>':'')+'<span class="tn">'+actualTm+'</span><span class="bust-tag-d">BUST</span></div>';
   }
   if(!tm&&actualTm){
     var asd2=seed(actualTm);
-    return'<div class="tr" style="border-left:2px solid var(--muted)">'+(asd2?'<span class="ts">'+asd2+'</span>':'')+'<span class="tn">'+actualTm+'</span><span class="tsc">\u2014</span></div>';
+    return'<div class="tr bust">'+(asd2?'<span class="ts">'+asd2+'</span>':'')+'<span class="tn">'+actualTm+'</span><span class="bust-tag-d">BUST</span></div>';
   }
   if(!tm)return'<div class="tr tbd"><span class="tn">TBD</span></div>';
   var sd2=seed(tm);var cor=rs&&pk===rs&&pk===tm,inc=rs&&pk&&pk!==rs&&pk===tm,sel=pk===tm;
