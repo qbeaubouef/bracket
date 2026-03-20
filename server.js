@@ -171,7 +171,7 @@ const ESPN_NAME_MAP = {
   "Wisconsin Badgers":"Wisconsin","Wisconsin":"Wisconsin",
   "High Point Panthers":"High Point","High Point":"High Point",
   "Arkansas Razorbacks":"Arkansas","Arkansas":"Arkansas",
-  "Hawaii Rainbow Warriors":"Hawaii","Hawai'i":"Hawaii","Hawaii":"Hawaii",
+  "Hawaii Rainbow Warriors":"Hawaii","Hawai'i Rainbow Warriors":"Hawaii","Hawai'i":"Hawaii","Hawaii":"Hawaii",
   "BYU Cougars":"BYU","BYU":"BYU",
   "Texas Longhorns":"Texas","NC State Wolfpack":"NC State","NC State":"NC State","NCSU":"NC State","North Carolina State":"NC State","N.C. State":"NC State","Texas":"Texas",
   "Gonzaga Bulldogs":"Gonzaga","Gonzaga":"Gonzaga",
