@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0e14;--surface:#12171f;--card:#1a2030;--card-hover:#1f2738;--accent:#e8a838;--accent2:#fff;--accent3:#e8a838;--accent-dim:rgba(232,168,56,0.15);--green:#4ade80;--red:#ef4444;--blue:#4a90d9;--text:#e6e6e6;--muted:rgba(255,255,255,0.35);--border:rgba(255,255,255,0.08);--font-display:'Oswald',sans-serif;--font-body:'Source Sans 3',-apple-system,sans-serif}
+:root{--bg:#0a0e14;--surface:#12171f;--card:#1a2030;--card-hover:#1f2738;--accent:#e8a838;--accent2:#fff;--accent3:#e8a838;--accent-dim:rgba(232,168,56,0.15);--accent-border:transparent;--green:#4ade80;--red:#ef4444;--blue:#4a90d9;--text:#e6e6e6;--muted:rgba(255,255,255,0.35);--border:rgba(255,255,255,0.08);--font-display:'Oswald',sans-serif;--font-body:'Source Sans 3',-apple-system,sans-serif}
 html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;-webkit-font-smoothing:antialiased}
 button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 ::selection{background:var(--accent);color:var(--accent2)}
@@ -89,7 +89,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .pick{flex:1;padding:7px 9px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:rgba(255,255,255,0.65);font-size:12px;text-align:left;display:flex;align-items:center;gap:4px;transition:all 0.12s;position:relative}
 .pick .sd{font-size:9px;opacity:0.4;min-width:14px}
 .pick:hover:not(:disabled){background:var(--card-hover)}
-.pick.sel{background:var(--accent);color:var(--accent2);font-weight:700;border-color:var(--accent)}
+.pick.sel{background:var(--accent);color:var(--accent2);font-weight:700;border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent-border)}
 .pick.sel .sd{opacity:0.7}
 .pick.win{background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.35);color:var(--green);font-weight:700}
 .pick.lose{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.25);color:var(--red);font-weight:700}
@@ -103,7 +103,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .pick:disabled{cursor:default}
 
 /* CHAMP BOX */
-.champ-box{text-align:center;padding:14px;background:var(--accent);border-radius:10px;margin-top:10px}
+.champ-box{text-align:center;padding:14px;background:var(--accent);border-radius:10px;margin-top:10px;box-shadow:inset 0 0 0 2px var(--accent-border)}
 .champ-label{font-size:10px;color:var(--accent2);opacity:0.7;text-transform:uppercase;letter-spacing:1.5px;font-family:var(--font-display)}
 .champ-name{font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--accent2);margin-top:4px}
 
@@ -163,7 +163,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .bg .tr{display:flex;align-items:center;padding:3px 6px;cursor:pointer;transition:background 0.1s;gap:3px;border-bottom:1px solid rgba(255,255,255,0.04)}
 .bg .tr:last-child{border-bottom:none}
 .bg .tr:hover{background:rgba(255,255,255,0.04)}
-.bg .tr.picked{background:var(--accent);color:var(--accent2);font-weight:700}
+.bg .tr.picked{background:var(--accent);color:var(--accent2);font-weight:700;box-shadow:inset 0 0 0 2px var(--accent-border)}
 .bg .tr.correct{background:rgba(74,222,128,0.1);color:var(--green);font-weight:700}
 .bg .tr.incorrect{background:rgba(239,68,68,0.08);color:var(--red);font-weight:700}
 .bg .tr.elim{opacity:0.25;text-decoration:line-through}
@@ -182,7 +182,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .ff-title{font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
 .ff-game{margin-bottom:16px}
 .ff-game-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;line-height:1.4}
-.champion-display{margin-top:16px;padding:14px 18px;background:var(--accent);border-radius:8px}
+.champion-display{margin-top:16px;padding:14px 18px;background:var(--accent);border-radius:8px;box-shadow:inset 0 0 0 2px var(--accent-border)}
 .champion-display .label{font-family:var(--font-display);font-size:9px;letter-spacing:2px;color:var(--accent2);opacity:0.7;text-transform:uppercase}
 .champion-display .name{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent2);margin-top:2px}
 .desk-nav{display:flex;align-items:center;justify-content:center;gap:12px;padding:4px 0;background:var(--surface);border-bottom:1px solid var(--border)}
@@ -197,7 +197,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 <div id="app"></div>
 <div id="confirm-modal" class="hidden"></div>
 <script>
-const TC={"Duke": ["#003087", "#FFFFFF", "#003087"], "Arizona": ["#CC0033", "#003366", "#FFFFFF"], "Michigan": ["#FFCB05", "#00274C", "#00274C"], "Florida": ["#0021A5", "#FA4616", "#FFFFFF"], "Houston": ["#C8102E", "#FFFFFF", "#C8102E"], "UConn": ["#000E2F", "#FFFFFF", "#000E2F"], "Purdue": ["#CEB888", "#000000", "#000000"], "Iowa State": ["#C8102E", "#F1BE48", "#FFFFFF"], "Kansas": ["#0051BA", "#E8000D", "#FFFFFF"], "St. John's": ["#D0202E", "#FFFFFF", "#D0202E"], "Alabama": ["#9E1B32", "#FFFFFF", "#9E1B32"], "Tennessee": ["#FF8200", "#FFFFFF", "#FF8200"], "Virginia": ["#232D4B", "#F84C1E", "#FFFFFF"], "Gonzaga": ["#002967", "#C4C9CF", "#FFFFFF"], "Illinois": ["#E84A27", "#13294B", "#FFFFFF"], "Michigan State": ["#18453B", "#FFFFFF", "#18453B"], "North Carolina": ["#7BAFD4", "#13294B", "#FFFFFF"], "Texas Tech": ["#CC0000", "#000000", "#FFFFFF"], "BYU": ["#002E5D", "#FFFFFF", "#002E5D"], "Wisconsin": ["#C5050C", "#FFFFFF", "#C5050C"], "UCLA": ["#2D68C4", "#FFB81C", "#FFFFFF"], "Vanderbilt": ["#866D4B", "#000000", "#FFFFFF"], "Nebraska": ["#D00000", "#FFFFFF", "#D00000"], "Kentucky": ["#0033A0", "#FFFFFF", "#0033A0"], "Iowa": ["#FFCD00", "#000000", "#000000"], "Clemson": ["#F56600", "#522D80", "#FFFFFF"], "Ohio State": ["#BB0000", "#666666", "#FFFFFF"], "TCU": ["#4D1979", "#FFFFFF", "#4D1979"], "Louisville": ["#AD0000", "#000000", "#FFFFFF"], "South Florida": ["#006747", "#CFC493", "#FFFFFF"], "North Dakota St.": ["#006633", "#F5B800", "#FFFFFF"], "UCF": ["#BA9B37", "#000000", "#000000"], "Furman": ["#582C83", "#FFFFFF", "#582C83"], "McNeese": ["#00529B", "#F5B800", "#FFFFFF"], "Troy": ["#8B2346", "#A6A6A6", "#FFFFFF"], "VCU": ["#F8B800", "#000000", "#000000"], "Penn": ["#011F5B", "#990000", "#FFFFFF"], "Saint Mary's": ["#D80024", "#003DA5", "#FFFFFF"], "Texas A&M": ["#500000", "#FFFFFF", "#500000"], "Idaho": ["#B5985A", "#000000", "#000000"], "LIU": ["#00573C", "#FFFFFF", "#00573C"], "Villanova": ["#13284C", "#FFFFFF", "#13284C"], "Utah State": ["#0F2439", "#FFFFFF", "#0F2439"], "High Point": ["#330072", "#FFFFFF", "#330072"], "Arkansas": ["#9D2235", "#FFFFFF", "#9D2235"], "Hawaii": ["#024731", "#FFFFFF", "#024731"], "Texas/NC State": ["#BF5700", "#CC0000", "#FFFFFF"], "Kennesaw State": ["#FDBB30", "#000000", "#000000"], "Miami FL": ["#F47321", "#005030", "#FFFFFF"], "Missouri": ["#F1B82D", "#000000", "#000000"], "Queens": ["#002D72", "#8C8C8C", "#FFFFFF"], "UMBC/Howard": ["#000000", "#F7B500", "#F7B500"], "Georgia": ["#BA0C2F", "#000000", "#FFFFFF"], "Saint Louis": ["#003DA5", "#FFFFFF", "#003DA5"], "Akron": ["#041E42", "#C99700", "#FFFFFF"], "Hofstra": ["#002D72", "#FFB81C", "#FFFFFF"], "Miami OH/SMU": ["#B30738", "#0033A0", "#FFFFFF"], "Wright State": ["#007A33", "#FFB81C", "#FFFFFF"], "Santa Clara": ["#862633", "#FFFFFF", "#862633"], "Tennessee State": ["#004B8D", "#FFFFFF", "#004B8D"], "PV A&M/Lehigh": ["#6C4023", "#FFFFFF", "#6C4023"], "Cal Baptist": ["#002855", "#C5960C", "#FFFFFF"], "Siena": ["#006747", "#F5D130", "#FFFFFF"], "Northern Iowa": ["#4B116F", "#F8B800", "#FFFFFF"]};
+const TC={"Akron":{f:"#041E42",t:"#A89968",b:null},"Alabama":{f:"#9E1B32",t:"#FFFFFF",b:null},"Arizona":{f:"#003366",t:"#fff",b:"#CC0033"},"Arkansas":{f:"#9D2235",t:"#FFFFFF",b:null},"BYU":{f:"#002E5D",t:"#FFFFFF",b:null},"Cal Baptist":{f:"#002554",t:"#A37400",b:null},"Clemson":{f:"#F56600",t:"#fff",b:"#522D80"},"Duke":{f:"#003087",t:"#FFFFFF",b:null},"Florida":{f:"#0021A5",t:"#FA4616",b:null},"Furman":{f:"#201547",t:"#fff",b:"#582C83"},"Georgia":{f:"#BA0C2F",t:"#000000",b:null},"Gonzaga":{f:"#041E42",t:"#fff",b:"#C8102E"},"Hawaii":{f:"#024731",t:"#C8C8C8",b:null},"High Point":{f:"#330072",t:"#FFFFFF",b:null},"Hofstra":{f:"#0B1E73",t:"#FEB612",b:null},"Houston":{f:"#C8102E",t:"#FFFFFF",b:null},"Howard":{f:"#003A63",t:"#fff",b:"#E51937"},"Idaho":{f:"#B3A369",t:"#000",b:"#EAAB00"},"Illinois":{f:"#E84A27",t:"#13294B",b:null},"Iowa":{f:"#000000",t:"#FFCD00",b:null},"Iowa State":{f:"#F1BE48",t:"#000",b:"#C8102E"},"Kansas":{f:"#0051BA",t:"#fff",b:"#FFC82D"},"Kennesaw State":{f:"#FDBB30",t:"#0B1315",b:null},"Kentucky":{f:"#0033A0",t:"#FFFFFF",b:null},"LIU":{f:"#69B3E7",t:"#000",b:"#FFC72C"},"Lehigh":{f:"#653600",t:"#FFD24F",b:null},"Louisville":{f:"#AD0000",t:"#FDB913",b:null},"McNeese":{f:"#00529B",t:"#FFD204",b:null},"Miami FL":{f:"#005030",t:"#fff",b:"#F47321"},"Miami OH":{f:"#B61E2E",t:"#FFFFFF",b:null},"Miami OH/SMU":{f:"#B61E2E",t:"#fff",b:"#0033A0"},"Michigan":{f:"#FFCB05",t:"#00274C",b:null},"Michigan State":{f:"#18453B",t:"#FFFFFF",b:null},"Missouri":{f:"#F1B82D",t:"#000000",b:null},"NC State":{f:"#CC0000",t:"#000000",b:null},"Nebraska":{f:"#E41C38",t:"#fff",b:"#FDF2D9"},"North Carolina":{f:"#7BAFD4",t:"#13294B",b:null},"North Dakota St.":{f:"#0A5640",t:"#FFC72A",b:null},"Northern Iowa":{f:"#4B116F",t:"#FFCC00",b:null},"Ohio State":{f:"#BB0000",t:"#FFFFFF",b:null},"PV A&M":{f:"#330066",t:"#FFCC33",b:null},"PV A&M/Lehigh":{f:"#330066",t:"#FFCC33",b:null},"Penn":{f:"#990000",t:"#fff",b:"#011F5B"},"Purdue":{f:"#CEB888",t:"#000000",b:null},"Queens":{f:"#192C66",t:"#fff",b:"#857040"},"SMU":{f:"#0033A0",t:"#fff",b:"#C8102E"},"Saint Louis":{f:"#003DA5",t:"#C8C9C7",b:null},"Saint Mary's":{f:"#D80024",t:"#fff",b:"#06315B"},"Santa Clara":{f:"#862633",t:"#FFFFFF",b:null},"Siena":{f:"#FFC72C",t:"#000",b:"#C8102E"},"South Florida":{f:"#006747",t:"#fff",b:"#CFC493"},"St. John's":{f:"#BA0C2F",t:"#fff",b:"#041C2C"},"TCU":{f:"#4D1979",t:"#A3A9AC",b:null},"Tennessee":{f:"#FF8200",t:"#000000",b:null},"Tennessee State":{f:"#00539F",t:"#FFFFFF",b:null},"Texas":{f:"#BF5700",t:"#fff",b:"#FFFFFF"},"Texas A&M":{f:"#500000",t:"#FFFFFF",b:null},"Texas Tech":{f:"#CC0000",t:"#000000",b:null},"Texas/NC State":{f:"#BF5700",t:"#fff",b:"#CC0000"},"Troy":{f:"#8A2432",t:"#fff",b:"#B3B5B8"},"UCF":{f:"#000000",t:"#FFC904",b:null},"UCLA":{f:"#2D68C4",t:"#fff",b:"#F2A900"},"UConn":{f:"#000E2F",t:"#FFFFFF",b:null},"UMBC":{f:"#B18906",t:"#fff",b:"#F7BD00"},"UMBC/Howard":{f:"#000000",t:"#F7BD00",b:null},"Utah State":{f:"#00263A",t:"#8A8D8F",b:null},"VCU":{f:"#FFB300",t:"#000000",b:null},"Vanderbilt":{f:"#000000",t:"#866D4B",b:null},"Villanova":{f:"#00205B",t:"#13B5EA",b:null},"Virginia":{f:"#232D4B",t:"#fff",b:"#F84C1E"},"Wisconsin":{f:"#C5050C",t:"#FFFFFF",b:null},"Wright State":{f:"#026937",t:"#fff",b:"#CEA052"}};
 const SD={"Duke": 1, "Siena": 16, "Ohio State": 8, "TCU": 9, "St. John's": 5, "Northern Iowa": 12, "Kansas": 4, "Cal Baptist": 13, "Louisville": 6, "South Florida": 11, "Michigan State": 3, "North Dakota St.": 14, "UCLA": 7, "UCF": 10, "UConn": 2, "Furman": 15, "Florida": 1, "PV A&M/Lehigh": 16, "Clemson": 8, "Iowa": 9, "Vanderbilt": 5, "McNeese": 12, "Nebraska": 4, "Troy": 13, "North Carolina": 6, "VCU": 11, "Illinois": 3, "Penn": 14, "Saint Mary's": 7, "Texas A&M": 10, "Houston": 2, "Idaho": 15, "Arizona": 1, "LIU": 16, "Villanova": 8, "Utah State": 9, "Wisconsin": 5, "High Point": 12, "Arkansas": 4, "Hawaii": 13, "BYU": 6, "Texas/NC State": 11, "Gonzaga": 3, "Kennesaw State": 14, "Miami FL": 7, "Missouri": 10, "Purdue": 2, "Queens": 15, "Michigan": 1, "UMBC/Howard": 16, "Georgia": 8, "Saint Louis": 9, "Texas Tech": 5, "Akron": 12, "Alabama": 4, "Hofstra": 13, "Tennessee": 6, "Miami OH/SMU": 11, "Virginia": 3, "Wright State": 14, "Kentucky": 7, "Santa Clara": 10, "Iowa State": 2, "Tennessee State": 15};
 var ENTRY_PIN="4406",ADMIN_PIN="5502";
 var REGIONS={east:{name:"East",emoji:"\u{1F3DB}\uFE0F",color:"#4a90d9",games:[[1,"Duke",16,"Siena"],[8,"Ohio State",9,"TCU"],[5,"St. John's",12,"Northern Iowa"],[4,"Kansas",13,"Cal Baptist"],[6,"Louisville",11,"South Florida"],[3,"Michigan State",14,"North Dakota St."],[7,"UCLA",10,"UCF"],[2,"UConn",15,"Furman"]]},south:{name:"South",emoji:"\u{1F334}",color:"#c0392b",games:[[1,"Florida",16,"PV A&M/Lehigh"],[8,"Clemson",9,"Iowa"],[5,"Vanderbilt",12,"McNeese"],[4,"Nebraska",13,"Troy"],[6,"North Carolina",11,"VCU"],[3,"Illinois",14,"Penn"],[7,"Saint Mary's",10,"Texas A&M"],[2,"Houston",15,"Idaho"]]},west:{name:"West",emoji:"\u{1F335}",color:"#cc0033",games:[[1,"Arizona",16,"LIU"],[8,"Villanova",9,"Utah State"],[5,"Wisconsin",12,"High Point"],[4,"Arkansas",13,"Hawaii"],[6,"BYU",11,"Texas/NC State"],[3,"Gonzaga",14,"Kennesaw State"],[7,"Miami FL",10,"Missouri"],[2,"Purdue",15,"Queens"]]},midwest:{name:"Midwest",emoji:"\u{1F3ED}",color:"#f0c040",games:[[1,"Michigan",16,"UMBC/Howard"],[8,"Georgia",9,"Saint Louis"],[5,"Texas Tech",12,"Akron"],[4,"Alabama",13,"Hofstra"],[6,"Tennessee",11,"Miami OH/SMU"],[3,"Virginia",14,"Wright State"],[7,"Kentucky",10,"Santa Clara"],[2,"Iowa State",15,"Tennessee State"]]}};
@@ -328,15 +328,17 @@ function applyColors(){
   var p=ap();var champ=p.finalFour&&p.finalFour[1]&&p.finalFour[1][0];
   if(champ&&TC[champ]){
     var c=TC[champ];
-    document.documentElement.style.setProperty("--accent",c[0]);
-    document.documentElement.style.setProperty("--accent2",c[1]);
-    document.documentElement.style.setProperty("--accent3",c[2]);
-    document.documentElement.style.setProperty("--accent-dim",c[0]+"26");
+    document.documentElement.style.setProperty("--accent",c.f);
+    document.documentElement.style.setProperty("--accent2",c.t);
+    document.documentElement.style.setProperty("--accent3",c.b||c.f);
+    document.documentElement.style.setProperty("--accent-dim",c.f+"26");
+    document.documentElement.style.setProperty("--accent-border",c.b||"transparent");
   }else{
     document.documentElement.style.setProperty("--accent","#e8a838");
     document.documentElement.style.setProperty("--accent2","#000");
     document.documentElement.style.setProperty("--accent3","#e8a838");
     document.documentElement.style.setProperty("--accent-dim","rgba(232,168,56,0.15)");
+    document.documentElement.style.setProperty("--accent-border","transparent");
   }
 }
 
@@ -345,8 +347,6 @@ function hideConfirm(){document.getElementById("confirm-modal").className="hidde
 
 // INIT
 async function init(){
-  // Fetch config (ESPN colors) — merge with hardcoded TC as fallback
-  try{var cfg=await $api("GET","/api/config");if(cfg.teamColors){for(var tm in cfg.teamColors){if(!TC[tm]){var c=cfg.teamColors[tm];TC[tm]=[c.primary,c.text||"#fff",c.secondary||c.primary];}}}}catch(e){}
   S.players=await $api("GET","/api/players");
   S.results=await $api("GET","/api/results");
   try{S.scores=await $api("GET","/api/scores");}catch(e){S.scores={};}
@@ -565,7 +565,7 @@ async function renderBoard(tid){
   if(!sorted.length)h+='<div style="text-align:center;color:var(--muted);padding:20px">No players yet</div>';
   sorted.forEach(function(p,i){
     var isV=S.viewing===p.name,isMe=S.user===p.name;
-    var champClr=p.champ!=="\u2014"&&TC[p.champ]?TC[p.champ][0]:"";
+    var champClr=p.champ!=="\u2014"&&TC[p.champ]?TC[p.champ].f:"";
     var champElim=p.champ!=="\u2014"&&elim.has(p.champ);
     var ex=isV?' style="border-color:var(--blue);background:rgba(74,144,217,0.08)"':isMe?' style="border-color:var(--accent)"':"";
     h+='<div class="lb-row'+(i===0?" first":"")+'"'+ex+' onclick="viewUser(\''+esc(p.name)+'\')">';
