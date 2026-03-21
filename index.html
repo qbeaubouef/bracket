@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0e14;--surface:#12171f;--card:#1a2030;--card-hover:#1f2738;--accent:#e8a838;--accent2:#fff;--accent3:#e8a838;--accent-dim:rgba(232,168,56,0.15);--accent-border:transparent;--green:#4ade80;--red:#ef4444;--blue:#4a90d9;--text:#e6e6e6;--muted:rgba(255,255,255,0.35);--border:rgba(255,255,255,0.08);--font-display:'Oswald',sans-serif;--font-body:'Source Sans 3',-apple-system,sans-serif}
+:root{--bg:#0a0e14;--surface:#12171f;--card:#1a2030;--card-hover:#1f2738;--accent:#e8a838;--accent2:#fff;--accent3:#e8a838;--accent-dim:rgba(232,168,56,0.15);--green:#4ade80;--red:#ef4444;--blue:#4a90d9;--text:#e6e6e6;--muted:rgba(255,255,255,0.35);--border:rgba(255,255,255,0.08);--font-display:'Oswald',sans-serif;--font-body:'Source Sans 3',-apple-system,sans-serif}
 html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;-webkit-font-smoothing:antialiased}
 button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 ::selection{background:var(--accent);color:var(--accent2)}
@@ -89,7 +89,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .pick{flex:1;padding:7px 9px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:rgba(255,255,255,0.65);font-size:12px;text-align:left;display:flex;align-items:center;gap:4px;transition:all 0.12s;position:relative}
 .pick .sd{font-size:9px;opacity:0.4;min-width:14px}
 .pick:hover:not(:disabled){background:var(--card-hover)}
-.pick.sel{background:var(--accent);color:var(--accent2);font-weight:700;border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent-border)}
+.pick.sel{background:var(--accent);color:var(--accent2);font-weight:700;border-color:var(--accent)}
 .pick.sel .sd{opacity:0.7}
 .pick.win{background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.35);color:var(--green);font-weight:700}
 .pick.lose{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.25);color:var(--red);font-weight:700}
@@ -103,7 +103,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .pick:disabled{cursor:default}
 
 /* CHAMP BOX */
-.champ-box{text-align:center;padding:14px;background:var(--accent);border-radius:10px;margin-top:10px;box-shadow:inset 0 0 0 2px var(--accent-border)}
+.champ-box{text-align:center;padding:14px;background:var(--accent);border-radius:10px;margin-top:10px}
 .champ-label{font-size:10px;color:var(--accent2);opacity:0.7;text-transform:uppercase;letter-spacing:1.5px;font-family:var(--font-display)}
 .champ-name{font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--accent2);margin-top:4px}
 
@@ -163,7 +163,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .bg .tr{display:flex;align-items:center;padding:3px 6px;cursor:pointer;transition:background 0.1s;gap:3px;border-bottom:1px solid rgba(255,255,255,0.04)}
 .bg .tr:last-child{border-bottom:none}
 .bg .tr:hover{background:rgba(255,255,255,0.04)}
-.bg .tr.picked{background:var(--accent);color:var(--accent2);font-weight:700;box-shadow:inset 0 0 0 2px var(--accent-border)}
+.bg .tr.picked{background:var(--accent);color:var(--accent2);font-weight:700}
 .bg .tr.correct{background:rgba(74,222,128,0.1);color:var(--green);font-weight:700}
 .bg .tr.incorrect{background:rgba(239,68,68,0.08);color:var(--red);font-weight:700}
 .bg .tr.elim{opacity:0.25;text-decoration:line-through}
@@ -182,7 +182,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .ff-title{font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
 .ff-game{margin-bottom:16px}
 .ff-game-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;line-height:1.4}
-.champion-display{margin-top:16px;padding:14px 18px;background:var(--accent);border-radius:8px;box-shadow:inset 0 0 0 2px var(--accent-border)}
+.champion-display{margin-top:16px;padding:14px 18px;background:var(--accent);border-radius:8px}
 .champion-display .label{font-family:var(--font-display);font-size:9px;letter-spacing:2px;color:var(--accent2);opacity:0.7;text-transform:uppercase}
 .champion-display .name{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent2);margin-top:2px}
 .desk-nav{display:flex;align-items:center;justify-content:center;gap:12px;padding:4px 0;background:var(--surface);border-bottom:1px solid var(--border)}
@@ -332,13 +332,11 @@ function applyColors(){
     document.documentElement.style.setProperty("--accent2",c.t);
     document.documentElement.style.setProperty("--accent3",c.b||c.f);
     document.documentElement.style.setProperty("--accent-dim",c.f+"26");
-    document.documentElement.style.setProperty("--accent-border",c.b||"transparent");
   }else{
     document.documentElement.style.setProperty("--accent","#e8a838");
     document.documentElement.style.setProperty("--accent2","#000");
     document.documentElement.style.setProperty("--accent3","#e8a838");
     document.documentElement.style.setProperty("--accent-dim","rgba(232,168,56,0.15)");
-    document.documentElement.style.setProperty("--accent-border","transparent");
   }
 }
 
