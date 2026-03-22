@@ -455,7 +455,7 @@ function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim,live,actualTm){
     var scH="";
     if(rs){var gs=getScore(rg,rd,ix);if(gs){var my=gs.t1===actualTm?gs.t1score:gs.t2===actualTm?gs.t2score:null;if(my!=null)scH='<span class="sc">'+my+'</span>';}}
     else if(isLive){var ls=liveTeamScore(live,actualTm);if(ls!=null)scH='<span class="sc" style="color:var(--green)">'+ls+'</span>';}
-    return'<button class="pick bust'+(isLive&&!rs?" live":"")+'" disabled>'+(asd?'<span class="sd">'+asd+'</span>':'')+actualTm+scH+'<span class="bust-tag">BUST</span></button>';
+    return'<button class="pick bust'+(isLive&&!rs?" live":"")+'" disabled>'+(asd?'<span class="sd">'+asd+'</span>':'')+actualTm+'<span class="bust-tag">BUST</span>'+scH+'</button>';
   }
   if(!tm&&actualTm){
     var asd2=seed(actualTm);
@@ -463,7 +463,7 @@ function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim,live,actualTm){
     var scH2="";
     if(rs){var gs2=getScore(rg,rd,ix);if(gs2){var my2=gs2.t1===actualTm?gs2.t1score:gs2.t2===actualTm?gs2.t2score:null;if(my2!=null)scH2='<span class="sc">'+my2+'</span>';}}
     else if(isLive2){var ls2=liveTeamScore(live,actualTm);if(ls2!=null)scH2='<span class="sc" style="color:var(--green)">'+ls2+'</span>';}
-    return'<button class="pick bust'+(isLive2&&!rs?" live":"")+'" disabled>'+(asd2?'<span class="sd">'+asd2+'</span>':'')+actualTm+scH2+'<span class="bust-tag">BUST</span></button>';
+    return'<button class="pick bust'+(isLive2&&!rs?" live":"")+'" disabled>'+(asd2?'<span class="sd">'+asd2+'</span>':'')+actualTm+'<span class="bust-tag">BUST</span>'+scH2+'</button>';
   }
   if(!tm)return'<button class="pick" disabled><span style="color:var(--muted)">TBD</span></button>';
   var cor=rs&&pk===rs&&pk===tm;
@@ -624,7 +624,7 @@ function dtr(tm,pk,rs,rg,rd,ix,elim,live,actualTm){
     var scH="";
     if(rs){var gs=getScore(rg,rd,ix);if(gs){var my=gs.t1===actualTm?gs.t1score:gs.t2===actualTm?gs.t2score:null;if(my!=null)scH='<span class="tsc">'+my+'</span>';}}
     else if(isLive){var ls=liveTeamScore(live,actualTm);if(ls!=null)scH='<span class="tsc" style="color:var(--green)">'+ls+'</span>';}
-    return'<div class="tr bust'+(isLive&&!rs?" live":"")+'">'+(asd?'<span class="ts">'+asd+'</span>':'')+'<span class="tn">'+actualTm+'</span>'+scH+'<span class="bust-tag-d">BUST</span></div>';
+    return'<div class="tr bust'+(isLive&&!rs?" live":"")+'">'+(asd?'<span class="ts">'+asd+'</span>':'')+'<span class="tn">'+actualTm+'</span>'+'<span class="bust-tag-d">BUST</span>'+scH+'</div>';
   }
   if(!tm&&actualTm){
     var asd2=seed(actualTm);
@@ -632,7 +632,7 @@ function dtr(tm,pk,rs,rg,rd,ix,elim,live,actualTm){
     var scH2="";
     if(rs){var gs2=getScore(rg,rd,ix);if(gs2){var my2=gs2.t1===actualTm?gs2.t1score:gs2.t2===actualTm?gs2.t2score:null;if(my2!=null)scH2='<span class="tsc">'+my2+'</span>';}}
     else if(isLive2){var ls2=liveTeamScore(live,actualTm);if(ls2!=null)scH2='<span class="tsc" style="color:var(--green)">'+ls2+'</span>';}
-    return'<div class="tr bust'+(isLive2&&!rs?" live":"")+'">'+(asd2?'<span class="ts">'+asd2+'</span>':'')+'<span class="tn">'+actualTm+'</span>'+scH2+'<span class="bust-tag-d">BUST</span></div>';
+    return'<div class="tr bust'+(isLive2&&!rs?" live":"")+'">'+(asd2?'<span class="ts">'+asd2+'</span>':'')+'<span class="tn">'+actualTm+'</span>'+'<span class="bust-tag-d">BUST</span>'+scH2+'</div>';
   }
   if(!tm)return'<div class="tr tbd"><span class="tn">TBD</span></div>';
   var sd2=seed(tm);var cor=rs&&pk===rs&&pk===tm,inc=rs&&pk&&pk!==rs&&pk===tm,sel=pk===tm;
