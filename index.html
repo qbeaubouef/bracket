@@ -279,6 +279,29 @@ function getEliminated(res){
   if(ffR[1]&&ffR[1][0]){var s1=(ffR[0]||{})[0],s2=(ffR[0]||{})[1];if(ffR[1][0]===s1&&s2)e.add(s2);if(ffR[1][0]===s2&&s1)e.add(s1);}
   return e;
 }
+// Build eliminator map: {loser → winner} from all results
+function getEliminatorMap(res){
+  var m={};
+  RK.forEach(function(rk){
+    var rR=res[rk]||{};var reg=REGIONS[rk];var r0=rR[0]||{};
+    for(var i=0;i<reg.games.length;i++){if(r0[i]){var g=reg.games[i];var loser=r0[i]===resolveTeam(g[1])?resolveTeam(g[3]):resolveTeam(g[1]);if(loser)m[loser]=r0[i];}}
+    for(var rd=1;rd<4;rd++){var rdR=rR[rd]||{};var prev=rR[rd-1]||{};var cnt=8/Math.pow(2,rd);for(var g2=0;g2<cnt;g2++){if(rdR[g2]){var t1=prev[g2*2],t2=prev[g2*2+1];if(rdR[g2]===t1&&t2)m[t2]=rdR[g2];if(rdR[g2]===t2&&t1)m[t1]=rdR[g2];}}}
+  });
+  var ffR=res.finalFour||{};var rc=RK.map(function(r){return(res[r]||{})[3]&&(res[r]||{})[3][0]});
+  if(ffR[0]&&ffR[0][0]){if(ffR[0][0]===rc[0]&&rc[1])m[rc[1]]=rc[0];if(ffR[0][0]===rc[1]&&rc[0])m[rc[0]]=rc[1];}
+  if(ffR[0]&&ffR[0][1]){if(ffR[0][1]===rc[2]&&rc[3])m[rc[3]]=rc[2];if(ffR[0][1]===rc[3]&&rc[2])m[rc[2]]=rc[3];}
+  if(ffR[1]&&ffR[1][0]){var s1=(ffR[0]||{})[0],s2=(ffR[0]||{})[1];if(ffR[1][0]===s1&&s2)m[s2]=s1;if(ffR[1][0]===s2&&s1)m[s1]=s2;}
+  return m;
+}
+// Follow elimination chain to find who's still alive
+function getBuster(deadTeam,elim,elimMap){
+  var t=deadTeam,seen=new Set();
+  while(t&&elimMap[t]&&seen.size<10){
+    seen.add(t);t=elimMap[t];
+    if(!elim.has(t))return t;
+  }
+  return null;
+}
 
 // SCORING
 function countPicks(p){var c=0;RK.forEach(function(rk){var rp=p[rk]||{};for(var rd=0;rd<4;rd++)c+=Object.keys(rp[rd]||{}).length;});var ff=p.finalFour||{};for(var rd=0;rd<2;rd++)c+=Object.keys(ff[rd]||{}).length;return c;}
@@ -466,6 +489,15 @@ function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim,live,actualTm){
     else if(isLive2){var ls2=liveTeamScore(live,actualTm);if(ls2!=null)scH2='<span class="sc" style="color:var(--green)">'+ls2+'</span>';}
     return'<button class="pick bust'+(isLive2&&!rs?" live":"")+'" disabled>'+(asd2?'<span class="sd">'+asd2+'</span>':'')+actualTm+scH2+'<span class="bust-tag">BUST</span></button>';
   }
+  // BUST chain: user's pick is eliminated, no actualTm from results yet — follow eliminator chain
+  if(tm&&!actualTm&&elim&&elim.has(tm)){
+    var elimMap=getEliminatorMap(S.results);
+    var buster=getBuster(tm,elim,elimMap);
+    if(buster){
+      var bsd=seed(buster);
+      return'<button class="pick bust" disabled>'+(bsd?'<span class="sd">'+bsd+'</span>':'')+buster+'<span class="bust-tag">BUST</span></button>';
+    }
+  }
   if(!tm)return'<button class="pick" disabled><span style="color:var(--muted)">TBD</span></button>';
   var cor=rs&&pk===rs&&pk===tm;
   var inc=rs&&pk&&pk!==rs&&pk===tm;
@@ -606,6 +638,11 @@ function mobAdmin(){
   h+='</div>';
   // Load archive list
   setTimeout(async function(){try{var years=await $api("GET","/api/archives");var el=document.getElementById("archive-list");if(el&&years.length){var ah="<div style=\'font-size:11px;color:var(--muted);margin-bottom:4px\'>Past tournaments:</div>";years.forEach(function(y){ah+="<button class=\'pick\' style=\'margin-bottom:3px;justify-content:center\' onclick=\'viewArchive("+y+")\'>"+y+" \u{1F4E5}</button>";});el.innerHTML=ah;}}catch(e){}},200);
+  h+='<div style="margin-top:20px"><div style="font-size:13px;font-weight:700;margin-bottom:8px">ESPN Bracket Groups</div>';
+  h+='<a href="https://fantasy.espn.com/games/tournament-challenge-bracket-2026/group?id=9252fdad-4989-487b-8e10-de073ca1dfeb" target="_blank" style="display:block;padding:8px 12px;margin-bottom:4px;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:12px;font-weight:600">Wheeler and Miller Family Madness 2026 \u2197</a>';
+  h+='<a href="https://fantasy.espn.com/games/tournament-challenge-bracket-2026/group?id=a16f559c-f60d-4872-a5a0-69d646cc38a1" target="_blank" style="display:block;padding:8px 12px;margin-bottom:4px;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:12px;font-weight:600">LBJ School Community Bracket Challenge 2026 \u2197</a>';
+  h+='<a href="https://fantasy.espn.com/games/tournament-challenge-bracket-2026/group?id=f75d70ff-772f-4ba0-8880-b229e2acdc66" target="_blank" style="display:block;padding:8px 12px;margin-bottom:4px;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none;font-size:12px;font-weight:600">Honda SBD Brackets \u2197</a>';
+  h+='</div>';
   h+='<div style="margin-top:20px"><div style="font-size:13px;font-weight:700;margin-bottom:8px">Manual Results</div>';
   RK.forEach(function(rk){var reg=REGIONS[rk],rR=S.results[rk]||{};var cur=reg.games.map(function(g){return{t1:resolveTeam(g[1]),t2:resolveTeam(g[3])}});var shown=false;for(var rd=0;rd<4;rd++){var rdR=rR[rd]||{};for(var i=0;i<cur.length;i++){var g=cur[i];if(!g.t1||!g.t2)continue;if(!rdR[i]&&!shown){h+='<div style="display:flex;gap:4px;margin-bottom:4px;align-items:center"><span style="font-size:10px;color:'+reg.color+';width:48px;font-weight:700;font-family:var(--font-display)">'+reg.name+'</span><button class="pick" style="flex:1;font-size:11px;padding:5px" onclick="manualResult(\''+rk+'\','+rd+','+i+',\''+esc(g.t1)+'\')">'+g.t1+'</button><button class="pick" style="flex:1;font-size:11px;padding:5px" onclick="manualResult(\''+rk+'\','+rd+','+i+',\''+esc(g.t2)+'\')">'+g.t2+'</button></div>';shown=true;}}var nx=[];for(var i2=0;i2<cur.length;i2+=2)nx.push({t1:rdR[i2]||null,t2:rdR[i2+1]||null});cur=nx;}});
   h+='</div>';return h;
@@ -629,6 +666,15 @@ function dtr(tm,pk,rs,rg,rd,ix,elim,live,actualTm){
     if(rs){var gs2=getScore(rg,rd,ix);if(gs2){var my2=gs2.t1===actualTm?gs2.t1score:gs2.t2===actualTm?gs2.t2score:null;if(my2!=null)scH2='<span class="tsc">'+my2+'</span>';}}
     else if(isLive2){var ls2=liveTeamScore(live,actualTm);if(ls2!=null)scH2='<span class="tsc" style="color:var(--green)">'+ls2+'</span>';}
     return'<div class="tr bust'+(isLive2&&!rs?" live":"")+'">'+(asd2?'<span class="ts">'+asd2+'</span>':'')+'<span class="tn">'+actualTm+'</span>'+scH2+'<span class="bust-tag-d">BUST</span></div>';
+  }
+  // BUST chain: user's pick eliminated, no actualTm — follow eliminator chain
+  if(tm&&!actualTm&&elim&&elim.has(tm)){
+    var elimMap=getEliminatorMap(S.results);
+    var buster=getBuster(tm,elim,elimMap);
+    if(buster){
+      var bsd=seed(buster);
+      return'<div class="tr bust">'+(bsd?'<span class="ts">'+bsd+'</span>':'')+'<span class="tn">'+buster+'</span><span class="bust-tag-d">BUST</span></div>';
+    }
   }
   if(!tm)return'<div class="tr tbd"><span class="tn">TBD</span></div>';
   var sd2=seed(tm);var cor=rs&&pk===rs&&pk===tm,inc=rs&&pk&&pk!==rs&&pk===tm,sel=pk===tm;
