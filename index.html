@@ -97,6 +97,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .pick.sel.elim{background:var(--card);color:var(--muted);border-color:var(--border)}
 .pick.live{border-color:var(--green);background:rgba(74,222,128,0.04)}
 .pick.bust{background:rgba(255,255,255,0.04);border-left:2px solid rgba(239,68,68,0.4);color:rgba(255,255,255,0.55);font-weight:600}
+.pick.bust-loser{background:rgba(255,255,255,0.02);border-left:2px solid rgba(239,68,68,0.2);color:rgba(255,255,255,0.25);font-weight:400}
 .bust-tag{font-size:7px;padding:1px 5px;border-radius:3px;font-weight:700;letter-spacing:0.5px;margin-left:auto;flex-shrink:0;background:rgba(239,68,68,0.12);color:var(--red)}
 .pick .ck{margin-left:auto;font-size:10px;flex-shrink:0}
 .pick .sc{margin-left:auto;font-size:9px;opacity:0.6;font-weight:400;flex-shrink:0}
@@ -169,6 +170,9 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .bg .tr.elim{opacity:0.25;text-decoration:line-through}
 .bg .tr.live{background:rgba(74,222,128,0.04)}
 .bg .tr.bust{background:rgba(255,255,255,0.04);border-left:2px solid rgba(239,68,68,0.4);color:rgba(255,255,255,0.55);font-weight:600}
+.bg .tr.bust-loser{background:rgba(255,255,255,0.02);border-left:2px solid rgba(239,68,68,0.2);color:rgba(255,255,255,0.25);font-weight:400}
+.bg .tr.bust-loser .ts{color:rgba(255,255,255,0.15)}
+.bg .tr.bust-loser .tsc{color:rgba(255,255,255,0.25)}
 .bust-tag-d{font-size:7px;padding:1px 4px;border-radius:3px;font-weight:700;letter-spacing:0.5px;margin-left:auto;flex-shrink:0;background:rgba(239,68,68,0.12);color:var(--red)}
 .bg.live{border-color:var(--green)}
 .bg .tr.locked{cursor:default}
@@ -452,18 +456,20 @@ function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim,live,actualTm){
   if(tm&&actualTm&&tm!==actualTm&&elim&&elim.has(tm)){
     var asd=seed(actualTm);
     var isLive=live&&(live.status==="STATUS_IN_PROGRESS"||live.status==="STATUS_HALFTIME");
+    var bustLost=rs&&rs!==actualTm;
     var scH="";
     if(rs){var gs=getScore(rg,rd,ix);if(gs){var my=gs.t1===actualTm?gs.t1score:gs.t2===actualTm?gs.t2score:null;if(my!=null)scH='<span class="sc">'+my+'</span>';}}
     else if(isLive){var ls=liveTeamScore(live,actualTm);if(ls!=null)scH='<span class="sc" style="color:var(--green)">'+ls+'</span>';}
-    return'<button class="pick bust'+(isLive&&!rs?" live":"")+'" disabled>'+(asd?'<span class="sd">'+asd+'</span>':'')+actualTm+'<span class="bust-tag">BUST</span>'+scH+'</button>';
+    return'<button class="pick '+(bustLost?"bust-loser":"bust")+(isLive&&!rs?" live":"")+'" disabled>'+(asd?'<span class="sd">'+asd+'</span>':'')+actualTm+'<span class="bust-tag">BUST</span>'+scH+'</button>';
   }
   if(!tm&&actualTm){
     var asd2=seed(actualTm);
     var isLive2=live&&(live.status==="STATUS_IN_PROGRESS"||live.status==="STATUS_HALFTIME");
+    var bustLost2=rs&&rs!==actualTm;
     var scH2="";
     if(rs){var gs2=getScore(rg,rd,ix);if(gs2){var my2=gs2.t1===actualTm?gs2.t1score:gs2.t2===actualTm?gs2.t2score:null;if(my2!=null)scH2='<span class="sc">'+my2+'</span>';}}
     else if(isLive2){var ls2=liveTeamScore(live,actualTm);if(ls2!=null)scH2='<span class="sc" style="color:var(--green)">'+ls2+'</span>';}
-    return'<button class="pick bust'+(isLive2&&!rs?" live":"")+'" disabled>'+(asd2?'<span class="sd">'+asd2+'</span>':'')+actualTm+'<span class="bust-tag">BUST</span>'+scH2+'</button>';
+    return'<button class="pick '+(bustLost2?"bust-loser":"bust")+(isLive2&&!rs?" live":"")+'" disabled>'+(asd2?'<span class="sd">'+asd2+'</span>':'')+actualTm+'<span class="bust-tag">BUST</span>'+scH2+'</button>';
   }
   if(!tm)return'<button class="pick" disabled><span style="color:var(--muted)">TBD</span></button>';
   var cor=rs&&pk===rs&&pk===tm;
@@ -621,18 +627,20 @@ function dtr(tm,pk,rs,rg,rd,ix,elim,live,actualTm){
   if(tm&&actualTm&&tm!==actualTm&&elim&&elim.has(tm)){
     var asd=seed(actualTm);
     var isLive=live&&(live.status==="STATUS_IN_PROGRESS"||live.status==="STATUS_HALFTIME");
+    var bustLost=rs&&rs!==actualTm;
     var scH="";
     if(rs){var gs=getScore(rg,rd,ix);if(gs){var my=gs.t1===actualTm?gs.t1score:gs.t2===actualTm?gs.t2score:null;if(my!=null)scH='<span class="tsc">'+my+'</span>';}}
     else if(isLive){var ls=liveTeamScore(live,actualTm);if(ls!=null)scH='<span class="tsc" style="color:var(--green)">'+ls+'</span>';}
-    return'<div class="tr bust'+(isLive&&!rs?" live":"")+'">'+(asd?'<span class="ts">'+asd+'</span>':'')+'<span class="tn">'+actualTm+'</span>'+'<span class="bust-tag-d">BUST</span>'+scH+'</div>';
+    return'<div class="tr '+(bustLost?"bust-loser":"bust")+(isLive&&!rs?" live":"")+'">'+(asd?'<span class="ts">'+asd+'</span>':'')+'<span class="tn">'+actualTm+'</span>'+'<span class="bust-tag-d">BUST</span>'+scH+'</div>';
   }
   if(!tm&&actualTm){
     var asd2=seed(actualTm);
     var isLive2=live&&(live.status==="STATUS_IN_PROGRESS"||live.status==="STATUS_HALFTIME");
+    var bustLost2=rs&&rs!==actualTm;
     var scH2="";
     if(rs){var gs2=getScore(rg,rd,ix);if(gs2){var my2=gs2.t1===actualTm?gs2.t1score:gs2.t2===actualTm?gs2.t2score:null;if(my2!=null)scH2='<span class="tsc">'+my2+'</span>';}}
     else if(isLive2){var ls2=liveTeamScore(live,actualTm);if(ls2!=null)scH2='<span class="tsc" style="color:var(--green)">'+ls2+'</span>';}
-    return'<div class="tr bust'+(isLive2&&!rs?" live":"")+'">'+(asd2?'<span class="ts">'+asd2+'</span>':'')+'<span class="tn">'+actualTm+'</span>'+'<span class="bust-tag-d">BUST</span>'+scH2+'</div>';
+    return'<div class="tr '+(bustLost2?"bust-loser":"bust")+(isLive2&&!rs?" live":"")+'">'+(asd2?'<span class="ts">'+asd2+'</span>':'')+'<span class="tn">'+actualTm+'</span>'+'<span class="bust-tag-d">BUST</span>'+scH2+'</div>';
   }
   if(!tm)return'<div class="tr tbd"><span class="tn">TBD</span></div>';
   var sd2=seed(tm);var cor=rs&&pk===rs&&pk===tm,inc=rs&&pk&&pk!==rs&&pk===tm,sel=pk===tm;
