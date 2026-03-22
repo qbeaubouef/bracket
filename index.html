@@ -451,6 +451,7 @@ function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim,live,actualTm){
   // BUST: user's pick is eliminated, actual advancing team is different — show actual team with BUST
   if(tm&&actualTm&&tm!==actualTm&&elim&&elim.has(tm)){
     var asd=seed(actualTm);
+    return'<button class="pick bust" disabled>'+(asd?'<span class="sd">'+asd+'</span>':'')+actualTm+'<span class="bust-tag">BUST</span></button>';
     var isLive=live&&(live.status==="STATUS_IN_PROGRESS"||live.status==="STATUS_HALFTIME");
     var scH="";
     if(rs){var gs=getScore(rg,rd,ix);if(gs){var my=gs.t1===actualTm?gs.t1score:gs.t2===actualTm?gs.t2score:null;if(my!=null)scH='<span class="sc">'+my+'</span>';}}
@@ -460,6 +461,7 @@ function pickHTML(tm,sd,pk,rs,rg,rd,ix,elim,live,actualTm){
   // No user pick but actual team exists
   if(!tm&&actualTm){
     var asd2=seed(actualTm);
+    return'<button class="pick bust" disabled>'+(asd2?'<span class="sd">'+asd2+'</span>':'')+actualTm+'<span class="bust-tag">BUST</span></button>';
     var isLive2=live&&(live.status==="STATUS_IN_PROGRESS"||live.status==="STATUS_HALFTIME");
     var scH2="";
     if(rs){var gs2=getScore(rg,rd,ix);if(gs2){var my2=gs2.t1===actualTm?gs2.t1score:gs2.t2===actualTm?gs2.t2score:null;if(my2!=null)scH2='<span class="sc">'+my2+'</span>';}}
@@ -621,6 +623,7 @@ function dtr(tm,pk,rs,rg,rd,ix,elim,live,actualTm){
   // BUST: user's pick eliminated, actual advancing team different
   if(tm&&actualTm&&tm!==actualTm&&elim&&elim.has(tm)){
     var asd=seed(actualTm);
+    return'<div class="tr bust">'+(asd?'<span class="ts">'+asd+'</span>':'')+'<span class="tn">'+actualTm+'</span><span class="bust-tag-d">BUST</span></div>';
     var isLive=live&&(live.status==="STATUS_IN_PROGRESS"||live.status==="STATUS_HALFTIME");
     var scH="";
     if(rs){var gs=getScore(rg,rd,ix);if(gs){var my=gs.t1===actualTm?gs.t1score:gs.t2===actualTm?gs.t2score:null;if(my!=null)scH='<span class="tsc">'+my+'</span>';}}
@@ -629,6 +632,7 @@ function dtr(tm,pk,rs,rg,rd,ix,elim,live,actualTm){
   }
   if(!tm&&actualTm){
     var asd2=seed(actualTm);
+    return'<div class="tr bust">'+(asd2?'<span class="ts">'+asd2+'</span>':'')+'<span class="tn">'+actualTm+'</span><span class="bust-tag-d">BUST</span></div>';
     var isLive2=live&&(live.status==="STATUS_IN_PROGRESS"||live.status==="STATUS_HALFTIME");
     var scH2="";
     if(rs){var gs2=getScore(rg,rd,ix);if(gs2){var my2=gs2.t1===actualTm?gs2.t1score:gs2.t2===actualTm?gs2.t2score:null;if(my2!=null)scH2='<span class="tsc">'+my2+'</span>';}}
