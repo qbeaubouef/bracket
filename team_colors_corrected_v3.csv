@@ -1,0 +1,1009 @@
+Type,Conference,Team,Color Name,Hex,Primary,Secondary
+MLB,NLW,Arizona Diamondbacks,Sedona Red,#A71930,1,0
+MLB,NLW,Arizona Diamondbacks,Sonoran Sand,#E3D4AD,0,1
+MLB,NLW,Arizona Diamondbacks,Black,#000000,0,0
+MLB,NLW,Arizona Diamondbacks,Teal,#30CED8,0,0
+MLB,NLE,Atlanta Braves,Scarlet,#CE1141,0,0
+MLB,NLE,Atlanta Braves,Navy Blue,#13274F,1,0
+MLB,NLE,Atlanta Braves,Yellow,#EAAA00,0,0
+MLB,NLE,Atlanta Braves,White,#FFFFFF,0,1
+MLB,ALE,Baltimore Orioles,Orange,#DF4601,1,0
+MLB,ALE,Baltimore Orioles,Black,#000000,0,1
+MLB,ALE,Boston Red Sox,Red,#BD3039,1,0
+MLB,ALE,Boston Red Sox,Navy Blue,#0C2340,0,0
+MLB,ALE,Boston Red Sox,White,#FFFFFF,0,1
+MLB,NLC,Chicago Cubs,Blue,#0E3386,1,0
+MLB,NLC,Chicago Cubs,Red,#CC3433,0,1
+MLB,ALC,Chicago White Sox,Black,#27251F,1,0
+MLB,ALC,Chicago White Sox,Silver,#C4CED4,0,1
+MLB,NLC,Cincinnati Reds,Red,#C6011F,1,0
+MLB,NLC,Cincinnati Reds,Black,#000000,0,1
+MLB,ALC,Cleveland Guardians,Navy Blue,#00385D,1,0
+MLB,ALC,Cleveland Guardians,Red,#E50022,0,0
+MLB,ALC,Cleveland Guardians,Red,#FF0000,0,1
+MLB,NLW,Colorado Rockies,Purple,#333366,1,0
+MLB,NLW,Colorado Rockies,Silver,#C4CED4,0,1
+MLB,NLW,Colorado Rockies,Black,#131413,0,0
+MLB,ALC,Detroit Tigers,Navy Blue,#0C2340,1,0
+MLB,ALC,Detroit Tigers,Orange,#FA4616,0,1
+MLB,ALW,Houston Astros,Navy Blue,#002D62,0,1
+MLB,ALW,Houston Astros,Orange,#EB6E1F,1,0
+MLB,ALC,Kansas City Royals,Royal Blue,#004687,1,0
+MLB,ALC,Kansas City Royals,Gold,#BD9B60,0,1
+MLB,ALW,Los Angeles Angels,Red,#BA0021,1,0
+MLB,ALW,Los Angeles Angels,Midnight Blue,#003263,0,0
+MLB,ALW,Los Angeles Angels,White,#FFFFFF,0,1
+MLB,NLW,Los Angeles Dodgers,Dodger Blue,#005A9C,1,0
+MLB,NLW,Los Angeles Dodgers,Red,#EF3E42,0,0
+MLB,NLW,Los Angeles Dodgers,White,#FFFFFF,0,1
+MLB,NLE,Miami Marlins,Miami Blue,#00A3E0,1,0
+MLB,NLE,Miami Marlins,Caliente Red,#EF3340,0,0
+MLB,NLE,Miami Marlins,Slate Gray,#41748D,0,0
+MLB,NLE,Miami Marlins,Black,#000000,0,1
+MLB,NLC,Milwaukee Brewers,Navy Blue,#12284B,1,0
+MLB,NLC,Milwaukee Brewers,Yellow,#FFC52F,0,1
+MLB,ALC,Minnesota Twins,Navy Blue,#002B5C,1,0
+MLB,ALC,Minnesota Twins,Scarlet Red,#D31145,0,0
+MLB,ALC,Minnesota Twins,Kasota Gold,#B9975B,0,1
+MLB,NLE,New York Mets,Blue,#002D72,1,0
+MLB,NLE,New York Mets,Orange,#FF5910,0,1
+MLB,ALE,New York Yankees,Navy Blue,#0C2340,1,0
+MLB,ALE,New York Yankees,Blue,#003087,0,0
+MLB,ALE,New York Yankees,Pinstripe Gray,#A5ACAF,0,1
+MLB,ALW,Oakland Athletics,Green,#003831,1,0
+MLB,ALW,Oakland Athletics,Gold,#EFB21E,0,1
+MLB,NLE,Philadelphia Phillies,Red,#E81828,1,0
+MLB,NLE,Philadelphia Phillies,Blue,#002D72,0,0
+MLB,NLE,Philadelphia Phillies,White,#FFFFFF,0,1
+MLB,NLC,Pittsburgh Pirates,Black,#27251F,1,0
+MLB,NLC,Pittsburgh Pirates,Gold,#FDB827,0,1
+MLB,NLW,San Diego Padres,Brown,#2F241D,1,0
+MLB,NLW,San Diego Padres,Gold,#FFC425,0,1
+MLB,NLW,San Francisco Giants,Orange,#FD5A1E,1,0
+MLB,NLW,San Francisco Giants,Black,#27251F,0,1
+MLB,NLW,San Francisco Giants,Beige,#EFD19F,0,0
+MLB,NLW,San Francisco Giants,Gold,#AE8F6F,0,0
+MLB,ALW,Seattle Mariners,Navy Blue,#0C2C56,0,0
+MLB,ALW,Seattle Mariners,Northwest Green,#005C5C,1,0
+MLB,ALW,Seattle Mariners,Silver,#C4CED4,0,1
+MLB,NLC,St. Louis Cardinals,Red,#C41E3A,1,0
+MLB,NLC,St. Louis Cardinals,Navy Blue,#0C2340,0,0
+MLB,NLC,St. Louis Cardinals,Yellow,#FEDB00,0,1
+MLB,ALE,Tampa Bay Rays,Navy Blue,#092C5C,1,0
+MLB,ALE,Tampa Bay Rays,Columbia Blue,#8FBCE6,0,1
+MLB,ALE,Tampa Bay Rays,Yellow,#F5D130,0,0
+MLB,ALW,Texas Rangers,Blue,#003278,1,0
+MLB,ALW,Texas Rangers,Red,#C0111F,0,0
+MLB,ALW,Texas Rangers,Red,#FF0000,0,1
+MLB,ALE,Toronto Blue Jays,Blue,#134A8E,1,0
+MLB,ALE,Toronto Blue Jays,Navy Blue,#1D2D5C,0,0
+MLB,ALE,Toronto Blue Jays,Red,#E8291C,0,0
+MLB,ALE,Toronto Blue Jays,White,#FFFFFF,0,1
+MLB,NLE,Washington Nationals,Red,#AB0003,1,0
+MLB,NLE,Washington Nationals,Navy Blue,#14225A,0,0
+MLB,NLE,Washington Nationals,White,#FFFFFF,0,1
+NCAA D1,ACC,Boston College Eagles,Maroon,#98002E,1,0
+NCAA D1,ACC,Boston College Eagles,Gold,#BC9B6A,0,1
+NCAA D1,ACC,Clemson Tigers,Clemson Orange,#F56600,1,0
+NCAA D1,ACC,Clemson Tigers,Regalia,#522D80,0,1
+NCAA D1,ACC,Duke Blue Devils,Duke Blue,#003087,1,0
+NCAA D1,ACC,Duke Blue Devils,White,#FFFFFF,0,1
+NCAA D1,ACC,Florida State Seminoles,Garnet,#782F40,1,0
+NCAA D1,ACC,Florida State Seminoles,Gold,#CEB888,0,1
+NCAA D1,ACC,Florida State Seminoles,Black,#000000,0,0
+NCAA D1,ACC,Georgia Tech Yellow Jackets,Tech Gold,#B3A369,1,0
+NCAA D1,ACC,Georgia Tech Yellow Jackets,Metallic Gold,#A28D5B,0,0
+NCAA D1,ACC,Georgia Tech Yellow Jackets,Blue,#003057,0,1
+NCAA D1,ACC,Louisville Cardinals,Red,#AD0000,1,0
+NCAA D1,ACC,Louisville Cardinals,Black,#000000,0,0
+NCAA D1,ACC,Louisville Cardinals,Yellow,#FDB913,0,1
+NCAA D1,ACC,Miami Hurricanes,Orange,#F47321,0,1
+NCAA D1,ACC,Miami Hurricanes,Green,#005030,1,0
+NCAA D1,ACC,North Carolina Tar Heels,Carolina Blue,#7BAFD4,1,0
+NCAA D1,ACC,North Carolina Tar Heels,White,#FFFFFF,0,0
+NCAA D1,ACC,North Carolina Tar Heels,Navy,#13294B,0,1
+NCAA D1,ACC,NC State Wolfpack,Red,#CC0000,1,0
+NCAA D1,ACC,NC State Wolfpack,Black,#000000,0,1
+NCAA D1,ACC,Notre Dame Fighting Irish,Notre Dame Blue,#0C2340,1,0
+NCAA D1,ACC,Notre Dame Fighting Irish,Standard Dome Gold,#C99700,0,1
+NCAA D1,ACC,Notre Dame Fighting Irish,Metallic Gold,#AE9142,0,0
+NCAA D1,ACC,Notre Dame Fighting Irish,Irish Green,#00843D,0,0
+NCAA D1,ACC,Pittsburgh Panthers,Game Royal,#003594,1,0
+NCAA D1,ACC,Pittsburgh Panthers,University Gold,#FFB81C,0,1
+NCAA D1,ACC,Syracuse Orange,Syracuse Orange,#F76900,1,0
+NCAA D1,ACC,Syracuse Orange,Primary Blue,#000E54,0,1
+NCAA D1,ACC,Virginia Cavaliers,Jefferson Blue,#232D4B,1,0
+NCAA D1,ACC,Virginia Cavaliers,Virginia Orange,#F84C1E,0,1
+NCAA D1,ACC,Virginia Tech Hokies,Chicago Maroon,#630031,1,0
+NCAA D1,ACC,Virginia Tech Hokies,Orange,#CF4420,0,1
+NCAA D1,ACC,Wake Forest Demon Deacons,Gold,#9E7E38,1,0
+NCAA D1,ACC,Wake Forest Demon Deacons,Black,#000000,0,1
+NCAA D1,Big 12,Central Florida Knights,Bright Gold,#FFC904,0,1
+NCAA D1,Big 12,Central Florida Knights,Metallic Gold,#BA9B37,0,0
+NCAA D1,Big 12,Central Florida Knights,Black,#000000,1,0
+NCAA D1,Big 12,Cincinnati Bearcats,Red,#E00122,1,0
+NCAA D1,Big 12,Cincinnati Bearcats,Black,#000000,0,1
+NCAA D1,Big East,Connecticut Huskies,Navy Blue,#000E2F,1,0
+NCAA D1,Big East,Connecticut Huskies,Gray,#7C878E,0,0
+NCAA D1,Big East,Connecticut Huskies,Red,#E4002B,0,0
+NCAA D1,Big East,Connecticut Huskies,White,#FFFFFF,0,1
+NCAA D1,American Athletic,East Carolina Pirates,Purple,#592A8A,1,0
+NCAA D1,American Athletic,East Carolina Pirates,Gold,#FDC82F,0,1
+NCAA D1,Big 12,Houston Cougars,Red,#C8102E,1,0
+NCAA D1,Big 12,Houston Cougars,Dark Red,#76232F,0,0
+NCAA D1,Big 12,Houston Cougars,Gray,#B2B4B2,0,0
+NCAA D1,Big 12,Houston Cougars,White,#FFFFFF,0,1
+NCAA D1,American Athletic,Memphis Tigers,Blue,#003087,1,0
+NCAA D1,American Athletic,Memphis Tigers,Gray,#898D8D,0,1
+NCAA D1,American Athletic,Memphis Tigers,Orange,#F8992E,0,0
+NCAA D1,Patriot League,Navy Midshipmen,Navy Blue,#00205B,1,0
+NCAA D1,Patriot League,Navy Midshipmen,Gold,#C5B783,0,1
+NCAA D1,ACC,SMU Mustangs,Blue,#0033A0,1,0
+NCAA D1,ACC,SMU Mustangs,Red,#C8102E,0,1
+NCAA D1,American Athletic,South Florida Bulls,USF GREEN,#006747,1,0
+NCAA D1,American Athletic,South Florida Bulls,USF GOLD,#CFC493,0,1
+NCAA D1,American Athletic,Temple Owls,Cherry,#9D2235,1,0
+NCAA D1,American Athletic,Temple Owls,Yellow,#FFCD00,0,1
+NCAA D1,American Athletic,Temple Owls,Metallic Silver,#8A8D8F,0,0
+NCAA D1,American Athletic,Temple Owls,Silver,#C1C6C8,0,0
+NCAA D1,American Athletic,Temple Owls,Black,#000000,0,0
+NCAA D1,American Athletic,Tulane Green Wave,Dark Green,#006747,1,0
+NCAA D1,American Athletic,Tulane Green Wave,Kelly Green,#43B02A,0,1
+NCAA D1,American Athletic,Tulane Green Wave,Blue,#418FDE,0,0
+NCAA D1,American Athletic,Tulane Green Wave,Black,#000000,0,0
+NCAA D1,American Athletic,Tulsa Golden Hurricane,Navy Blue,#002D72,1,0
+NCAA D1,American Athletic,Tulsa Golden Hurricane,Red,#C8102E,0,0
+NCAA D1,American Athletic,Tulsa Golden Hurricane,Old Gold,#C5B783,0,1
+NCAA D1,American Athletic,Tulsa Golden Hurricane,Yellow,#F3D54E,0,0
+NCAA D1,American Athletic,Tulsa Golden Hurricane,Metallic Gold,#84754E,0,0
+NCAA D1,American Athletic,Wichita State Shockers,Wichita State Yellow,#FFCD00,1,0
+NCAA D1,American Athletic,Wichita State Shockers,Black,#000000,0,1
+NCAA D1,America East,University At Albany Great Danes,Purple,#461660,1,0
+NCAA D1,America East,University At Albany Great Danes,Gold,#EEB211,0,1
+NCAA D1,America East,Binghamton Bearcats,Deep Green,#005A43,1,0
+NCAA D1,America East,Binghamton Bearcats,Green,#169B62,0,1
+NCAA D1,America East,Binghamton Bearcats,RED,#BF0D3E,0,0
+NCAA D1,America East,Binghamton Bearcats,COOL GRAY,#B1B3B3,0,0
+NCAA D1,America East,Maine Black Bears,Navy Blue,#003263,1,0
+NCAA D1,America East,Maine Black Bears,Light Blue,#B0D7FF,0,1
+NCAA D1,America East,Maine Black Bears,RED,#AB0634,0,0
+NCAA D1,America East,Maine Black Bears,GRAY,#908C89,0,0
+NCAA D1,America East,New Hampshire Wildcats,Blue,#041E42,1,0
+NCAA D1,America East,New Hampshire Wildcats,Silver,#BBBCBC,0,1
+NCAA D1,CAA,Stony Brook University Seawolves,STONY BROOK RED,#990000,1,0
+NCAA D1,CAA,Stony Brook University Seawolves,MIDNIGHT BLUE,#16243E,0,1
+NCAA D1,CAA,Stony Brook University Seawolves,STONY BROOK GREY,#828282,0,0
+NCAA D1,America East,UMass Lowell River Hawks,BLUE,#003DA5,1,0
+NCAA D1,America East,UMass Lowell River Hawks,RED,#C8102E,0,1
+NCAA D1,America East,University of Maryland - Baltimore County Retrievers,UMBC Retriever Brown,#B18906,1,0
+NCAA D1,America East,University of Maryland - Baltimore County Retrievers,Black,#000000,0,0
+NCAA D1,America East,University of Maryland - Baltimore County Retrievers,Gold,#F7BD00,0,1
+NCAA D1,America East,Vermont Catamounts,CATAMOUNT GREEN,#154734,1,0
+NCAA D1,America East,Vermont Catamounts,CATAMOUNT BROWN,#8B5B29,0,1
+NCAA D1,America East,Vermont Catamounts,CATAMOUNT GOLD,#FFC72C,0,0
+NCAA D1,America East,Vermont Catamounts,CATAMOUNT LIGHT BROWN,#C6AA76,0,0
+NCAA D1,America East,Vermont Catamounts,CATAMOUNT ORANGE,#FF6A13,0,0
+NCAA D1,Atlantic 10,Davidson Wildcats,Red,#AC1A2F,1,0
+NCAA D1,Atlantic 10,Davidson Wildcats,Black,#000000,0,1
+NCAA D1,Atlantic 10,Dayton Flyers,RED SCARE,#CE1141,1,0
+NCAA D1,Atlantic 10,Dayton Flyers,FLYERS BLUE,#004B8D,0,1
+NCAA D1,Atlantic 10,Dayton Flyers,GLOW RED,#F80228,0,0
+NCAA D1,Atlantic 10,Dayton Flyers,GLOW BLUE,#0200D1,0,0
+NCAA D1,Atlantic 10,Duquesne Dukes,Navy Blue,#041E42,1,0
+NCAA D1,Atlantic 10,Duquesne Dukes,Red,#BA0C2F,0,1
+NCAA D1,Atlantic 10,Duquesne Dukes,Black,#000000,0,0
+NCAA D1,Atlantic 10,Fordham Rams,FORDHAM ATHLETIC MAROON,#860038,1,0
+NCAA D1,Atlantic 10,Fordham Rams,White,#FFFFFF,0,1
+NCAA D1,Atlantic 10,George Mason Patriots,MASON GREEN,#006633,1,0
+NCAA D1,Atlantic 10,George Mason Patriots,MASON GOLD,#FFCC33,0,1
+NCAA D1,Atlantic 10,George Washington Colonials,BUFF,#E2CB92,1,0
+NCAA D1,Atlantic 10,George Washington Colonials,BLUE,#002654,0,1
+NCAA D1,Atlantic 10,La Salle Explorers,GOLD,#FFCC00,1,0
+NCAA D1,Atlantic 10,La Salle Explorers,BLUE,#003366,0,1
+NCAA D1,Atlantic 10,Rhode Island Rams,Keaney Blue,#68ABE8,1,0
+NCAA D1,Atlantic 10,Rhode Island Rams,Navy Blue,#002147,0,1
+NCAA D1,Atlantic 10,Richmond Spiders,UR BLUE,#000066,1,0
+NCAA D1,Atlantic 10,Richmond Spiders,UR RED,#990000,0,1
+NCAA D1,Atlantic 10,St. Bonaventure Bonnies,BROWN,#54261A,1,0
+NCAA D1,Atlantic 10,St. Bonaventure Bonnies,GOLD,#FDB726,0,1
+NCAA D1,Atlantic 10,St. Bonaventure Bonnies,GRAY,#BDB6B0,0,0
+NCAA D1,Atlantic 10,Saint Joseph's Hawks,CRIMSON,#9E1B32,1,0
+NCAA D1,Atlantic 10,Saint Joseph's Hawks,GRAY,#6C6F70,0,1
+NCAA D1,Atlantic 10,Saint Louis Billikens,SLU Blue,#003DA5,1,0
+NCAA D1,Atlantic 10,Saint Louis Billikens,COLLEGE CHURCH GRAY,#C8C9C7,0,1
+NCAA D1,Atlantic 10,Virginia Commonwealth Rams,Gold,#FFB300,1,0
+NCAA D1,Atlantic 10,Virginia Commonwealth Rams,Black,#000000,0,1
+NCAA D1,Atlantic Sun,Florida Gulf Coast Eagles,Blue,#002D72,1,0
+NCAA D1,Atlantic Sun,Florida Gulf Coast Eagles,Green,#007749,0,1
+NCAA D1,Atlantic Sun,Florida Gulf Coast Eagles,Gold,#B9975B,0,0
+NCAA D1,Atlantic Sun,Jacksonville Dolphins,GREEN,#004E44,1,0
+NCAA D1,Atlantic Sun,Jacksonville Dolphins,GRAY,#898A8D,0,1
+NCAA D1,Atlantic Sun,Jacksonville Dolphins,SILVER,#BBBBBB,0,0
+NCAA D1,Conference USA,Kennesaw State Owls,KSU Gold,#FDBB30,1,0
+NCAA D1,Conference USA,Kennesaw State Owls,BLACK,#0B1315,0,1
+NCAA D1,Conference USA,Kennesaw State Owls,GREY,#C5C6C8,0,0
+NCAA D1,Conference USA,Liberty Flames,Blue,#002D62,1,0
+NCAA D1,Conference USA,Liberty Flames,Red,#C41230,0,1
+NCAA D1,Conference USA,Liberty Flames,Grey,#C6C8CA,0,0
+NCAA D1,Atlantic Sun,Lipscomb University Bisons,PURPLE,#331E54,1,0
+NCAA D1,Atlantic Sun,Lipscomb University Bisons,GOLD,#F4AA00,0,1
+NCAA D1,Atlantic Sun,North Alabama Lions,UNA PURPLE,#46166B,1,0
+NCAA D1,Atlantic Sun,North Alabama Lions,UNA GOLD,#DB9F11,0,1
+NCAA D1,Atlantic Sun,North Alabama Lions,UNA GREY,#5F6062,0,0
+NCAA D1,Atlantic Sun,North Florida Ospreys,OSPREY BLUE,#00246B,1,0
+NCAA D1,Atlantic Sun,North Florida Ospreys,OSPREY GRAY,#D9D9D9,0,1
+NCAA D1,Big South,USC Upstate Spartans,GREEN,#00703C,1,0
+NCAA D1,Big South,USC Upstate Spartans,White,#FFFFFF,0,1
+NCAA D1,Big South,USC Upstate Spartans,Black,#000000,0,0
+NCAA D1,Atlantic Sun,Stetson Hatters,Stetson Green,#00523E,1,0
+NCAA D1,Atlantic Sun,Stetson Hatters,Hatter Green,#3B8729,0,1
+NCAA D1,Big East,Butler Bulldogs,Blue,#13294B,1,0
+NCAA D1,Big East,Butler Bulldogs,GRAY,#747678,0,1
+NCAA D1,Big East,Butler Bulldogs,SECONDARY GRAY,#D1E0D7,0,0
+NCAA D1,Big East,Creighton Bluejays,Blue,#005CA9,1,0
+NCAA D1,Big East,Creighton Bluejays,Navy Blue,#00235D,0,0
+NCAA D1,Big East,Creighton Bluejays,Light Blue,#6CADDE,0,0
+NCAA D1,Big East,Creighton Bluejays,Gray,#828282,0,0
+NCAA D1,Big East,Creighton Bluejays,White,#FFFFFF,0,1
+NCAA D1,Big East,DePaul Blue Demons,Royal Blue,#005EB8,1,0
+NCAA D1,Big East,DePaul Blue Demons,SCARLET,#E4002B,0,0
+NCAA D1,Big East,DePaul Blue Demons,White,#FFFFFF,0,1
+NCAA D1,Big East,Georgetown Hoyas,Georgetown Blue,#041E42,1,0
+NCAA D1,Big East,Georgetown Hoyas,Georgetown Gray,#8D817B,0,1
+NCAA D1,Big East,Marquette Golden Eagles,Marquette Blue,#003366,1,0
+NCAA D1,Big East,Marquette Golden Eagles,Marquette Gold,#FFCC00,0,1
+NCAA D1,Big East,Providence Friars,SILVER,#8A8D8F,0,1
+NCAA D1,Big East,Providence Friars,Black,#000000,1,0
+NCAA D1,Big East,Providence Friars,White,#FFFFFF,0,0
+NCAA D1,Big East,Seton Hall Pirates,Blue,#004488,1,0
+NCAA D1,Big East,Seton Hall Pirates,Gray,#A2AAAD,0,1
+NCAA D1,Big East,St. John's Red Storm,St. John’s Red,#BA0C2F,1,0
+NCAA D1,Big East,St. John's Red Storm,SJU Blue,#041C2C,0,1
+NCAA D1,Big East,St. John's Red Storm,Silver Gray,#A7A8AA,0,0
+NCAA D1,Big East,Villanova Wildcats,Navy,#00205B,1,0
+NCAA D1,Big East,Villanova Wildcats,Light Blue,#13B5EA,0,1
+NCAA D1,Big East,Villanova Wildcats,Gold,#8B634B,0,0
+NCAA D1,Big East,Xavier University Musketeers,Blue,#0C2340,1,0
+NCAA D1,Big East,Xavier University Musketeers,Silver,#9EA2A2,0,1
+NCAA D1,Big Sky,Eastern Washington Eagles,Red,#A10022,1,0
+NCAA D1,Big Sky,Eastern Washington Eagles,Black,#000000,0,1
+NCAA D1,Big Sky,Eastern Washington Eagles,Gray,#6D6E71,0,0
+NCAA D1,Big Sky,Idaho Vandals,Athletic Gold,#B3A369,1,0
+NCAA D1,Big Sky,Idaho Vandals,Academic Gold,#EAAB00,0,1
+NCAA D1,Big Sky,Idaho Vandals,Metallic Gold,#86754D,0,0
+NCAA D1,Big Sky,Idaho Vandals,Black,#000000,0,0
+NCAA D1,Big Sky,Idaho State Bengals,ISU Orange,#FF671F,1,0
+NCAA D1,Big Sky,Idaho State Bengals,Black,#000000,0,0
+NCAA D1,Big Sky,Idaho State Bengals,Light Orange,#F9A81A,0,1
+NCAA D1,Big Sky,Montana Grizzlies,Maroon,#660033,1,0
+NCAA D1,Big Sky,Montana Grizzlies,Silver,#999999,0,1
+NCAA D1,Big Sky,Montana State Bobcats,Blue,#00205B,1,0
+NCAA D1,Big Sky,Montana State Bobcats,Gold,#B9975B,0,1
+NCAA D1,Big Sky,Northern Arizona Lumberjacks,NAU Blue,#003466,1,0
+NCAA D1,Big Sky,Northern Arizona Lumberjacks,NAU Gold,#FFD200,0,1
+NCAA D1,Big Sky,Northern Colorado Bears,Bears Blue,#013C65,1,0
+NCAA D1,Big Sky,Northern Colorado Bears,Bears Gold,#F6B000,0,1
+NCAA D1,Big Sky,Portland State Vikings,Green,#154734,1,0
+NCAA D1,Big Sky,Portland State Vikings,White,#FFFFFF,0,1
+NCAA D1,Big Sky,"California State University, Sacramento Hornets",Sac State Green,#043927,1,0
+NCAA D1,Big Sky,"California State University, Sacramento Hornets",Sac State Gold,#C4B581,0,1
+NCAA D1,WAC,Southern Utah Thunderbirds,SUU Red,#C41425,1,0
+NCAA D1,WAC,Southern Utah Thunderbirds,SUU Black,#000000,0,1
+NCAA D1,Big Sky,Weber State Wildcats,Wildcat Purple,#4B2682,1,0
+NCAA D1,Big Sky,Weber State Wildcats,Gray,#A1A1A4,0,1
+NCAA D1,Big Sky,Weber State Wildcats,Black,#130C0E,0,0
+NCAA D1,CAA,Campbell Fighting Camels,Orange,#F58025,1,0
+NCAA D1,CAA,Campbell Fighting Camels,Black,#231F20,0,1
+NCAA D1,Big South,Charleston Southern Buccaneers,Gold,#A8996E,1,0
+NCAA D1,Big South,Charleston Southern Buccaneers,Blue,#002855,0,1
+NCAA D1,Big South,Gardner-Webb Bulldogs,Red,#BF2F37,1,0
+NCAA D1,Big South,Gardner-Webb Bulldogs,Black,#000000,0,1
+NCAA D1,CAA,Hampton Pirates,Blue,#0060A9,1,0
+NCAA D1,CAA,Hampton Pirates,White,#FFFFFF,0,1
+NCAA D1,Big South,High Point Panthers,Royal Purple,#330072,1,0
+NCAA D1,Big South,High Point Panthers,White,#FFFFFF,0,1
+NCAA D1,Big South,Longwood Lancers,Blue,#15213B,1,0
+NCAA D1,Big South,Longwood Lancers,Grey,#999D9E,0,1
+NCAA D1,Big South,Presbyterian Blue Hose,Blue,#0060A9,1,0
+NCAA D1,Big South,Presbyterian Blue Hose,Red,#9D2235,0,1
+NCAA D1,Big South,Radford Highlanders,Red,#C2011B,1,0
+NCAA D1,Big South,Radford Highlanders,Gray,#D1D3D4,0,0
+NCAA D1,Big South,Radford Highlanders,Blue,#003C71,0,1
+NCAA D1,Big South,UNC Asheville Bulldogs,Blue,#003DA5,1,0
+NCAA D1,Big South,UNC Asheville Bulldogs,Grey,#808285,0,0
+NCAA D1,Big South,UNC Asheville Bulldogs,Light Grey,#C7C8CA,0,0
+NCAA D1,Big South,UNC Asheville Bulldogs,Red,#E31837,0,1
+NCAA D1,Big South,UNC Asheville Bulldogs,Black,#231F20,0,0
+NCAA D1,Big South,Winthrop Eagles,Garnet,#660000,1,0
+NCAA D1,Big South,Winthrop Eagles,Gold,#F0B323,0,1
+NCAA D1,Big Ten,Illinois Fighting Illini,Navy Blue,#13294B,0,1
+NCAA D1,Big Ten,Illinois Fighting Illini,Orange,#E84A27,1,0
+NCAA D1,Big Ten,Indiana Hoosiers,Crimson,#990000,1,0
+NCAA D1,Big Ten,Indiana Hoosiers,Cream,#EEEDEB,0,1
+NCAA D1,Big Ten,Iowa Hawkeyes,Black,#000000,1,0
+NCAA D1,Big Ten,Iowa Hawkeyes,Hawkeyes Gold,#FFCD00,0,1
+NCAA D1,Big Ten,Maryland Terrapins,Red,#E03A3E,1,0
+NCAA D1,Big Ten,Maryland Terrapins,Black,#000000,0,0
+NCAA D1,Big Ten,Maryland Terrapins,Gold,#FFD520,0,1
+NCAA D1,Big Ten,Michigan Wolverines,Blue,#00274C,0,1
+NCAA D1,Big Ten,Michigan Wolverines,Maize,#FFCB05,1,0
+NCAA D1,Big Ten,Minnesota Golden Gophers,Maroon,#7A0019,1,0
+NCAA D1,Big Ten,Minnesota Golden Gophers,Gold,#FFCC33,0,1
+NCAA D1,Big Ten,Nebraska Cornhuskers,Red,#E41C38,1,0
+NCAA D1,Big Ten,Nebraska Cornhuskers,Black,#000000,0,0
+NCAA D1,Big Ten,Nebraska Cornhuskers,Cream,#FDF2D9,0,1
+NCAA D1,Big Ten,Northwestern Wildcats,Purple,#4E2A84,1,0
+NCAA D1,Big Ten,Northwestern Wildcats,White,#FFFFFF,0,1
+NCAA D1,Big Ten,Ohio State Buckeyes,Scarlet,#BB0000,1,0
+NCAA D1,Big Ten,Ohio State Buckeyes,Gray,#666666,0,0
+NCAA D1,Big Ten,Ohio State Buckeyes,Black,#000000,0,0
+NCAA D1,Big Ten,Ohio State Buckeyes,White,#FFFFFF,0,1
+NCAA D1,Big Ten,Penn State Nittany Lions,Blue,#041E42,1,0
+NCAA D1,Big Ten,Penn State Nittany Lions,White,#FFFFFF,0,1
+NCAA D1,Big Ten,Purdue Boilermakers,Athletic Gold,#CEB888,1,0
+NCAA D1,Big Ten,Purdue Boilermakers,Black,#000000,0,1
+NCAA D1,Big Ten,Purdue Boilermakers,Gray,#9D968D,0,0
+NCAA D1,Big Ten,Purdue Boilermakers,Dark Gray,#373A36,0,0
+NCAA D1,Big Ten,Purdue Boilermakers,Campus Gold,#C28E0E,0,0
+NCAA D1,Big Ten,Rutgers Scarlet Knights,Scarlet,#CC0033,1,0
+NCAA D1,Big Ten,Rutgers Scarlet Knights,Gray,#5F6A72,0,0
+NCAA D1,Big Ten,Rutgers Scarlet Knights,Black,#000000,0,1
+NCAA D1,Big Ten,Wisconsin Badgers,Badger Red,#C5050C,1,0
+NCAA D1,Big Ten,Wisconsin Badgers,White,#FFFFFF,0,1
+NCAA D1,Big West,Cal Poly Mustangs,Cal Poly Green,#003831,1,0
+NCAA D1,Big West,Cal Poly Mustangs,Cal Poly Vegas Gold,#FFE395,0,1
+NCAA D1,Big West,Cal Poly Mustangs,Cal Poly Copper Gold,#B38F4F,0,0
+NCAA D1,Big West,Cal Poly Mustangs,Black,#000000,0,0
+NCAA D1,Big West,Cal State Fullerton Titans,TITAN BLUE,#00274C,1,0
+NCAA D1,Big West,Cal State Fullerton Titans,TITAN LIGHT ORANGE,#DC8218,0,1
+NCAA D1,Big West,Hawaii Warriors,Green,#024731,1,0
+NCAA D1,Big West,Hawaii Warriors,Silver,#C8C8C8,0,1
+NCAA D1,Big West,Hawaii Warriors,Black,#000000,0,0
+NCAA D1,Big West,Long Beach State Beach,Go Beach Gold,#FFC72A,1,0
+NCAA D1,Big West,Long Beach State Beach,Championship Black,#000000,0,1
+NCAA D1,Big West,UC Davis Aggies,Yale Blue,#002855,1,0
+NCAA D1,Big West,UC Davis Aggies,Gold,#B3A369,0,1
+NCAA D1,Big West,UC Irvine Anteaters,DARK BLUE,#0C2340,1,0
+NCAA D1,Big West,UC Irvine Anteaters,YELLOW,#FFC72C,0,1
+NCAA D1,Big West,UC Riverside Highlanders,UCR BLUE,#2D6CC0,1,0
+NCAA D1,Big West,UC Riverside Highlanders,UCR NAVY,#003066,0,1
+NCAA D1,Big West,UC Riverside Highlanders,UCR GOLD,#F1AB00,0,0
+NCAA D1,Big West,UC Riverside Highlanders,UCR GRAY,#7A6E67,0,0
+NCAA D1,Big West,UC Santa Barbara Gauchos,NAVY,#003660,1,0
+NCAA D1,Big West,UC Santa Barbara Gauchos,GOLD,#FEBC11,0,1
+NCAA D1,Big 12,Baylor Bears,Baylor Green,#154734,1,0
+NCAA D1,Big 12,Baylor Bears,Baylor Gold,#FFB81C,0,1
+NCAA D1,Big 12,Iowa State Cyclones,Cardinal,#C8102E,0,1
+NCAA D1,Big 12,Iowa State Cyclones,Gold,#F1BE48,1,0
+NCAA D1,Big 12,Kansas Jayhawks,KU Blue,#0051BA,1,0
+NCAA D1,Big 12,Kansas Jayhawks,Crimson,#E8000D,0,0
+NCAA D1,Big 12,Kansas Jayhawks,Jayhawk Yellow,#FFC82D,0,1
+NCAA D1,Big 12,Kansas Jayhawks,Signature Grey,#85898A,0,0
+NCAA D1,Big 12,Kansas State Wildcats,Purple,#512888,1,0
+NCAA D1,Big 12,Kansas State Wildcats,Light Gray,#D1D1D1,0,1
+NCAA D1,Big 12,Kansas State Wildcats,Gray,#A7A7A7,0,0
+NCAA D1,Big 12,Kansas State Wildcats,Black,#000000,0,0
+NCAA D1,SEC,Oklahoma Sooners,Crimson,#841617,1,0
+NCAA D1,SEC,Oklahoma Sooners,Cream,#FDF9D8,0,1
+NCAA D1,Big 12,Oklahoma State Cowboys,Orange,#FF7300,1,0
+NCAA D1,Big 12,Oklahoma State Cowboys,Black,#000000,0,1
+NCAA D1,SEC,Texas Longhorns,Burnt Orange,#BF5700,1,0
+NCAA D1,SEC,Texas Longhorns,Dark Gray,#333F48,0,0
+NCAA D1,SEC,Texas Longhorns,White,#FFFFFF,0,1
+NCAA D1,Big 12,Texas Christian Horned Frogs,Purple,#4D1979,1,0
+NCAA D1,Big 12,Texas Christian Horned Frogs,Grey,#A3A9AC,0,1
+NCAA D1,Big 12,Texas Tech Red Raiders,Red,#CC0000,1,0
+NCAA D1,Big 12,Texas Tech Red Raiders,Black,#000000,0,1
+NCAA D1,Big 12,West Virginia Mountaineers,Blue,#002855,1,0
+NCAA D1,Big 12,West Virginia Mountaineers,Gold,#EAAA00,0,1
+NCAA D1,CAA,Charleston Cougars,Maroon,#800000,1,0
+NCAA D1,CAA,Charleston Cougars,METALLIC GOLD,#9D8958,0,1
+NCAA D1,CAA,Charleston Cougars,GRAY,#D9D9D6,0,0
+NCAA D1,CAA,Charleston Cougars,GOLD,#C5B783,0,0
+NCAA D1,CAA,Drexel Dragons,Blue,#00437B,1,0
+NCAA D1,CAA,Drexel Dragons,Gold,#FFDA02,0,1
+NCAA D1,CAA,Elon Phoenix,Maroon,#73000A,1,0
+NCAA D1,CAA,Elon Phoenix,Gold,#B59A57,0,1
+NCAA D1,CAA,Elon Phoenix,Black,#000000,0,0
+NCAA D1,CAA,Hofstra Pride,Blue,#0B1E73,1,0
+NCAA D1,CAA,Hofstra Pride,Gold,#FEB612,0,1
+NCAA D1,Sun Belt,James Madison Dukes,Purple,#450084,1,0
+NCAA D1,Sun Belt,James Madison Dukes,Gold,#CBB677,0,1
+NCAA D1,CAA,Northeastern Huskies,Red,#D41B2C,1,0
+NCAA D1,CAA,Northeastern Huskies,Black,#000000,0,1
+NCAA D1,CAA,Towson Tigers,Gold,#FFBB00,1,0
+NCAA D1,CAA,Towson Tigers,Black,#3C3C3C,0,1
+NCAA D1,CAA,Towson Tigers,Gray,#DDDDDD,0,0
+NCAA D1,CAA,UNC Wilmington Seahawks,Blue,#003366,1,0
+NCAA D1,CAA,UNC Wilmington Seahawks,Teal,#006666,0,1
+NCAA D1,CAA,UNC Wilmington Seahawks,Yellow,#FFD600,0,0
+NCAA D1,CAA,William & Mary Tribe,Green,#115740,1,0
+NCAA D1,CAA,William & Mary Tribe,Gold,#F0B323,0,1
+NCAA D1,American Athletic,UNC Charlotte 49ers,Green,#046A38,1,0
+NCAA D1,American Athletic,UNC Charlotte 49ers,Gold,#B9975B,0,1
+NCAA D1,American Athletic,UNC Charlotte 49ers,Black,#27251F,0,0
+NCAA D1,Conference USA,Florida International Panthers,Navy Blue,#081E3F,1,0
+NCAA D1,Conference USA,Florida International Panthers,Gold,#B6862C,0,1
+NCAA D1,Conference USA,Louisiana Tech Bulldogs,Blue,#002F8B,1,0
+NCAA D1,Conference USA,Louisiana Tech Bulldogs,Red,#E31B23,0,1
+NCAA D1,Conference USA,Louisiana Tech Bulldogs,Silver,#A2AAAD,0,0
+NCAA D1,Conference USA,Louisiana Tech Bulldogs,Black,#111111,0,0
+NCAA D1,Sun Belt,Marshall Thundering Herd,GREEN,#00B140,1,0
+NCAA D1,Sun Belt,Marshall Thundering Herd,GRAY,#A2AAAD,0,1
+NCAA D1,Sun Belt,Marshall Thundering Herd,BROWN,#693F23,0,0
+NCAA D1,Sun Belt,Marshall Thundering Herd,LIGHT BROWN,#AD7C59,0,0
+NCAA D1,Sun Belt,Marshall Thundering Herd,BLACK,#27251F,0,0
+NCAA D1,Conference USA,Middle Tennessee State Blue Raiders,Black,#000000,0,1
+NCAA D1,Conference USA,Middle Tennessee State Blue Raiders,MTSU Blue,#0066CC,1,0
+NCAA D1,American Athletic,North Texas Mean Green,UNT Green,#00853E,1,0
+NCAA D1,American Athletic,North Texas Mean Green,Black,#000000,0,1
+NCAA D1,Sun Belt,Old Dominion Monarchs,Blue,#003057,1,0
+NCAA D1,Sun Belt,Old Dominion Monarchs,Gray,#7C878E,0,1
+NCAA D1,Sun Belt,Old Dominion Monarchs,Light Blue,#92C1E9,0,0
+NCAA D1,American Athletic,Rice Owls,Navy Blue,#00205B,1,0
+NCAA D1,American Athletic,Rice Owls,Gray,#C1C6C8,0,1
+NCAA D1,Sun Belt,Southern Mississippi Golden Eagles,Black,#000000,0,1
+NCAA D1,Sun Belt,Southern Mississippi Golden Eagles,Gold,#FFAB00,1,0
+NCAA D1,American Athletic,Alabama Birmingham (UAB) Blazers,Green,#006341,1,0
+NCAA D1,American Athletic,Alabama Birmingham (UAB) Blazers,Gold,#CC8A00,0,1
+NCAA D1,American Athletic,Alabama Birmingham (UAB) Blazers,Black,#000000,0,0
+NCAA D1,American Athletic,Alabama Birmingham (UAB) Blazers,Red,#BF0D3E,0,0
+NCAA D1,Conference USA,UTEP Miners,Orange,#FF8200,1,0
+NCAA D1,Conference USA,UTEP Miners,Blue,#041E42,0,1
+NCAA D1,Conference USA,UTEP Miners,Silver,#B1B3B3,0,0
+NCAA D1,American Athletic,UTSA Roadrunners,Orange,#F15A22,1,0
+NCAA D1,American Athletic,UTSA Roadrunners,Blue,#0C2340,0,1
+NCAA D1,Conference USA,Western Kentucky Hilltoppers,Red,#C60C30,1,0
+NCAA D1,Conference USA,Western Kentucky Hilltoppers,Black,#1E1E1E,0,1
+NCAA D1,Conference USA,Western Kentucky Hilltoppers,Gray,#A2A4A3,0,0
+NCAA D1,Horizon League,Cleveland State Vikings,CLEVELAND STATE GREEN,#006747,1,0
+NCAA D1,Horizon League,Cleveland State Vikings,White,#FFFFFF,0,1
+NCAA D1,Horizon League,Detroit Mercy Titans,RED,#A6093D,1,0
+NCAA D1,Horizon League,Detroit Mercy Titans,BLUE,#002D72,0,1
+NCAA D1,Horizon League,Detroit Mercy Titans,GRAY,#D7D2CB,0,0
+NCAA D1,Horizon League,Green Bay Phoenix,GREEN,#006747,1,0
+NCAA D1,Horizon League,Green Bay Phoenix,RED,#9D2235,0,1
+NCAA D1,Horizon League,Green Bay Phoenix,SILVER,#8A8D8F,0,0
+NCAA D1,Horizon League,IU Indianapolis Jaguars,IU Crimson,#9D2235,1,0
+NCAA D1,Horizon League,IU Indianapolis Jaguars,IU Cream,#DFD1A7,0,1
+NCAA D1,Horizon League,IU Indianapolis Jaguars,Black,#000000,0,0
+NCAA D1,Horizon League,Milwaukee Panthers,UWM GOLD,#FFBD00,1,0
+NCAA D1,Horizon League,Milwaukee Panthers,UWM SILVER GRAY,#CCCCCC,0,1
+NCAA D1,Horizon League,Northern Kentucky Norse,GOLD,#FFC72C,1,0
+NCAA D1,Horizon League,Northern Kentucky Norse,Black,#000000,0,1
+NCAA D1,Horizon League,Northern Kentucky Norse,White,#FFFFFF,0,0
+NCAA D1,Horizon League,Oakland Golden Grizzlies,METALLIC GOLD,#B59A57,1,0
+NCAA D1,Horizon League,Oakland Golden Grizzlies,Black,#000000,0,1
+NCAA D1,Missouri Valley,UIC Flames,RED,#AC1E2D,1,0
+NCAA D1,Missouri Valley,UIC Flames,FLAMES BLUE,#041E42,0,1
+NCAA D1,Missouri Valley,UIC Flames,YELLOW,#FACC09,0,0
+NCAA D1,Horizon League,Wright State Raiders,RAIDER GREEN,#026937,1,0
+NCAA D1,Horizon League,Wright State Raiders,RAIDER GOLD,#CEA052,0,1
+NCAA D1,Horizon League,Wright State Raiders,MCLIN GOLD,#FFE1A5,0,0
+NCAA D1,Horizon League,Wright State Raiders,NUTTER ORANGE,#DE6328,0,0
+NCAA D1,Horizon League,Youngstown State Penguins,PENGUIN RED,#C8102E,1,0
+NCAA D1,Horizon League,Youngstown State Penguins,PENGUIN YELLOW,#F3D54E,0,1
+NCAA D1,Ivy League,Brown Bears,Seal Brown,#4E3629,1,0
+NCAA D1,Ivy League,Brown Bears,Brown Red,#7C2529,0,0
+NCAA D1,Ivy League,Brown Bears,Cardinal Red,#E4002B,0,1
+NCAA D1,Ivy League,Columbia Lions,Athletic Dark Blue,#003865,1,0
+NCAA D1,Ivy League,Columbia Lions,Columbia Blue,#9BCBEB,0,1
+NCAA D1,Ivy League,Cornell Big Red,Carnelian,#B31B1B,1,0
+NCAA D1,Ivy League,Cornell Big Red,Brown,#5E3920,0,1
+NCAA D1,Ivy League,Cornell Big Red,Light Brown,#89572E,0,0
+NCAA D1,Ivy League,Cornell Big Red,Black,#000000,0,0
+NCAA D1,Ivy League,Dartmouth Big Green,DARTMOUTH GREEN,#046A38,1,0
+NCAA D1,Ivy League,Dartmouth Big Green,White,#FFFFFF,0,1
+NCAA D1,Ivy League,Harvard University,Crimson,#A41034,1,0
+NCAA D1,Ivy League,Harvard University,Black,#000000,0,1
+NCAA D1,Ivy League,Harvard University,Cool Gray,#808285,0,0
+NCAA D1,Ivy League,Harvard University,Silver,#B6B6B6,0,0
+NCAA D1,Ivy League,Penn Quakers,Penn Red,#990000,1,0
+NCAA D1,Ivy League,Penn Quakers,Blue,#011F5B,0,1
+NCAA D1,Ivy League,Princeton Tigers,PRINCETON ORANGE,#FF671F,1,0
+NCAA D1,Ivy League,Princeton Tigers,BLACK,#000000,0,1
+NCAA D1,Ivy League,Yale Bulldogs,YALE BLUE,#00356B,1,0
+NCAA D1,Ivy League,Yale Bulldogs,White,#FFFFFF,0,1
+NCAA D1,MAAC,Saint Peter's Peacocks,NAVY,#003C71,1,0
+NCAA D1,MAAC,Saint Peter's Peacocks,BLUE,#0072CE,0,1
+NCAA D1,MAAC,Saint Peter's Peacocks,GRAY,#A59C94,0,0
+NCAA D1,MAAC,Siena Saints,SIENA YELLOW,#FFC72C,1,0
+NCAA D1,MAAC,Siena Saints,SIENA RED,#C8102E,0,1
+NCAA D1,MAAC,Siena Saints,SIENA GREEN,#006747,0,0
+NCAA D1,MAAC,Siena Saints,SIENA BROWN,#693F23,0,0
+NCAA D1,MAC,Akron Zips,BLUE,#041E42,1,0
+NCAA D1,MAC,Akron Zips,GOLD,#A89968,0,1
+NCAA D1,MAC,Bowling Green Falcons,ORANGE,#FE5000,1,0
+NCAA D1,MAC,Bowling Green Falcons,BROWN,#4F2C1D,0,1
+NCAA D1,MAC,Bowling Green Falcons,TAN,#CDA077,0,0
+NCAA D1,MAC,Buffalo Bulls,UB BLUE,#005BBB,1,0
+NCAA D1,MAC,Buffalo Bulls,White,#FFFFFF,0,1
+NCAA D1,MAC,Kent State Golden Flashes,NAVY BLUE,#002664,1,0
+NCAA D1,MAC,Kent State Golden Flashes,GOLD,#EAAB00,0,1
+NCAA D1,MAC,Miami Redhawks,RED,#B61E2E,1,0
+NCAA D1,MAC,Miami Redhawks,White,#FFFFFF,0,1
+NCAA D1,MAC,Ohio Bobcats,BOBCAT GREEN,#00694E,1,0
+NCAA D1,MAC,Ohio Bobcats,BOBCAT TAN,#CDA077,0,1
+NCAA D1,MAC,Ball State Cardinals,CARDINAL RED,#BA0C2F,1,0
+NCAA D1,MAC,Ball State Cardinals,White,#FFFFFF,0,1
+NCAA D1,MAC,Central Michigan Chippewas,Maroon,#6A0032,1,0
+NCAA D1,MAC,Central Michigan Chippewas,Gold,#FFC82E,0,1
+NCAA D1,MAC,Eastern Michigan Eagles,GREEN,#006633,1,0
+NCAA D1,MAC,Eastern Michigan Eagles,White,#FFFFFF,0,1
+NCAA D1,MAC,Northern Illinois Huskies,NIU RED,#BA0C2F,1,0
+NCAA D1,MAC,Northern Illinois Huskies,NIU SILVER,#8A8D8F,0,1
+NCAA D1,MAC,Toledo Rockets,BLUE,#15397F,1,0
+NCAA D1,MAC,Toledo Rockets,LIGHT BLUE,#005CB9,0,1
+NCAA D1,MAC,Toledo Rockets,GOLD,#FFDA00,0,0
+NCAA D1,MAC,Toledo Rockets,LIGHT GRAY,#BEC6C3,0,0
+NCAA D1,MAC,Toledo Rockets,GRAY,#A0ACAA,0,0
+NCAA D1,MAC,Western Michigan Broncos,BROWN,#6C4023,1,0
+NCAA D1,MAC,Western Michigan Broncos,GOLD,#B5A167,0,1
+NCAA D1,MAC,Western Michigan Broncos,GRAY,#AAA8AA,0,0
+NCAA D1,SWAC,Bethune-Cookman Wildcats,Yellow,#F2A900,1,0
+NCAA D1,SWAC,Bethune-Cookman Wildcats,Burgundy,#6F263D,0,1
+NCAA D1,SWAC,Bethune-Cookman Wildcats,Black,#000000,0,0
+NCAA D1,MEAC,Coppin State Eagles,Blue,#003056,1,0
+NCAA D1,MEAC,Coppin State Eagles,Gold,#FFC915,0,1
+NCAA D1,MEAC,Delaware State Hornets,Red,#EE3124,1,0
+NCAA D1,MEAC,Delaware State Hornets,Light Blue,#72CDF4,0,1
+NCAA D1,MEAC,Delaware State Hornets,Blue,#009DDC,0,0
+NCAA D1,MEAC,Delaware State Hornets,Black,#231F20,0,0
+NCAA D1,SWAC,Florida A&M Rattlers,Fang Orange,#EE7624,1,0
+NCAA D1,SWAC,Florida A&M Rattlers,Venom Green,#1B5633,0,1
+NCAA D1,SWAC,Florida A&M Rattlers,Black,#231F20,0,0
+NCAA D1,MEAC,Howard Bison,Dark Blue,#003A63,1,0
+NCAA D1,MEAC,Howard Bison,Red,#E51937,0,1
+NCAA D1,MEAC,Howard Bison,Gray,#6A808C,0,0
+NCAA D1,MEAC,Maryland Eastern Shore Hawks,Red,#862633,1,0
+NCAA D1,MEAC,Maryland Eastern Shore Hawks,Gray,#888B8D,0,1
+NCAA D1,MEAC,Maryland Eastern Shore Hawks,Black,#000000,0,0
+NCAA D1,MEAC,Morgan State Bears,Morgan Blue,#1B4383,1,0
+NCAA D1,MEAC,Morgan State Bears,Morgan Orange,#F47937,0,1
+NCAA D1,MEAC,Morgan State Bears,Morgan Brown,#CDA177,0,0
+NCAA D1,MEAC,Morgan State Bears,Morgan Gold,#FFBF3F,0,0
+NCAA D1,MEAC,Morgan State Bears,Black,#000000,0,0
+NCAA D1,MEAC,Norfolk State Spartans,NSU Green,#007A53,1,0
+NCAA D1,MEAC,Norfolk State Spartans,NSU Gold,#F3D03E,0,1
+NCAA D1,MEAC,Norfolk State Spartans,NSU Gray,#54585A,0,0
+NCAA D1,MEAC,North Carolina Central Eagles,NCCU Maroon,#880023,1,0
+NCAA D1,MEAC,North Carolina Central Eagles,NCCU Gray,#8E9093,0,1
+NCAA D1,MEAC,North Carolina Central Eagles,NCCU Black,#000000,0,0
+NCAA D1,MEAC,South Carolina State Bulldogs,Red,#862633,1,0
+NCAA D1,MEAC,South Carolina State Bulldogs,Blue,#001A72,0,1
+NCAA D1,MEAC,South Carolina State Bulldogs,Black,#000000,0,0
+NCAA D1,Atlantic 10,Loyola Ramblers,Maroon,#922247,1,0
+NCAA D1,Atlantic 10,Loyola Ramblers,Gold,#FEBD18,0,1
+NCAA D1,Missouri Valley,Northern Iowa Panthers,PURPLE,#4B116F,1,0
+NCAA D1,Missouri Valley,Northern Iowa Panthers,GOLD,#FFCC00,0,1
+NCAA D1,Missouri Valley,Valparaiso Beacons,BROWN,#381E0E,1,0
+NCAA D1,Missouri Valley,Valparaiso Beacons,LIGHT BROWN,#613318,0,0
+NCAA D1,Missouri Valley,Valparaiso Beacons,GOLD,#FFCC00,0,1
+NCAA D1,Mountain West,Air Force Falcons,Blue,#003087,1,0
+NCAA D1,Mountain West,Air Force Falcons,Silver,#8A8D8F,0,1
+NCAA D1,Mountain West,Boise State Broncos,Orange,#D64309,0,1
+NCAA D1,Mountain West,Boise State Broncos,Blue,#0033A0,1,0
+NCAA D1,Mountain West,Colorado State Rams,Green,#1E4D2B,1,0
+NCAA D1,Mountain West,Colorado State Rams,Gold,#C8C372,0,1
+NCAA D1,Mountain West,Fresno State Bulldogs,Red,#DB0032,1,0
+NCAA D1,Mountain West,Fresno State Bulldogs,Blue,#002E6D,0,1
+NCAA D1,Mountain West,Fresno State Bulldogs,Green,#007934,0,0
+NCAA D1,Mountain West,New Mexico Lobos,Red,#BA0C2F,1,0
+NCAA D1,Mountain West,New Mexico Lobos,Silver,#A7A8AA,0,1
+NCAA D1,Mountain West,New Mexico Lobos,Lobo Gray,#63666A,0,0
+NCAA D1,Mountain West,New Mexico Lobos,Turquoise,#007A86,0,0
+NCAA D1,Mountain West,New Mexico Lobos,Black,#000000,0,0
+NCAA D1,Mountain West,San Diego State Aztecs,Red,#A6192E,1,0
+NCAA D1,Mountain West,San Diego State Aztecs,Black,#000000,0,1
+NCAA D1,Mountain West,San Jose State Spartans,Blue,#0055A2,1,0
+NCAA D1,Mountain West,San Jose State Spartans,Gold,#E5A823,0,1
+NCAA D1,Mountain West,San Jose State Spartans,Gray,#939597,0,0
+NCAA D1,Mountain West,UNLV Rebels,Scarlet,#CF0A2C,1,0
+NCAA D1,Mountain West,UNLV Rebels,Gray,#CAC8C8,0,1
+NCAA D1,Mountain West,UNLV Rebels,Black,#000000,0,0
+NCAA D1,Mountain West,Utah State Aggies,Aggie Blue,#00263A,1,0
+NCAA D1,Mountain West,Utah State Aggies,Silver,#8A8D8F,0,1
+NCAA D1,Mountain West,Utah State Aggies,Black,#000000,0,0
+NCAA D1,Mountain West,University of Wyoming Cowboys,Wyoming Gold,#FFC425,1,0
+NCAA D1,Mountain West,University of Wyoming Cowboys,Wyoming Brown,#492F24,0,1
+NCAA D1,America East,Bryant Bulldogs,Gold,#B4975B,1,0
+NCAA D1,America East,Bryant Bulldogs,Light Gold,#C9BB8C,0,1
+NCAA D1,America East,Bryant Bulldogs,Gray,#818286,0,0
+NCAA D1,America East,Bryant Bulldogs,Black,#000000,0,0
+NCAA D1,Northeast Conference,Central Connecticut Blue Devils,Blue,#00539B,1,0
+NCAA D1,Northeast Conference,Central Connecticut Blue Devils,Silver,#CFD4D8,0,1
+NCAA D1,Northeast Conference,Fairleigh Dickinson Knights,Blue,#28334A,1,0
+NCAA D1,Northeast Conference,Fairleigh Dickinson Knights,Burgundy,#72293C,0,1
+NCAA D1,Northeast Conference,Long Island University Sharks,Blue,#69B3E7,1,0
+NCAA D1,Northeast Conference,Long Island University Sharks,Gold,#FFC72C,0,1
+NCAA D1,MAAC,Merrimack Warriors,Blue,#003768,1,0
+NCAA D1,MAAC,Merrimack Warriors,Gold,#FDB813,0,1
+NCAA D1,Horizon League,Robert Morris Colonials,Blue,#14234B,1,0
+NCAA D1,Horizon League,Robert Morris Colonials,Red,#A6192E,0,1
+NCAA D1,Horizon League,Robert Morris Colonials,Gray,#B2B1AE,0,0
+NCAA D1,MAAC,Sacred Heart Pioneers,Red,#CE1141,1,0
+NCAA D1,MAAC,Sacred Heart Pioneers,Gray,#B1B3B6,0,1
+NCAA D1,MAAC,Sacred Heart Pioneers,Black,#4D4D4F,0,0
+NCAA D1,Northeast Conference,St. Francis (BKN) Terriers,Blue,#005496,1,0
+NCAA D1,Northeast Conference,St. Francis (BKN) Terriers,Red,#E03A3E,0,1
+NCAA D1,Northeast Conference,St. Francis (PA) Red Flash,Red,#BD1F25,1,0
+NCAA D1,Northeast Conference,St. Francis (PA) Red Flash,Dark Red,#790000,0,1
+NCAA D1,Northeast Conference,St. Francis (PA) Red Flash,Silver,#8E908F,0,0
+NCAA D1,Northeast Conference,St. Francis (PA) Red Flash,Black,#000000,0,0
+NCAA D1,Northeast Conference,Wagner Seahawks,Green,#00483A,1,0
+NCAA D1,Northeast Conference,Wagner Seahawks,Gray,#B9BBBD,0,1
+NCAA D1,Atlantic Sun,Austin Peay Governors,Red,#C41E3A,1,0
+NCAA D1,Atlantic Sun,Austin Peay Governors,Gray,#ADAFAA,0,1
+NCAA D1,Atlantic Sun,Austin Peay Governors,Black,#000000,0,0
+NCAA D1,Missouri Valley,Belmont Bruins,Red,#C8102E,1,0
+NCAA D1,Missouri Valley,Belmont Bruins,Dark Blue,#00205B,0,1
+NCAA D1,Missouri Valley,Belmont Bruins,Black,#000000,0,0
+NCAA D1,Ohio Valley,Eastern Illinois Panthers,Gray,#919295,1,0
+NCAA D1,Ohio Valley,Eastern Illinois Panthers,Blue,#004B83,0,1
+NCAA D1,Atlantic Sun,Eastern Kentucky Colonels,Maroon,#8A0039,1,0
+NCAA D1,Atlantic Sun,Eastern Kentucky Colonels,White,#FFFFFF,0,1
+NCAA D1,Conference USA,Jacksonville State Gamecocks,Red,#CC0000,1,0
+NCAA D1,Conference USA,Jacksonville State Gamecocks,Black,#000000,0,1
+NCAA D1,Ohio Valley,Morehead State Eagles,Gold,#FFCF00,1,0
+NCAA D1,Ohio Valley,Morehead State Eagles,Blue,#005EB8,0,1
+NCAA D1,Ohio Valley,Morehead State Eagles,Black,#000000,0,0
+NCAA D1,Missouri Valley,Murray State Racers,Gold,#ECAC00,1,0
+NCAA D1,Missouri Valley,Murray State Racers,Blue,#002144,0,1
+NCAA D1,Ohio Valley,SE Missouri St Redhawks,Rich Black,#000000,1,0
+NCAA D1,Ohio Valley,SE Missouri St Redhawks,Southeast Red,#C8102E,0,1
+NCAA D1,Ohio Valley,SIU-Edwardsville Cougars,Red,#EF3829,1,0
+NCAA D1,Ohio Valley,SIU-Edwardsville Cougars,Light Brown,#CFAA7A,0,0
+NCAA D1,Ohio Valley,SIU-Edwardsville Cougars,Brown,#A68462,0,1
+NCAA D1,Ohio Valley,SIU-Edwardsville Cougars,Gold,#896532,0,0
+NCAA D1,Ohio Valley,SIU-Edwardsville Cougars,Dark Gold,#5A471C,0,0
+NCAA D1,Ohio Valley,SIU-Edwardsville Cougars,Black,#000000,0,0
+NCAA D1,Ohio Valley,Tennessee State Tigers,Blue,#00539F,1,0
+NCAA D1,Ohio Valley,Tennessee State Tigers,White,#FFFFFF,0,1
+NCAA D1,Ohio Valley,Tennessee Tech Golden Eagles,Tennessee Tech Purple,#4F2984,1,0
+NCAA D1,Ohio Valley,Tennessee Tech Golden Eagles,Tennessee Tech Gold,#FFDD00,0,1
+NCAA D1,Ohio Valley,UT Martin Skyhawks,Orange,#F79728,1,0
+NCAA D1,Ohio Valley,UT Martin Skyhawks,Blue,#002A5B,0,1
+NCAA D1,Big 12,Arizona Wildcats,Cardinal,#CC0033,0,1
+NCAA D1,Big 12,Arizona Wildcats,Navy,#003366,1,0
+NCAA D1,Big 12,Arizona State Sun Devils,Maroon,#8C1D40,1,0
+NCAA D1,Big 12,Arizona State Sun Devils,Gold,#FFC627,0,1
+NCAA D1,ACC,California Golden Bears,Berkeley Blue,#003262,1,0
+NCAA D1,ACC,California Golden Bears,Founder’s Rock,#3B7EA1,0,0
+NCAA D1,ACC,California Golden Bears,California Gold,#FDB515,0,1
+NCAA D1,ACC,California Golden Bears,Medalist,#C4820E,0,0
+NCAA D1,Big 12,Colorado Buffaloes,Gold,#CFB87C,1,0
+NCAA D1,Big 12,Colorado Buffaloes,Black,#000000,0,1
+NCAA D1,Big 12,Colorado Buffaloes,Silver,#A2A4A3,0,0
+NCAA D1,Big Ten,Oregon Ducks,Oregon Green,#154733,1,0
+NCAA D1,Big Ten,Oregon Ducks,Yellow,#FEE123,0,1
+NCAA D1,Pac-12,Oregon State Beavers,Beaver Orange,#DC4405,1,0
+NCAA D1,Pac-12,Oregon State Beavers,Paddletail Black,#000000,0,1
+NCAA D1,ACC,Stanford Cardinal,Red,#8C1515,1,0
+NCAA D1,ACC,Stanford Cardinal,Cool Gray,#4D4F53,0,0
+NCAA D1,ACC,Stanford Cardinal,Black,#2E2D29,0,0
+NCAA D1,ACC,Stanford Cardinal,White,#FFFFFF,0,1
+NCAA D1,Big Ten,UCLA Bruins,Blue,#2D68C4,1,0
+NCAA D1,Big Ten,UCLA Bruins,Gold,#F2A900,0,1
+NCAA D1,Big Ten,USC Trojans,Red,#990000,1,0
+NCAA D1,Big Ten,USC Trojans,Yellow,#FFC72C,0,1
+NCAA D1,Big 12,Utah Utes,University Red,#CC0000,1,0
+NCAA D1,Big 12,Utah Utes,Gray,#808080,0,0
+NCAA D1,Big 12,Utah Utes,Black,#000000,0,0
+NCAA D1,Big 12,Utah Utes,Silver,#C4CED4,0,1
+NCAA D1,Big Ten,Washington Huskies,Purple,#4B2E83,1,0
+NCAA D1,Big Ten,Washington Huskies,Gold,#B7A57A,0,1
+NCAA D1,Big Ten,Washington Huskies,Metallic Gold,#85754D,0,0
+NCAA D1,Pac-12,Washington State Cougars,Crimson,#981E32,1,0
+NCAA D1,Pac-12,Washington State Cougars,Gray,#5E6A71,0,1
+NCAA D1,Patriot League,American Eagles,Blue,#143D8D,1,0
+NCAA D1,Patriot League,American Eagles,Red,#C41230,0,1
+NCAA D1,Patriot League,Army Black Knights,Gold,#D4BF91,0,1
+NCAA D1,Patriot League,Army Black Knights,Gray,#B2B4B3,0,0
+NCAA D1,Patriot League,Army Black Knights,Black,#000000,1,0
+NCAA D1,Patriot League,Boston University Terriers,Red,#CC0000,1,0
+NCAA D1,Patriot League,Boston University Terriers,Dark Red,#A3011B,0,0
+NCAA D1,Patriot League,Boston University Terriers,Dark Grey,#231F20,0,1
+NCAA D1,Patriot League,Boston University Terriers,Grey,#929497,0,0
+NCAA D1,Patriot League,Boston University Terriers,Light Grey,#E6E6E7,0,0
+NCAA D1,Patriot League,Bucknell Bison,Orange,#E87722,1,0
+NCAA D1,Patriot League,Bucknell Bison,Blue,#003865,0,1
+NCAA D1,Patriot League,Holy Cross Crusaders,Purple,#602D89,1,0
+NCAA D1,Patriot League,Holy Cross Crusaders,Black,#000000,0,1
+NCAA D1,Patriot League,Lafayette Leopards,Gold,#A8996E,0,1
+NCAA D1,Patriot League,Lafayette Leopards,Maroon,#98002E,1,0
+NCAA D1,Patriot League,Lafayette Leopards,Black,#000000,0,0
+NCAA D1,Patriot League,Lehigh Mountain Hawks,Dark Brown,#653600,1,0
+NCAA D1,Patriot League,Lehigh Mountain Hawks,Gold,#FFD24F,0,1
+NCAA D1,Patriot League,Lehigh Mountain Hawks,Red,#E51937,0,0
+NCAA D1,Patriot League,Lehigh Mountain Hawks,Brown,#994708,0,0
+NCAA D1,Patriot League,Lehigh Mountain Hawks,Light Gold,#CFAB7A,0,0
+NCAA D1,Patriot League,Lehigh Mountain Hawks,Green,#00703C,0,0
+NCAA D1,SEC,Alabama Crimson Tide,Crimson,#9E1B32,1,0
+NCAA D1,SEC,Alabama Crimson Tide,Gray,#828A8F,0,0
+NCAA D1,SEC,Alabama Crimson Tide,White,#FFFFFF,0,1
+NCAA D1,SEC,Arkansas Razorbacks,Cardinal,#9D2235,1,0
+NCAA D1,SEC,Arkansas Razorbacks,White,#FFFFFF,0,1
+NCAA D1,SEC,Auburn Tigers,Auburn Blue,#0C2340,1,0
+NCAA D1,SEC,Auburn Tigers,Auburn Orange,#E87722,0,1
+NCAA D1,SEC,Florida Gators,Blue,#0021A5,1,0
+NCAA D1,SEC,Florida Gators,Orange,#FA4616,0,1
+NCAA D1,SEC,Georgia Bulldogs,Bulldog Red,#BA0C2F,1,0
+NCAA D1,SEC,Georgia Bulldogs,Arch Black,#000000,0,1
+NCAA D1,SEC,Kentucky Wildcats,Wildcat Blue,#0033A0,1,0
+NCAA D1,SEC,Kentucky Wildcats,Black,#000000,0,0
+NCAA D1,SEC,Kentucky Wildcats,White,#FFFFFF,0,1
+NCAA D1,SEC,Louisiana State (LSU) Tigers,Purple,#461D7C,1,0
+NCAA D1,SEC,Louisiana State (LSU) Tigers,Gold,#FDD023,0,1
+NCAA D1,SEC,Ole Miss Rebels,Red,#CE1126,1,0
+NCAA D1,SEC,Ole Miss Rebels,Navy Blue,#14213D,0,0
+NCAA D1,SEC,Ole Miss Rebels,White,#FFFFFF,0,1
+NCAA D1,SEC,Mississippi State University Bulldogs,Maroon,#660000,1,0
+NCAA D1,SEC,Mississippi State University Bulldogs,White,#FFFFFF,0,1
+NCAA D1,SEC,Missouri Tigers,Black,#000000,0,1
+NCAA D1,SEC,Missouri Tigers,Gold,#F1B82D,1,0
+NCAA D1,SEC,South Carolina Gamecocks,Garnet,#73000A,1,0
+NCAA D1,SEC,South Carolina Gamecocks,Black,#000000,0,0
+NCAA D1,SEC,South Carolina Gamecocks,White,#FFFFFF,0,1
+NCAA D1,SEC,Tennessee Volunteers,Tennessee Orange,#FF8200,1,0
+NCAA D1,SEC,Tennessee Volunteers,Smokey,#58595B,0,0
+NCAA D1,SEC,Tennessee Volunteers,Black,#000000,0,1
+NCAA D1,SEC,Texas A&M Aggies,Maroon,#500000,1,0
+NCAA D1,SEC,Texas A&M Aggies,White,#FFFFFF,0,1
+NCAA D1,SEC,Vanderbilt Commodores,Black,#000000,1,0
+NCAA D1,SEC,Vanderbilt Commodores,Gold,#866D4B,0,1
+NCAA D1,Southern Conference,Chattanooga Mocs,Blue,#00386B,1,0
+NCAA D1,Southern Conference,Chattanooga Mocs,Gold,#E0AA0F,0,1
+NCAA D1,Southern Conference,Chattanooga Mocs,Gray,#ADAFAA,0,0
+NCAA D1,Southern Conference,ETSU Buccaneers,Navy,#041E42,1,0
+NCAA D1,Southern Conference,ETSU Buccaneers,Gold,#FFC72C,0,1
+NCAA D1,Southern Conference,Mercer Bears,Mercer Orange,#F76800,1,0
+NCAA D1,Southern Conference,Mercer Bears,Black,#000000,0,1
+NCAA D1,Southern Conference,Furman Paladins,Dark Purple,#201547,1,0
+NCAA D1,Southern Conference,Furman Paladins,Purple,#582C83,0,1
+NCAA D1,Southern Conference,Furman Paladins,Gray,#A7A8AA,0,0
+NCAA D1,Southern Conference,Samford Bulldogs,Navy,#002649,1,0
+NCAA D1,Southern Conference,Samford Bulldogs,Red,#C4161D,0,1
+NCAA D1,Southern Conference,Citadel Bulldogs,Citadel Blue,#3975B7,1,0
+NCAA D1,Southern Conference,Citadel Bulldogs,Navy,#1F3A60,0,1
+NCAA D1,Southern Conference,UNC Greensboro Spartans,Navy,#0F2044,1,0
+NCAA D1,Southern Conference,UNC Greensboro Spartans,Gold,#FFB71B,0,1
+NCAA D1,Southern Conference,UNC Greensboro Spartans,Grey,#BEC0C2,0,0
+NCAA D1,Southern Conference,VMI Keydets,Red,#A71F23,1,0
+NCAA D1,Southern Conference,VMI Keydets,Yellow,#FFD520,0,1
+NCAA D1,Southern Conference,VMI Keydets,Black,#000000,0,0
+NCAA D1,Southern Conference,VMI Keydets,Gray,#666766,0,0
+NCAA D1,Southern Conference,Western Carolina Catamounts,Purple,#592C88,1,0
+NCAA D1,Southern Conference,Western Carolina Catamounts,Gold,#C1A875,0,1
+NCAA D1,Southern Conference,Wofford Terriers,Old Gold,#886E4C,1,0
+NCAA D1,Southern Conference,Wofford Terriers,Khaki,#C7B37F,0,1
+NCAA D1,WAC,Abilene Christian Wildcats,Purple,#4F2170,1,0
+NCAA D1,WAC,Abilene Christian Wildcats,Gray,#C5C6C8,0,1
+NCAA D1,Atlantic Sun,Central Arkansas Bears,Purple,#4F2D7F,1,0
+NCAA D1,Atlantic Sun,Central Arkansas Bears,Gray,#818A8F,0,1
+NCAA D1,Atlantic Sun,Central Arkansas Bears,Black,#000000,0,0
+NCAA D1,Southland,Incarnate Word Cardinals,Red,#CB333B,1,0
+NCAA D1,Southland,Incarnate Word Cardinals,Black,#000000,0,1
+NCAA D1,Southland,Lamar Cardinals,Red,#DC0032,1,0
+NCAA D1,Southland,Lamar Cardinals,Gold,#FCB034,0,1
+NCAA D1,Southland,McNeese Cowboys,Royal Blue,#00529B,1,0
+NCAA D1,Southland,McNeese Cowboys,Sunflower Gold,#FFD204,0,1
+NCAA D1,Southland,New Orleans Privateers,Blue,#005CA6,1,0
+NCAA D1,Southland,New Orleans Privateers,Gray,#A3A9AC,0,0
+NCAA D1,Southland,New Orleans Privateers,Dark Blue,#002F56,0,1
+NCAA D1,Southland,Nicholls Colonels,Red,#AE132A,1,0
+NCAA D1,Southland,Nicholls Colonels,Gray,#72808A,0,1
+NCAA D1,Southland,Nicholls Colonels,Black,#000000,0,0
+NCAA D1,Southland,Northwestern State Demons,Purple,#663399,1,0
+NCAA D1,Southland,Northwestern State Demons,Orange,#FF6600,0,1
+NCAA D1,Conference USA,Sam Houston State Bearkats,Orange,#FE5100,1,0
+NCAA D1,Conference USA,Sam Houston State Bearkats,White,#FFFFFF,0,1
+NCAA D1,Southland,SE Louisiana Lions,Green,#006341,1,0
+NCAA D1,Southland,SE Louisiana Lions,Gold,#EAAA00,0,1
+NCAA D1,Southland,SE Louisiana Lions,Black,#000000,0,0
+NCAA D1,WAC,Stephen F. Austin Lumberjacks,Purple,#613393,1,0
+NCAA D1,WAC,Stephen F. Austin Lumberjacks,White,#FFFFFF,0,1
+NCAA D1,Summit League,Denver Pioneers,Maroon,#8B2332,1,0
+NCAA D1,Summit League,Denver Pioneers,Bronze,#8B6F4B,0,1
+NCAA D1,Summit League,North Dakota State Bison,Green,#0A5640,1,0
+NCAA D1,Summit League,North Dakota State Bison,Yellow,#FFC72A,0,1
+NCAA D1,Summit League,North Dakota Fighting Hawks,UND Green,#009A44,1,0
+NCAA D1,Summit League,North Dakota Fighting Hawks,UND Gray,#AAAEAD,0,1
+NCAA D1,Summit League,North Dakota Fighting Hawks,Black,#000000,0,0
+NCAA D1,Summit League,Nebraska Omaha Mavericks,Black,#000000,0,1
+NCAA D1,Summit League,Nebraska Omaha Mavericks,Red,#D71920,1,0
+NCAA D1,Summit League,Nebraska Omaha Mavericks,Dark Grey,#636568,0,0
+NCAA D1,Summit League,Oral Roberts Golden Eagles,Navy Blue,#002F60,1,0
+NCAA D1,Summit League,Oral Roberts Golden Eagles,Gold,#C5B783,0,1
+NCAA D1,Summit League,Oral Roberts Golden Eagles,Dark Gold,#A28E2A,0,0
+NCAA D1,Summit League,South Dakota Coyotes,Red,#AD0000,1,0
+NCAA D1,Summit League,South Dakota Coyotes,Gray,#B4B4B4,0,1
+NCAA D1,Summit League,South Dakota Coyotes,Black,#000000,0,0
+NCAA D1,Summit League,South Dakota State Jackrabbits,SDSU Blue,#0033A0,1,0
+NCAA D1,Summit League,South Dakota State Jackrabbits,SDSU Yellow,#FFD100,0,1
+NCAA D1,Summit League,Western Illinois Leathernecks,Purple,#663399,1,0
+NCAA D1,Summit League,Western Illinois Leathernecks,Yellow,#FFCC00,0,1
+NCAA D1,Sun Belt,Appalachian State Mountaineers,Black,#222222,1,0
+NCAA D1,Sun Belt,Appalachian State Mountaineers,Yellow,#FFCC00,0,1
+NCAA D1,Ohio Valley,Arkansas Little Rock Trojans,Maroon,#6E2639,1,0
+NCAA D1,Ohio Valley,Arkansas Little Rock Trojans,Silver,#A7A9AC,0,1
+NCAA D1,Sun Belt,Arkansas State Red Wolves,Scarlett,#CC092F,1,0
+NCAA D1,Sun Belt,Arkansas State Red Wolves,Black,#000000,0,1
+NCAA D1,Sun Belt,Coastal Carolina Chanticleers,Teal,#006F71,1,0
+NCAA D1,Sun Belt,Coastal Carolina Chanticleers,Gold,#A27752,0,1
+NCAA D1,Sun Belt,Coastal Carolina Chanticleers,Black,#111111,0,0
+NCAA D1,Sun Belt,Georgia Southern Eagles,Blue,#011E41,1,0
+NCAA D1,Sun Belt,Georgia Southern Eagles,Gray,#A3AAAE,0,0
+NCAA D1,Sun Belt,Georgia Southern Eagles,Old Gold,#87714D,0,1
+NCAA D1,Sun Belt,Georgia State Panthers,Blue,#0039A6,1,0
+NCAA D1,Sun Belt,Georgia State Panthers,Red,#C60C30,0,1
+NCAA D1,Sun Belt,Georgia State Panthers,Black,#000000,0,0
+NCAA D1,Sun Belt,Louisiana Ragin' Cajuns,Red,#CE181E,1,0
+NCAA D1,Sun Belt,Louisiana Ragin' Cajuns,White,#FFFFFF,0,1
+NCAA D1,Sun Belt,South Alabama Jaguars,Blue,#00205B,1,0
+NCAA D1,Sun Belt,South Alabama Jaguars,Red,#BF0D3E,0,1
+NCAA D1,Sun Belt,Texas State Bobcats,Maroon,#501214,1,0
+NCAA D1,Sun Belt,Texas State Bobcats,Gold,#8D734A,0,1
+NCAA D1,Sun Belt,Troy Trojans,Red,#8A2432,1,0
+NCAA D1,Sun Belt,Troy Trojans,Grey,#B3B5B8,0,1
+NCAA D1,SWAC,Alabama A&M Bulldogs,Maroon,#660000,1,0
+NCAA D1,SWAC,Alabama A&M Bulldogs,White,#FFFFFF,0,1
+NCAA D1,SWAC,Alabama State Hornets,Old Gold,#C99700,1,0
+NCAA D1,SWAC,Alabama State Hornets,Black,#000000,0,1
+NCAA D1,SWAC,Alcorn State Braves,Gold,#CE8E00,1,0
+NCAA D1,SWAC,Alcorn State Braves,Purple,#4B306A,0,1
+NCAA D1,SWAC,Arkansas-Pine Bluff Golden Lions,Gold,#EEB310,1,0
+NCAA D1,SWAC,Arkansas-Pine Bluff Golden Lions,Red,#E31837,0,1
+NCAA D1,SWAC,Arkansas-Pine Bluff Golden Lions,Black,#000000,0,0
+NCAA D1,SWAC,Jackson State Tigers,Navy Blue,#002147,1,0
+NCAA D1,SWAC,Jackson State Tigers,Light Blue,#008ED6,0,1
+NCAA D1,SWAC,Mississippi Valley State Delta Devils,Green,#00703C,1,0
+NCAA D1,SWAC,Mississippi Valley State Delta Devils,Red,#E51937,0,1
+NCAA D1,SWAC,Mississippi Valley State Delta Devils,Black,#000000,0,0
+NCAA D1,SWAC,Prairie View A&M Panthers,Purple,#330066,1,0
+NCAA D1,SWAC,Prairie View A&M Panthers,Gold,#FFCC33,0,1
+NCAA D1,SWAC,Prairie View A&M Panthers,Black,#000000,0,0
+NCAA D1,SWAC,Southern Jaguars,Columbia Blue,#58B6E7,1,0
+NCAA D1,SWAC,Southern Jaguars,Gold,#FFCE34,0,1
+NCAA D1,SWAC,Texas Southern Tigers,Maroon,#7C183E,1,0
+NCAA D1,SWAC,Texas Southern Tigers,Gray,#9DA6AB,0,1
+NCAA D1,WAC,California Baptist Lancers,Navy Blue,#002554,1,0
+NCAA D1,WAC,California Baptist Lancers,Gold,#A37400,0,1
+NCAA D1,WAC,Grand Canyon University  Antelopes,Purple,#522398,1,0
+NCAA D1,WAC,Grand Canyon University  Antelopes,Black,#000000,0,1
+NCAA D1,Summit League,University of Missouri-Kansas City Kangaroos,Blue,#005293,1,0
+NCAA D1,Summit League,University of Missouri-Kansas City Kangaroos,Yellow,#FECB00,0,1
+NCAA D1,Summit League,University of Missouri-Kansas City Kangaroos,Black,#000000,0,0
+NCAA D1,Summit League,University of Missouri-Kansas City Kangaroos,Gray,#DCDDDE,0,0
+NCAA D1,Conference USA,New Mexico State Aggies,Crimson,#861F41,1,0
+NCAA D1,Conference USA,New Mexico State Aggies,Gray,#97999B,0,1
+NCAA D1,Conference USA,New Mexico State Aggies,Black,#000000,0,0
+NCAA D1,WAC,Seattle University Redhawks,Red,#AA0000,1,0
+NCAA D1,WAC,Seattle University Redhawks,Black,#000000,0,1
+NCAA D1,WAC,University of Texas Rio Grande Valley Vaqueros,Orange,#FFA300,1,0
+NCAA D1,WAC,University of Texas Rio Grande Valley Vaqueros,Dark Orange,#F05023,0,1
+NCAA D1,WAC,University of Texas Rio Grande Valley Vaqueros,Green,#00843D,0,0
+NCAA D1,WAC,University of Texas Rio Grande Valley Vaqueros,Navy Blue,#0C2340,0,0
+NCAA D1,WAC,Utah Valley Wolverines,Green,#275D38,1,0
+NCAA D1,WAC,Utah Valley Wolverines,Black,#000000,0,1
+NCAA D1,WAC,Utah Valley Wolverines,Gray,#8E8C89,0,0
+NCAA D1,Big 12,BYU,Blue,#002E5D,1,0
+NCAA D1,Big 12,BYU,Royal,#0062B8,0,0
+NCAA D1,Big 12,BYU,White,#FFFFFF,0,1
+NCAA D1,WCC,Gonzaga,Navy Blue,#041E42,1,0
+NCAA D1,WCC,Gonzaga,Athletic Red,#C8102E,0,1
+NCAA D1,WCC,Gonzaga,Athletic Gray,#C1C6C8,0,0
+NCAA D1,WCC,Loyola Marymount Lions,LMU Red,#B62B3A,1,0
+NCAA D1,WCC,Loyola Marymount Lions,LMU Blue,#00447C,0,1
+NCAA D1,WCC,Loyola Marymount Lions,LMU Gray,#617080,0,0
+NCAA D1,WCC,Loyola Marymount Lions,LMU Black,#231F20,0,0
+NCAA D1,WCC,Pacific Tigers,Pacific Athletic Orange,#E35205,1,0
+NCAA D1,WCC,Pacific Tigers,Pacific Black,#231F20,0,1
+NCAA D1,WCC,Pacific Tigers,Pacific University Orange,#D86018,0,0
+NCAA D1,WCC,Pacific Tigers,Pacific Gray,#949A90,0,0
+NCAA D1,WCC,Pepperdine Waves,Pepperdine Blue,#00205C,1,0
+NCAA D1,WCC,Pepperdine Waves,Pepperdine Orange,#EE7624,0,1
+NCAA D1,WCC,Portland Pilots,Purple,#1E1656,1,0
+NCAA D1,WCC,Portland Pilots,Gray,#5E6A71,0,1
+NCAA D1,WCC,Saint Mary's Gaels,SMC Red,#D80024,1,0
+NCAA D1,WCC,Saint Mary's Gaels,Gray,#06315B,0,1
+NCAA D1,WCC,San Diego Toreros,Navy Blue,#002868,1,0
+NCAA D1,WCC,San Diego Toreros,Torero Blue,#84BCE8,0,1
+NCAA D1,WCC,San Diego Toreros,Immaculata Blue,#207BC1,0,0
+NCAA D1,WCC,San Francisco Dons,USF Yellow,#FDBB30,0,1
+NCAA D1,WCC,San Francisco Dons,USF Green,#00543C,1,0
+NCAA D1,WCC,San Francisco Dons,USF Gray,#919194,0,0
+NCAA D1,WCC,Santa Clara Broncos,Cardinal Red,#862633,1,0
+NCAA D1,WCC,Santa Clara Broncos,White,#FFFFFF,0,1
+NCAA D1,Atlantic Sun,West Georgia Wolves,Red,#ED1B2F,1,0
+NCAA D1,Atlantic Sun,West Georgia Wolves,Navy,#002855,0,1
+NCAA D1,Missouri Valley,Bradley Braves,Red,#AD122A,1,0
+NCAA D1,Missouri Valley,Bradley Braves,White,#FFFFFF,0,1
+NCAA D1,Northeast Conference,Le Moyne Dolphins,Green,#006747,1,0
+NCAA D1,Northeast Conference,Le Moyne Dolphins,Gold,#FFB81C,0,1
+NCAA D1,Ohio Valley,Lindenwood Lions,Black,#000000,1,0
+NCAA D1,Ohio Valley,Lindenwood Lions,Gold,#C4A43C,0,1
+NCAA D1,Ohio Valley,Southern Indiana Screaming Eagles,Red,#C41230,1,0
+NCAA D1,Ohio Valley,Southern Indiana Screaming Eagles,Blue,#003DA5,0,1
+NCAA D1,Patriot League,Loyola Maryland Greyhounds,Green,#00694E,1,0
+NCAA D1,Patriot League,Loyola Maryland Greyhounds,Gray,#CACAC8,0,1
+NCAA D1,Southland,Houston Christian Huskies,Blue,#1C4E9D,1,0
+NCAA D1,Southland,Houston Christian Huskies,Orange,#F3652C,0,1
+NCAA D1,Southland,Texas A&M-Corpus Christi Islanders,Blue,#0067C5,1,0
+NCAA D1,Southland,Texas A&M-Corpus Christi Islanders,Green,#007F3E,0,1
+NCAA D1,MAAC,Canisius Golden Griffins,Blue,#0C2340,1,0
+NCAA D1,MAAC,Canisius Golden Griffins,Gold,#FFBA00,0,1
+NCAA D1,MAAC,Fairfield Stags,Red,#C8102E,1,0
+NCAA D1,MAAC,Fairfield Stags,Gray,#A2AAAD,0,1
+NCAA D1,MAAC,Iona Gaels,Maroon,#6F2C3F,1,0
+NCAA D1,MAAC,Iona Gaels,Gold,#F2A900,0,1
+NCAA D1,MAAC,Manhattan Jaspers,Green,#00703C,1,0
+NCAA D1,MAAC,Manhattan Jaspers,White,#FFFFFF,0,1
+NCAA D1,MAAC,Marist Red Foxes,Marist Red,#C8102E,1,0
+NCAA D1,MAAC,Marist Red Foxes,Light Grey,#B2B2B2,0,1
+NCAA D1,MAAC,Niagara Purple Eagles,Purple,#582C83,1,0
+NCAA D1,MAAC,Niagara Purple Eagles,White,#FFFFFF,0,1
+NCAA D1,MAAC,Quinnipiac Bobcats,Navy,#0C2340,1,0
+NCAA D1,MAAC,Quinnipiac Bobcats,Gold,#FFB81C,0,1
+NCAA D1,MAAC,Quinnipiac Bobcats,Light Blue,#418FDE,0,0
+NCAA D1,MAAC,Rider Broncs,Rider Cranberry,#981E32,1,0
+NCAA D1,MAAC,Rider Broncs,Rider Grey,#6C6F70,0,1
+NCAA D1,MAAC,Mount St. Mary's Mountaineers,Blue,#002855,1,0
+NCAA D1,MAAC,Mount St. Mary's Mountaineers,Bronze,#84754E,0,1
+NCAA D1,Missouri Valley,Drake Bulldogs,Drake Blue,#004477,1,0
+NCAA D1,Missouri Valley,Drake Bulldogs,Gray,#999999,0,1
+NCAA D1,Missouri Valley,Evansville Purple Aces,Purple,#52237F,1,0
+NCAA D1,Missouri Valley,Evansville Purple Aces,Orange,#F36F21,0,1
+NCAA D1,Missouri Valley,Illinois State Redbirds,Red,#CE1126,1,0
+NCAA D1,Missouri Valley,Illinois State Redbirds,Yellow,#F9DD16,0,1
+NCAA D1,Missouri Valley,Indiana State Sycamores,Royal Blue,#0142BC,1,0
+NCAA D1,Missouri Valley,Indiana State Sycamores,White,#FFFFFF,0,1
+NCAA D1,Missouri Valley,Southern Illinois Salukis,Maroon,#720000,1,0
+NCAA D1,Missouri Valley,Southern Illinois Salukis,Black,#000000,0,1
+NCAA D1,Big Ten,Michigan State Spartans,Green,#18453B,1,0
+NCAA D1,Big Ten,Michigan State Spartans,White,#FFFFFF,0,1
+NCAA D1,American Athletic,FAU Owls,Blue,#003366,1,0
+NCAA D1,American Athletic,FAU Owls,Red,#CC0000,0,1
+NCAA D1,Atlantic Sun,Bellarmine Knights,Scarlet,#752936,1,0
+NCAA D1,Atlantic Sun,Bellarmine Knights,Silver,#C8C8C8,0,1
+NCAA D1,Atlantic Sun,Queens Royals,Blue,#192C66,1,0
+NCAA D1,Atlantic Sun,Queens Royals,Gold,#857040,0,1
+NCAA D1,CAA,Monmouth Hawks,Midnight Blue,#041E42,1,0
+NCAA D1,CAA,Monmouth Hawks,Grey,#53565A,0,1
+NCAA D1,CAA,NC A&T Aggies,Yellow,#F3B237,1,0
+NCAA D1,CAA,NC A&T Aggies,Blue,#003D6D,0,1
+NCAA D1,Big West,Cal State Bakersfield Roadrunners,Blue,#003594,1,0
+NCAA D1,Big West,Cal State Bakersfield Roadrunners,Gold,#FFC72C,0,1
+NCAA D1,Big West,Cal State Northridge Matadors,Red,#CE1126,1,0
+NCAA D1,Big West,Cal State Northridge Matadors,Silver,#D1CEC6,0,1
+NCAA D1,Big West,UC San Diego Tritons,Blue,#182B49,1,0
+NCAA D1,Big West,UC San Diego Tritons,Gold,#FFCD00,0,1
+NCAA D1,Horizon League,Purdue Fort Wayne Mastodons,Blue,#002F6C,1,0
+NCAA D1,Horizon League,Purdue Fort Wayne Mastodons,Black,#000000,0,1
+NCAA D1,Mountain West,Nevada Wolf Pack,Navy Blue,#003366,1,0
+NCAA D1,Mountain West,Nevada Wolf Pack,Gray,#807F84,0,1
+NCAA D1,Patriot League,Colgate Raiders,Maroon,#821019,1,0
+NCAA D1,Patriot League,Colgate Raiders,White,#FFFFFF,0,1
+NCAA D1,SWAC,Grambling State Tigers,Gold,#EAA921,1,0
+NCAA D1,SWAC,Grambling State Tigers,Black,#000000,0,1
+NCAA D1,America East,NJIT Highlanders,NJIT Red,#D22630,1,0
+NCAA D1,America East,NJIT Highlanders,Navy Blue,#071D49,0,1
+NCAA D1,Summit League,St. Thomas Tommies,Tommie Purple,#512773,1,0
+NCAA D1,Summit League,St. Thomas Tommies,Gray,#98999B,0,1
+NCAA D1,Sun Belt,Louisiana-Monroe Warhawks,Warhawk Maroon,#840029,1,0
+NCAA D1,Sun Belt,Louisiana-Monroe Warhawks,Heritage Gold,#FDB913,0,1
+NCAA D1,WAC,Tarleton State Texans,Purple,#4F2D7F,1,0
+NCAA D1,WAC,Tarleton State Texans,White,#FFFFFF,0,1
+NCAA D1,WAC,UT Arlington Mavericks,Orange,#F58025,1,0
+NCAA D1,WAC,UT Arlington Mavericks,Blue,#0064B1,0,1
+NCAA D1,WAC,Utah Tech Trailblazers,Red,#BA1C21,1,0
+NCAA D1,WAC,Utah Tech Trailblazers,Blue,#0C233F,0,1
+NCAA D1,Northeast Conference,Stonehill Skyhawks,Purple,#2F2975,1,0
+NCAA D1,Northeast Conference,Stonehill Skyhawks,White,#FFFFFF,0,1
+NCAA D1,MAC,University of Massachusetts Minutemen,RED,#971B2F,1,0
+NCAA D1,MAC,University of Massachusetts Minutemen,DARK RED,#572932,0,1
+NCAA D1,MAC,University of Massachusetts Minutemen,GREY,#B1B3B3,0,0
+NCAA D1,Conference USA,Delaware Blue Hens,Delaware Blue,#00539F,1,0
+NCAA D1,Conference USA,Delaware Blue Hens,Yellow,#FFDD31,0,1
+NCAA D1,Conference USA,Delaware Blue Hens,Delaware Yellow-Gold,#FFD200,0,0
+NCAA D1,Conference USA,Missouri State Bears,MISSOURI STATE MAROON,#5E0009,1,0
+NCAA D1,Conference USA,Missouri State Bears,White,#FFFFFF,0,1

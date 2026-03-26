@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>MLB Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#ffffff;--bg2:#f5f5f0;--bg3:#eae8e1;
+  --text:#1a1a1a;--text2:#555;--text3:#888;
+  --border:#ddd;--border2:#ccc;
+  --green:#1a7f37;--red:#cf222e;--blue:#0969da;
+  --card:#fff;--card-hover:#fafaf7;
+  --pin-bg:#f8f7f4;
+  --font-display:'Barlow Condensed',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --shadow:0 1px 3px rgba(0,0,0,0.06);
+  --shadow2:0 2px 8px rgba(0,0,0,0.08);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#0d0d0d;--bg2:#161616;--bg3:#1e1e1e;
+    --text:#e8e6e1;--text2:#999;--text3:#666;
+    --border:#2a2a2a;--border2:#383838;
+    --green:#3fb950;--red:#f85149;--blue:#58a6ff;
+    --card:#181818;--card-hover:#1f1f1f;
+    --pin-bg:#111;
+    --shadow:0 1px 3px rgba(0,0,0,0.3);
+    --shadow2:0 2px 8px rgba(0,0,0,0.4);
+  }
+}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+button{cursor:pointer;font-family:var(--font-body)}
+/* ── PIN GATE ── */
+#pin-gate{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;background:var(--pin-bg);padding:24px}
+.pin-logo{font-family:var(--font-display);font-size:48px;font-weight:700;letter-spacing:-1px;color:var(--text);margin-bottom:4px}
+.pin-sub{font-size:13px;color:var(--text3);margin-bottom:32px;letter-spacing:1px;text-transform:uppercase}
+.pin-dots{display:flex;gap:12px;margin-bottom:24px}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);background:transparent;transition:all 0.15s}
+.pin-dot.filled{background:var(--text);border-color:var(--text)}
+.pin-dot.error{border-color:var(--red);background:var(--red);animation:shake 0.4s}
+.pin-pad{display:grid;grid-template-columns:repeat(3,72px);gap:8px}
+.pin-btn{width:72px;height:56px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);font-family:var(--font-display);font-size:24px;font-weight:500;transition:all 0.1s}
+.pin-btn:active{transform:scale(0.95);background:var(--bg3)}
+.pin-btn.fn{font-size:13px;font-family:var(--font-body);color:var(--text3);border-color:transparent;background:transparent}
+.pin-error{font-size:13px;color:var(--red);margin-top:16px;height:18px}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+
+/* ── APP SHELL ── */
+#app{display:none}
+.app-header{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border)}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:10px 16px}
+.header-title{font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:-0.5px}
+.header-date{font-size:12px;color:var(--text3)}
+.tabs{display:flex;border-top:1px solid var(--border)}
+.tab{flex:1;text-align:center;padding:10px 0;font-family:var(--font-display);font-size:14px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;color:var(--text3);border-bottom:2px solid transparent;transition:all 0.15s;background:transparent;border-left:none;border-right:none;border-top:none}
+.tab.active{color:var(--text);border-bottom-color:var(--text)}
+.tab:hover{color:var(--text2)}
+.tab-panel{display:none;padding:0 0 80px}
+.tab-panel.active{display:block}
+.update-bar{font-size:11px;color:var(--text3);text-align:center;padding:6px;background:var(--bg2)}
+
+/* ── SCOREBOARD ── */
+.score-date-nav{display:flex;align-items:center;justify-content:center;gap:16px;padding:12px 16px}
+.score-date-nav button{background:transparent;border:1px solid var(--border);color:var(--text2);width:32px;height:32px;border-radius:6px;font-size:14px;display:flex;align-items:center;justify-content:center}
+.score-date-nav button:hover{background:var(--bg2)}
+.score-date-label{font-family:var(--font-display);font-size:15px;font-weight:500;min-width:140px;text-align:center}
+.games-list{padding:0 12px}
+.game-card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;transition:box-shadow 0.15s}
+.game-card:hover{box-shadow:var(--shadow2)}
+.game-summary{padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px}
+.game-teams{flex:1}
+.game-team-row{display:flex;align-items:center;gap:8px;padding:3px 0}
+.team-color-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.team-name{font-size:14px;font-weight:500;flex:1}
+.team-score{font-family:var(--font-display);font-size:20px;font-weight:600;min-width:24px;text-align:right}
+.team-score.winner{color:var(--text)}
+.team-score.loser{color:var(--text3)}
+.game-meta{text-align:right;min-width:70px;flex-shrink:0}
+.game-status{font-family:var(--font-display);font-size:13px;font-weight:600}
+.game-status.live{color:var(--green)}
+.game-status.final{color:var(--text3)}
+.game-status.pre{color:var(--text2)}
+.game-detail-text{font-size:11px;color:var(--text3);margin-top:2px}
+.game-expand-icon{font-size:11px;color:var(--text3);transition:transform 0.2s}
+.game-card.expanded .game-expand-icon{transform:rotate(180deg)}
+.no-games{text-align:center;padding:40px 16px;color:var(--text3);font-size:14px}
+
+/* ── GAME DETAIL (expanded) ── */
+.game-detail{display:none;border-top:1px solid var(--border);background:var(--bg2)}
+.game-card.expanded .game-detail{display:block}
+.detail-section{padding:12px 14px}
+.detail-section+.detail-section{border-top:1px solid var(--border)}
+.detail-label{font-family:var(--font-display);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.detail-matchup{display:flex;justify-content:space-between;gap:12px}
+.detail-player{flex:1}
+.detail-player-role{font-size:11px;color:var(--text3)}
+.detail-player-name{font-size:14px;font-weight:500}
+.detail-player-stats{font-size:12px;color:var(--text2);margin-top:2px}
+.count-display{display:flex;align-items:center;gap:16px;margin-top:8px}
+.count-group{display:flex;align-items:center;gap:4px}
+.count-label{font-size:11px;color:var(--text3);min-width:12px}
+.count-pip{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--border2)}
+.count-pip.filled-b{background:var(--green);border-color:var(--green)}
+.count-pip.filled-s{background:var(--red);border-color:var(--red)}
+.count-pip.filled-o{background:var(--text2);border-color:var(--text2)}
+.diamond-wrap{display:flex;justify-content:center;padding:8px 0}
+.diamond{position:relative;width:60px;height:60px}
+.base{position:absolute;width:12px;height:12px;border:1.5px solid var(--border2);background:transparent;transform:rotate(45deg)}
+.base.occupied{background:var(--blue);border-color:var(--blue)}
+.base.b1{right:0;top:50%;margin-top:-6px}
+.base.b2{left:50%;top:0;margin-left:-6px}
+.base.b3{left:0;top:50%;margin-top:-6px}
+.linescore-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.linescore{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}
+.linescore th,.linescore td{padding:4px 6px;text-align:center}
+.linescore th{font-family:var(--font-display);font-weight:500;color:var(--text3);font-size:11px}
+.linescore td{font-family:var(--font-display);font-weight:500}
+.linescore .team-col{text-align:left;font-weight:600;min-width:36px}
+.linescore .current-inning{color:var(--green);font-weight:700}
+.linescore .rhe{border-left:1px solid var(--border);font-weight:700}
+.play-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.play-event{font-weight:600;color:var(--text)}
+.probable-pitchers{display:flex;justify-content:space-between;gap:12px}
+.pp-side{flex:1}
+.pp-label{font-size:11px;color:var(--text3)}
+.pp-name{font-size:13px;font-weight:500}
+
+/* ── STANDINGS ── */
+.standings-league{padding:16px 12px 0}
+.standings-league-title{font-family:var(--font-display);font-size:18px;font-weight:700;letter-spacing:-0.5px;margin-bottom:12px;padding-left:4px}
+.division-card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.division-header{font-family:var(--font-display);font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text2);padding:10px 14px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.standings-table{width:100%;border-collapse:collapse;font-size:13px}
+.standings-table th{font-family:var(--font-display);font-weight:500;color:var(--text3);font-size:11px;letter-spacing:0.5px;padding:6px 8px;text-align:center;border-bottom:1px solid var(--border)}
+.standings-table th:first-child{text-align:left;padding-left:14px}
+.standings-table td{padding:8px;text-align:center;border-bottom:1px solid var(--border)}
+.standings-table tr:last-child td{border-bottom:none}
+.standings-table td:first-child{text-align:left;padding-left:14px}
+.standings-team{display:flex;align-items:center;gap:8px}
+.standings-team .team-color-dot{width:8px;height:8px}
+.standings-team-name{font-weight:500}
+.standings-team-abbr{display:none}
+.streak-w{color:var(--green);font-weight:600}
+.streak-l{color:var(--red);font-weight:600}
+.gb-leader{color:var(--text3)}
+
+/* ── PLAYOFF PICTURE ── */
+.playoff-section{padding:16px 12px}
+.playoff-card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.playoff-header{font-family:var(--font-display);font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:10px 14px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.playoff-row{display:flex;align-items:center;padding:8px 14px;border-bottom:1px solid var(--border);gap:8px}
+.playoff-row:last-child{border-bottom:none}
+.playoff-seed{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--text3);min-width:20px}
+.playoff-team-name{flex:1;font-weight:500;font-size:13px}
+.playoff-record{font-size:12px;color:var(--text2);min-width:40px;text-align:right}
+.playoff-gb{font-size:12px;color:var(--text3);min-width:50px;text-align:right}
+.playoff-divider{border-top:2px dashed var(--red);margin:0 14px}
+.playoff-divider-label{font-size:10px;color:var(--red);text-align:center;padding:4px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+
+/* ── RESPONSIVE ── */
+@media(min-width:768px){
+  .games-list{max-width:640px;margin:0 auto}
+  .standings-league{max-width:720px;margin:0 auto}
+  .playoff-section{max-width:640px;margin:0 auto}
+}
+@media(max-width:400px){
+  .standings-team-name{display:none}
+  .standings-team-abbr{display:inline;font-weight:500}
+}
+</style>
+</head>
+<body>
+
+<!-- PIN GATE -->
+<div id="pin-gate">
+  <div class="pin-logo">MLB</div>
+  <div class="pin-sub">Dashboard</div>
+  <div class="pin-dots"><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div></div>
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="pinKey('1')">1</button>
+    <button class="pin-btn" onclick="pinKey('2')">2</button>
+    <button class="pin-btn" onclick="pinKey('3')">3</button>
+    <button class="pin-btn" onclick="pinKey('4')">4</button>
+    <button class="pin-btn" onclick="pinKey('5')">5</button>
+    <button class="pin-btn" onclick="pinKey('6')">6</button>
+    <button class="pin-btn" onclick="pinKey('7')">7</button>
+    <button class="pin-btn" onclick="pinKey('8')">8</button>
+    <button class="pin-btn" onclick="pinKey('9')">9</button>
+    <button class="pin-btn fn"></button>
+    <button class="pin-btn" onclick="pinKey('0')">0</button>
+    <button class="pin-btn fn" onclick="pinDel()">&#9003;</button>
+  </div>
+  <div class="pin-error" id="pin-error"></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="app-header">
+    <div class="header-top">
+      <div class="header-title">MLB</div>
+      <div class="header-date" id="header-date"></div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-tab="scoreboard">Scoreboard</button>
+      <button class="tab" data-tab="standings">Standings</button>
+      <button class="tab" data-tab="playoff">Playoff Picture</button>
+    </div>
+  </div>
+
+  <div class="update-bar" id="update-bar"></div>
+
+  <div class="tab-panel active" id="panel-scoreboard">
+    <div class="score-date-nav">
+      <button onclick="shiftDate(-1)">&#8592;</button>
+      <div class="score-date-label" id="score-date-label"></div>
+      <button onclick="shiftDate(1)">&#8594;</button>
+    </div>
+    <div class="games-list" id="games-list"></div>
+  </div>
+
+  <div class="tab-panel" id="panel-standings">
+    <div id="standings-container"></div>
+  </div>
+
+  <div class="tab-panel" id="panel-playoff">
+    <div id="playoff-container"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  TEAM COLORS — loaded from server API
+// ══════════════════════════════════════════
+let TC = {}; // { "Team Name": { primary, secondary, division } }
+
+function teamColor(name) {
+  if (TC[name]) return { p: TC[name].primary || '#666', s: TC[name].secondary || '#ccc' };
+  // Fuzzy match on last word (e.g. "Pirates" matches "Pittsburgh Pirates")
+  for (const [k, v] of Object.entries(TC)) {
+    if (name.includes(k.split(' ').pop())) return { p: v.primary || '#666', s: v.secondary || '#ccc' };
+  }
+  return { p: '#666', s: '#ccc' };
+}
+
+async function loadTeamColors() {
+  const data = await apiFetch('/api/colors');
+  if (data && data.teams) {
+    TC = data.teams;
+    console.log('[Colors] Loaded', Object.keys(TC).length, 'teams');
+  }
+}
+
+// ══════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════
+let authToken = localStorage.getItem('mlb_token');
+let pinEntry = '';
+
+async function checkAuth() {
+  if (!authToken) return false;
+  try {
+    const r = await fetch('/api/auth/check', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-auth-token': authToken } });
+    const d = await r.json();
+    return d.valid;
+  } catch (e) { return false; }
+}
+
+async function doAuth(pin) {
+  try {
+    const r = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pin }) });
+    const d = await r.json();
+    if (d.token) {
+      authToken = d.token;
+      localStorage.setItem('mlb_token', d.token);
+      return { ok: true };
+    }
+    return { ok: false, error: d.error, attemptsLeft: d.attemptsLeft, remaining: d.remaining };
+  } catch (e) { return { ok: false, error: 'network' }; }
+}
+
+function updateDots() {
+  document.querySelectorAll('.pin-dot').forEach((d, i) => {
+    d.classList.toggle('filled', i < pinEntry.length);
+    d.classList.remove('error');
+  });
+}
+
+function pinKey(n) {
+  if (pinEntry.length >= 4) return;
+  pinEntry += n;
+  updateDots();
+  if (pinEntry.length === 4) submitPin();
+}
+
+function pinDel() {
+  pinEntry = pinEntry.slice(0, -1);
+  updateDots();
+  document.getElementById('pin-error').textContent = '';
+}
+
+async function submitPin() {
+  const res = await doAuth(pinEntry);
+  if (res.ok) {
+    document.getElementById('pin-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  } else {
+    document.querySelectorAll('.pin-dot').forEach(d => d.classList.add('error'));
+    const errEl = document.getElementById('pin-error');
+    if (res.error === 'locked') errEl.textContent = `Locked. Try again in ${res.remaining}s`;
+    else if (res.attemptsLeft !== undefined) errEl.textContent = `Wrong PIN. ${res.attemptsLeft} attempts left`;
+    else errEl.textContent = 'Connection error';
+    setTimeout(() => { pinEntry = ''; updateDots(); }, 600);
+  }
+}
+
+// Keyboard support for PIN
+document.addEventListener('keydown', e => {
+  if (document.getElementById('pin-gate').style.display === 'none') return;
+  if (e.key >= '0' && e.key <= '9') pinKey(e.key);
+  else if (e.key === 'Backspace') pinDel();
+});
+
+// ══════════════════════════════════════════
+//  APP STATE
+// ══════════════════════════════════════════
+let currentDate = new Date();
+let expandedGame = null;
+let refreshTimer = null;
+let gameDetailTimers = {};
+
+function todayStr(d) {
+  const dt = d || new Date();
+  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+}
+
+function isToday(d) { return todayStr(d) === todayStr(new Date()); }
+
+function formatDateLabel(d) {
+  const today = new Date();
+  const opts = { weekday: 'long', month: 'short', day: 'numeric' };
+  const label = d.toLocaleDateString('en-US', opts);
+  if (todayStr(d) === todayStr(today)) return `Today \u2014 ${label}`;
+  const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+  if (todayStr(d) === todayStr(yesterday)) return `Yesterday \u2014 ${label}`;
+  const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
+  if (todayStr(d) === todayStr(tomorrow)) return `Tomorrow \u2014 ${label}`;
+  return label;
+}
+
+function shiftDate(dir) {
+  currentDate = new Date(currentDate);
+  currentDate.setDate(currentDate.getDate() + dir);
+  document.getElementById('score-date-label').textContent = formatDateLabel(currentDate);
+  loadScores();
+}
+
+// ══════════════════════════════════════════
+//  API HELPERS
+// ══════════════════════════════════════════
+async function apiFetch(url) {
+  const r = await fetch(url, { headers: { 'x-auth-token': authToken } });
+  if (r.status === 401) {
+    localStorage.removeItem('mlb_token');
+    location.reload();
+    return null;
+  }
+  return r.json();
+}
+
+// ══════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// ══════════════════════════════════════════
+//  SCOREBOARD
+// ══════════════════════════════════════════
+async function loadScores() {
+  const dateStr = todayStr(currentDate);
+  const endpoint = isToday(currentDate) ? '/api/scores' : `/api/scores/${dateStr}`;
+  const data = await apiFetch(endpoint);
+  if (!data) return;
+
+  const dates = data.schedule?.dates || [];
+  const games = dates[0]?.games || [];
+  const container = document.getElementById('games-list');
+
+  if (!games.length) {
+    container.innerHTML = '<div class="no-games">No games scheduled</div>';
+    return;
+  }
+
+  container.innerHTML = games.map(g => renderGameCard(g)).join('');
+
+  if (data.updated) {
+    const ago = Math.round((Date.now() - data.updated) / 1000);
+    document.getElementById('update-bar').textContent = ago < 10 ? 'Just updated' : `Updated ${ago}s ago`;
+  }
+}
+
+function renderGameCard(g) {
+  const away = g.teams.away;
+  const home = g.teams.home;
+  const awayName = away.team.name;
+  const homeName = home.team.name;
+  const awayAbbr = away.team.abbreviation;
+  const homeAbbr = home.team.abbreviation;
+  const awayC = teamColor(awayName);
+  const homeC = teamColor(homeName);
+  const ls = g.linescore || {};
+  const state = g.status.abstractGameState;
+  const detail = g.status.detailedState;
+
+  let awayScore = away.score ?? '';
+  let homeScore = home.score ?? '';
+  let statusText = '';
+  let statusClass = 'pre';
+  let detailText = '';
+
+  if (state === 'Live') {
+    const half = ls.inningHalf === 'Top' ? 'Top' : 'Bot';
+    statusText = `${half} ${ls.currentInningOrdinal || ''}`;
+    statusClass = 'live';
+    const outs = ls.outs !== undefined ? `${ls.outs} out` : '';
+    detailText = outs;
+  } else if (state === 'Final') {
+    statusText = ls.currentInning > 9 ? `F/${ls.currentInning}` : 'Final';
+    statusClass = 'final';
+  } else {
+    const gt = new Date(g.gameDate);
+    statusText = gt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    statusClass = 'pre';
+    const bc = g.broadcasts?.filter(b => b.type === 'TV')?.map(b => b.callSign) || [];
+    detailText = bc.join(', ');
+  }
+
+  const awayWin = state === 'Final' && awayScore > homeScore;
+  const homeWin = state === 'Final' && homeScore > awayScore;
+
+  let ppHtml = '';
+  if (state === 'Preview') {
+    const awayPP = away.probablePitcher?.fullName || 'TBD';
+    const homePP = home.probablePitcher?.fullName || 'TBD';
+    ppHtml = `<div class="detail-section"><div class="probable-pitchers">
+      <div class="pp-side"><div class="pp-label">${awayAbbr} Starter</div><div class="pp-name">${awayPP}</div></div>
+      <div class="pp-side" style="text-align:right"><div class="pp-label">${homeAbbr} Starter</div><div class="pp-name">${homePP}</div></div>
+    </div></div>`;
+  }
+
+  return `<div class="game-card" data-gamepk="${g.gamePk}" data-state="${state}" onclick="toggleGame(this,${g.gamePk},'${state}')">
+    <div class="game-summary">
+      <div class="game-teams">
+        <div class="game-team-row">
+          <div class="team-color-dot" style="background:${awayC.p}"></div>
+          <div class="team-name">${awayAbbr} ${away.team.teamName}</div>
+          <div class="team-score ${awayWin ? 'winner' : homeWin ? 'loser' : ''}">${awayScore}</div>
+        </div>
+        <div class="game-team-row">
+          <div class="team-color-dot" style="background:${homeC.p}"></div>
+          <div class="team-name">${homeAbbr} ${home.team.teamName}</div>
+          <div class="team-score ${homeWin ? 'winner' : awayWin ? 'loser' : ''}">${homeScore}</div>
+        </div>
+      </div>
+      <div class="game-meta">
+        <div class="game-status ${statusClass}">${statusText}</div>
+        <div class="game-detail-text">${detailText}</div>
+      </div>
+      <div class="game-expand-icon">&#9662;</div>
+    </div>
+    <div class="game-detail" id="detail-${g.gamePk}">
+      ${state !== 'Preview' ? renderLinescore(ls, awayAbbr, homeAbbr) : ''}
+      ${ppHtml}
+      <div id="live-detail-${g.gamePk}"></div>
+    </div>
+  </div>`;
+}
+
+function renderLinescore(ls, awayAbbr, homeAbbr) {
+  if (!ls.innings || !ls.innings.length) return '';
+  const innings = ls.innings;
+  const curInning = ls.currentInning;
+  const isLive = ls.currentInningOrdinal !== undefined;
+  let headCols = innings.map(inn => {
+    const isCur = isLive && inn.num === curInning;
+    return `<th class="${isCur ? 'current-inning' : ''}">${inn.num}</th>`;
+  }).join('');
+
+  let awayRow = innings.map(inn => {
+    const isCur = isLive && inn.num === curInning;
+    const runs = inn.away?.runs;
+    return `<td class="${isCur ? 'current-inning' : ''}">${runs !== undefined ? runs : ''}</td>`;
+  }).join('');
+
+  let homeRow = innings.map(inn => {
+    const isCur = isLive && inn.num === curInning;
+    const runs = inn.home?.runs;
+    return `<td class="${isCur ? 'current-inning' : ''}">${runs !== undefined ? runs : ''}</td>`;
+  }).join('');
+
+  const awayR = ls.teams?.away?.runs ?? '';
+  const awayH = ls.teams?.away?.hits ?? '';
+  const awayE = ls.teams?.away?.errors ?? '';
+  const homeR = ls.teams?.home?.runs ?? '';
+  const homeH = ls.teams?.home?.hits ?? '';
+  const homeE = ls.teams?.home?.errors ?? '';
+
+  return `<div class="detail-section"><div class="linescore-wrap"><table class="linescore">
+    <thead><tr><th class="team-col"></th>${headCols}<th class="rhe">R</th><th>H</th><th>E</th></tr></thead>
+    <tbody>
+      <tr><td class="team-col">${awayAbbr}</td>${awayRow}<td class="rhe">${awayR}</td><td>${awayH}</td><td>${awayE}</td></tr>
+      <tr><td class="team-col">${homeAbbr}</td>${homeRow}<td class="rhe">${homeR}</td><td>${homeH}</td><td>${homeE}</td></tr>
+    </tbody>
+  </table></div></div>`;
+}
+
+async function toggleGame(el, gamePk, state) {
+  const isExpanded = el.classList.contains('expanded');
+  document.querySelectorAll('.game-card.expanded').forEach(c => {
+    c.classList.remove('expanded');
+    const pk = c.dataset.gamepk;
+    if (gameDetailTimers[pk]) { clearInterval(gameDetailTimers[pk]); delete gameDetailTimers[pk]; }
+  });
+  if (isExpanded) return;
+  el.classList.add('expanded');
+
+  if (state === 'Live' || state === 'Final') {
+    await loadGameDetail(gamePk);
+    if (state === 'Live') {
+      gameDetailTimers[gamePk] = setInterval(() => loadGameDetail(gamePk), 15000);
+    }
+  }
+}
+
+async function loadGameDetail(gamePk) {
+  const data = await apiFetch(`/api/game/${gamePk}`);
+  if (!data || !data.game) return;
+
+  const gd = data.game;
+  const liveData = gd.liveData || {};
+  const plays = liveData.plays || {};
+  const curPlay = plays.currentPlay || {};
+  const matchup = curPlay.matchup || {};
+  const count = curPlay.count || {};
+  const linescore = liveData.linescore || {};
+  const offense = linescore.offense || {};
+  const defense = linescore.defense || {};
+  const state = gd.gameData?.status?.abstractGameState;
+
+  const container = document.getElementById(`live-detail-${gamePk}`);
+  if (!container) return;
+
+  let html = '';
+
+  if (state === 'Live' && matchup.pitcher) {
+    const pitcherId = matchup.pitcher.id;
+    const boxTeams = liveData.boxscore?.teams || {};
+    let pitcherStats = {};
+    for (const side of ['home', 'away']) {
+      const p = boxTeams[side]?.players?.[`ID${pitcherId}`];
+      if (p) { pitcherStats = p.stats?.pitching || {}; break; }
+    }
+
+    const balls = count.balls || 0;
+    const strikes = count.strikes || 0;
+    const outs = count.outs || 0;
+    const r1 = offense.first ? true : false;
+    const r2 = offense.second ? true : false;
+    const r3 = offense.third ? true : false;
+
+    html += `<div class="detail-section"><div class="detail-label">At bat</div>
+      <div class="detail-matchup">
+        <div class="detail-player">
+          <div class="detail-player-role">Pitching</div>
+          <div class="detail-player-name">${defense.pitcher?.fullName || matchup.pitcher?.fullName || '?'}</div>
+          <div class="detail-player-stats">${pitcherStats.inningsPitched || '0'} IP \u2022 ${pitcherStats.numberOfPitches || 0} P \u2022 ${pitcherStats.strikeOuts || 0} K \u2022 ${pitcherStats.earnedRuns || 0} ER</div>
+        </div>
+        <div class="detail-player" style="text-align:right">
+          <div class="detail-player-role">Batting</div>
+          <div class="detail-player-name">${matchup.batter?.fullName || '?'}</div>
+          <div class="detail-player-stats">${matchup.batSide?.description || ''} handed</div>
+        </div>
+      </div>
+      <div class="count-display">
+        <div class="count-group"><span class="count-label">B</span>${[0, 1, 2, 3].map(i => `<div class="count-pip ${i < balls ? 'filled-b' : ''}"></div>`).join('')}</div>
+        <div class="count-group"><span class="count-label">S</span>${[0, 1, 2].map(i => `<div class="count-pip ${i < strikes ? 'filled-s' : ''}"></div>`).join('')}</div>
+        <div class="count-group"><span class="count-label">O</span>${[0, 1, 2].map(i => `<div class="count-pip ${i < outs ? 'filled-o' : ''}"></div>`).join('')}</div>
+        <div class="diamond-wrap"><div class="diamond">
+          <div class="base b1 ${r1 ? 'occupied' : ''}"></div>
+          <div class="base b2 ${r2 ? 'occupied' : ''}"></div>
+          <div class="base b3 ${r3 ? 'occupied' : ''}"></div>
+        </div></div>
+      </div>
+    </div>`;
+  }
+
+  const lastPlay = state === 'Live' ? curPlay : (plays.allPlays?.length ? plays.allPlays[plays.allPlays.length - 1] : null);
+  if (lastPlay?.result?.description) {
+    html += `<div class="detail-section"><div class="detail-label">${state === 'Live' ? 'Last play' : 'Final play'}</div>
+      <div class="play-desc"><span class="play-event">${lastPlay.result.event || ''}</span> \u2014 ${lastPlay.result.description}</div>
+    </div>`;
+  }
+
+  const scoringPlays = plays.scoringPlays || [];
+  if (scoringPlays.length) {
+    const scoringHtml = scoringPlays.slice(-5).map(idx => {
+      const sp = plays.allPlays?.[idx];
+      if (!sp) return '';
+      return `<div class="play-desc" style="margin-bottom:4px"><span class="play-event">${sp.about?.halfInning === 'top' ? '\u25B3' : '\u25BD'} ${sp.about?.inning || ''}</span> ${sp.result?.description || ''}</div>`;
+    }).join('');
+    html += `<div class="detail-section"><div class="detail-label">Scoring plays</div>${scoringHtml}</div>`;
+  }
+
+  container.innerHTML = html;
+
+  const awayAbbr = gd.gameData?.teams?.away?.abbreviation || '?';
+  const homeAbbr = gd.gameData?.teams?.home?.abbreviation || '?';
+  const detailPane = document.getElementById(`detail-${gamePk}`);
+  if (detailPane) {
+    const existingLS = detailPane.querySelector('.linescore-wrap');
+    if (existingLS) {
+      existingLS.parentElement.outerHTML = renderLinescore(linescore, awayAbbr, homeAbbr);
+    }
+  }
+}
+
+// ══════════════════════════════════════════
+//  STANDINGS
+// ══════════════════════════════════════════
+const DIV_NAMES = {
+  200: 'AL West', 201: 'AL East', 202: 'AL Central',
+  203: 'NL West', 204: 'NL East', 205: 'NL Central'
+};
+const LEAGUE_DIVS = {
+  'American League': [201, 202, 200],
+  'National League': [204, 205, 203]
+};
+
+async function loadStandings() {
+  const data = await apiFetch('/api/standings');
+  if (!data || !data.standings) return;
+
+  const records = data.standings.records || [];
+  const byDiv = {};
+  records.forEach(r => {
+    const divId = r.division?.id;
+    if (divId) byDiv[divId] = r.teamRecords;
+  });
+
+  let html = '';
+  for (const [league, divIds] of Object.entries(LEAGUE_DIVS)) {
+    html += `<div class="standings-league"><div class="standings-league-title">${league}</div>`;
+    for (const divId of divIds) {
+      const teams = byDiv[divId] || [];
+      html += renderDivisionStandings(DIV_NAMES[divId] || 'Division', teams);
+    }
+    html += '</div>';
+  }
+  document.getElementById('standings-container').innerHTML = html;
+}
+
+function renderDivisionStandings(divName, teams) {
+  let rows = teams.map(tr => {
+    const name = tr.team.name;
+    const abbr = tr.team.abbreviation;
+    const c = teamColor(name);
+    const gb = tr.gamesBack === '-' ? '\u2014' : tr.gamesBack;
+    const streak = tr.streak?.streakCode || '';
+    const streakClass = streak.startsWith('W') ? 'streak-w' : streak.startsWith('L') ? 'streak-l' : '';
+    const l10rec = tr.records?.splitRecords?.find(r => r.type === 'lastTen');
+    const l10 = l10rec ? `${l10rec.wins}-${l10rec.losses}` : '';
+    return `<tr>
+      <td><div class="standings-team"><div class="team-color-dot" style="background:${c.p}"></div><span class="standings-team-name">${name}</span><span class="standings-team-abbr">${abbr}</span></div></td>
+      <td>${tr.wins}</td><td>${tr.losses}</td><td>${tr.winningPercentage}</td>
+      <td class="${gb === '\u2014' ? 'gb-leader' : ''}">${gb}</td>
+      <td class="${streakClass}">${streak}</td><td>${l10}</td>
+    </tr>`;
+  }).join('');
+
+  return `<div class="division-card">
+    <div class="division-header">${divName}</div>
+    <table class="standings-table">
+      <thead><tr><th>Team</th><th>W</th><th>L</th><th>PCT</th><th>GB</th><th>STRK</th><th>L10</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
+
+// ══════════════════════════════════════════
+//  PLAYOFF PICTURE
+// ══════════════════════════════════════════
+async function loadPlayoffPicture() {
+  const data = await apiFetch('/api/standings');
+  if (!data || !data.standings) return;
+
+  const records = data.standings.records || [];
+  const byLeague = { 'AL': [], 'NL': [] };
+
+  records.forEach(r => {
+    const divId = r.division?.id;
+    const league = [200, 201, 202].includes(divId) ? 'AL' : 'NL';
+    const divName = DIV_NAMES[divId] || '';
+    r.teamRecords.forEach((tr, i) => {
+      byLeague[league].push({
+        name: tr.team.name,
+        abbr: tr.team.abbreviation,
+        wins: tr.wins,
+        losses: tr.losses,
+        pct: tr.winningPercentage,
+        gb: tr.gamesBack,
+        wcgb: tr.wildCardGamesBack,
+        divLeader: i === 0,
+        divName,
+        color: teamColor(tr.team.name)
+      });
+    });
+  });
+
+  let html = '';
+  for (const [league, teams] of Object.entries(byLeague)) {
+    const leagueName = league === 'AL' ? 'American League' : 'National League';
+    const divLeaders = teams.filter(t => t.divLeader).sort((a, b) => parseFloat(b.pct) - parseFloat(a.pct));
+    const wcTeams = teams.filter(t => !t.divLeader).sort((a, b) => parseFloat(b.pct) - parseFloat(a.pct));
+
+    html += `<div class="playoff-section"><div class="standings-league-title">${leagueName}</div>`;
+    html += `<div class="playoff-card"><div class="playoff-header">Division Leaders</div>`;
+    divLeaders.forEach((t, i) => {
+      html += `<div class="playoff-row">
+        <div class="playoff-seed">${i + 1}</div>
+        <div class="team-color-dot" style="background:${t.color.p}"></div>
+        <div class="playoff-team-name">${t.abbr} ${t.name.split(' ').pop()}</div>
+        <div class="playoff-record">${t.wins}-${t.losses}</div>
+      </div>`;
+    });
+    html += '</div>';
+
+    html += `<div class="playoff-card"><div class="playoff-header">Wild Card</div>`;
+    wcTeams.forEach((t, i) => {
+      if (i === 3) {
+        html += `<div class="playoff-divider"></div><div class="playoff-divider-label">Out of Playoff</div>`;
+      }
+      const inWC = i < 3;
+      html += `<div class="playoff-row" style="${!inWC ? 'opacity:0.5' : ''}">
+        <div class="playoff-seed">${inWC ? (i + 4) : ''}</div>
+        <div class="team-color-dot" style="background:${t.color.p}"></div>
+        <div class="playoff-team-name">${t.abbr} ${t.name.split(' ').pop()}</div>
+        <div class="playoff-record">${t.wins}-${t.losses}</div>
+        <div class="playoff-gb">${t.wcgb === '-' || t.wcgb === '' ? '\u2014' : 'WC ' + t.wcgb}</div>
+      </div>`;
+    });
+    html += '</div></div>';
+  }
+
+  document.getElementById('playoff-container').innerHTML = html;
+}
+
+// ══════════════════════════════════════════
+//  INIT & REFRESH
+// ══════════════════════════════════════════
+async function initApp() {
+  document.getElementById('header-date').textContent = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  document.getElementById('score-date-label').textContent = formatDateLabel(currentDate);
+
+  // Load colors first, then data
+  await loadTeamColors();
+  await Promise.all([loadScores(), loadStandings(), loadPlayoffPicture()]);
+
+  // Auto-refresh scores every 30s
+  refreshTimer = setInterval(async () => {
+    if (isToday(currentDate)) {
+      await loadScores();
+    }
+  }, 30000);
+
+  // Refresh standings every 5 min
+  setInterval(() => {
+    loadStandings();
+    loadPlayoffPicture();
+  }, 5 * 60 * 1000);
+}
+
+// ══════════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════════
+(async () => {
+  if (await checkAuth()) {
+    document.getElementById('pin-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  }
+})();
+</script>
+</body>
+</html>
