@@ -553,8 +553,8 @@ function mobFF(){
   h+='<div class="game-row">'+pickHTML(ch[0],seed(ch[0]),s1P,s1R,"finalFour",0,0,elim,null,actual[0]&&actual[0]!==ch[0]?actual[0]:null)+pickHTML(ch[1],seed(ch[1]),s1P,s1R,"finalFour",0,0,elim,null,actual[1]&&actual[1]!==ch[1]?actual[1]:null)+'</div>';
   h+='<div class="ff-label">West vs Midwest'+(getSchedule("finalFour",0,1)?' <span style="color:var(--muted);font-size:8px">\u00b7 '+getSchedule("finalFour",0,1)+'</span>':'')+'</div>';
   h+='<div class="game-row">'+pickHTML(ch[2],seed(ch[2]),s2P,s2R,"finalFour",0,1,elim,null,actual[2]&&actual[2]!==ch[2]?actual[2]:null)+pickHTML(ch[3],seed(ch[3]),s2P,s2R,"finalFour",0,1,elim,null,actual[3]&&actual[3]!==ch[3]?actual[3]:null)+'</div></div>';
-  // Championship: use actual F4 winners if available
-  var cAct1=s1R||s1P, cAct2=s2R||s2P;
+  // Championship: only show BUST once semifinal results are in
+  var cAct1=s1R||null, cAct2=s2R||null;
   h+='<div class="rd-group"><div class="rd-label" style="color:var(--accent)">Championship <span class="rd-pts">320 pts</span>'+(getSchedule("finalFour",1,0)?' <span style="font-weight:400;opacity:0.5;font-size:9px">\u00b7 '+getSchedule("finalFour",1,0)+'</span>':'')+'</div>';
   h+='<div class="game-row">'+pickHTML(s1P,seed(s1P),cP,cR,"finalFour",1,0,elim,null,cAct1&&cAct1!==s1P?cAct1:null)+pickHTML(s2P,seed(s2P),cP,cR,"finalFour",1,0,elim,null,cAct2&&cAct2!==s2P?cAct2:null)+'</div></div>';
   if(cP){var cElim=elim.has(cP);h+='<div class="champ-box"'+(cElim?' style="opacity:0.3;text-decoration:line-through"':'')+'><div class="champ-label">'+(S.viewing||"Your")+' Champion</div><div class="champ-name">\u{1F3C6} '+seed(cP)+' '+cP+' \u{1F3C6}</div></div>';}
@@ -689,8 +689,8 @@ function deskFF(){
   var ffP=p.finalFour||{},ffR=S.results.finalFour||{};
   var s1P=(ffP[0]||{})[0],s2P=(ffP[0]||{})[1],cP=(ffP[1]||{})[0];
   var s1R=(ffR[0]||{})[0],s2R=(ffR[0]||{})[1],cR=(ffR[1]||{})[0];
-  var cAct1=s1R||(actual[0]&&actual[0]!==ch[0]?actual[0]:null)||(actual[1]&&actual[1]!==ch[1]?actual[1]:null)||s1P;
-  var cAct2=s2R||(actual[2]&&actual[2]!==ch[2]?actual[2]:null)||(actual[3]&&actual[3]!==ch[3]?actual[3]:null)||s2P;
+  var cAct1=s1R||null;
+  var cAct2=s2R||null;
   var h='<div class="ff-center"><div class="ff-title">\u{1F3C6} Final Four</div>';
   h+='<div class="ff-game"><div class="ff-game-label">East vs South \u00b7 160pts'+(getSchedule("finalFour",0,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,0)+'</span>':'')+'</div><div class="bg">'+dtr(ch[0],s1P,s1R,"finalFour",0,0,elim,null,actual[0]&&actual[0]!==ch[0]?actual[0]:null)+dtr(ch[1],s1P,s1R,"finalFour",0,0,elim,null,actual[1]&&actual[1]!==ch[1]?actual[1]:null)+'</div></div>';
   h+='<div class="ff-game"><div class="ff-game-label">Championship \u00b7 320pts'+(getSchedule("finalFour",1,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",1,0)+'</span>':'')+'</div><div class="bg">'+dtr(s1P,cP,cR,"finalFour",1,0,elim,null,cAct1&&cAct1!==s1P?cAct1:null)+dtr(s2P,cP,cR,"finalFour",1,0,elim,null,cAct2&&cAct2!==s2P?cAct2:null)+'</div></div>';
