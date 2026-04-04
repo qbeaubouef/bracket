@@ -97,7 +97,7 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .pick.sel.elim{background:var(--card);color:var(--muted);border-color:var(--border)}
 .pick.live{border-color:var(--green);background:rgba(74,222,128,0.04)}
 .pick.bust{background:rgba(255,255,255,0.04);border-left:2px solid rgba(239,68,68,0.4);color:rgba(255,255,255,0.55);font-weight:600}
-.pick.bust-loser{background:rgba(255,255,255,0.02);border-left:2px solid rgba(239,68,68,0.2);color:rgba(255,255,255,0.25);font-weight:400}
+.pick.bust-loser{background:rgba(255,255,255,0.01);border-left:2px solid rgba(239,68,68,0.15);color:rgba(255,255,255,0.18);font-weight:400;opacity:0.5}
 .bust-tag{font-size:7px;padding:1px 5px;border-radius:3px;font-weight:700;letter-spacing:0.5px;margin-left:auto;flex-shrink:0;background:rgba(239,68,68,0.12);color:var(--red)}
 .pick .ck{margin-left:auto;font-size:10px;flex-shrink:0}
 .pick .sc{margin-left:auto;font-size:9px;opacity:0.6;font-weight:400;flex-shrink:0}
@@ -170,9 +170,9 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .bg .tr.elim{opacity:0.25;text-decoration:line-through}
 .bg .tr.live{background:rgba(74,222,128,0.04)}
 .bg .tr.bust{background:rgba(255,255,255,0.04);border-left:2px solid rgba(239,68,68,0.4);color:rgba(255,255,255,0.55);font-weight:600}
-.bg .tr.bust-loser{background:rgba(255,255,255,0.02);border-left:2px solid rgba(239,68,68,0.2);color:rgba(255,255,255,0.25);font-weight:400}
-.bg .tr.bust-loser .ts{color:rgba(255,255,255,0.15)}
-.bg .tr.bust-loser .tsc{color:rgba(255,255,255,0.25)}
+.bg .tr.bust-loser{background:rgba(255,255,255,0.01);border-left:2px solid rgba(239,68,68,0.15);color:rgba(255,255,255,0.18);font-weight:400;opacity:0.5}
+.bg .tr.bust-loser .ts{color:rgba(255,255,255,0.12)}
+.bg .tr.bust-loser .tsc{color:rgba(255,255,255,0.18)}
 .bust-tag-d{font-size:7px;padding:1px 4px;border-radius:3px;font-weight:700;letter-spacing:0.5px;margin-left:auto;flex-shrink:0;background:rgba(239,68,68,0.12);color:var(--red)}
 .bg.live{border-color:var(--green)}
 .bg .tr.locked{cursor:default}
@@ -541,19 +541,23 @@ function mobRegion(rk){
 function mobFF(){
   var p=ap(),elim=getEliminated(S.results);
   var ch=RK.map(function(r){var rp=p[r]||{};return rp[3]&&rp[3][0]||null});
+  var actual=RK.map(function(r){var rr=S.results[r]||{};return rr[3]&&rr[3][0]||null});
   var ffP=p.finalFour||{},ffR=S.results.finalFour||{};
   var s1P=(ffP[0]||{})[0],s2P=(ffP[0]||{})[1],cP=(ffP[1]||{})[0];
   var s1R=(ffR[0]||{})[0],s2R=(ffR[0]||{})[1],cR=(ffR[1]||{})[0];
+  // Display teams: use actual E8 winner if available, else user pick
+  var d=ch.map(function(c,i){return actual[i]||c;});
   var h='<div class="sec-head"><div class="sec-emoji">\u{1F3C6}</div><div class="sec-title">Final Four</div></div>';
   h+='<div class="rd-group"><div class="rd-label" style="color:var(--accent)">Semifinals <span class="rd-pts">160 pts</span></div>';
   h+='<div class="ff-label">East vs South'+(getSchedule("finalFour",0,0)?' <span style="color:var(--muted);font-size:8px">\u00b7 '+getSchedule("finalFour",0,0)+'</span>':'')+'</div>';
-  h+='<div class="game-row">'+pickHTML(ch[0],seed(ch[0]),s1P,s1R,"finalFour",0,0,elim)+pickHTML(ch[1],seed(ch[1]),s1P,s1R,"finalFour",0,0,elim)+'</div>';
+  h+='<div class="game-row">'+pickHTML(ch[0],seed(ch[0]),s1P,s1R,"finalFour",0,0,elim,null,actual[0]&&actual[0]!==ch[0]?actual[0]:null)+pickHTML(ch[1],seed(ch[1]),s1P,s1R,"finalFour",0,0,elim,null,actual[1]&&actual[1]!==ch[1]?actual[1]:null)+'</div>';
   h+='<div class="ff-label">West vs Midwest'+(getSchedule("finalFour",0,1)?' <span style="color:var(--muted);font-size:8px">\u00b7 '+getSchedule("finalFour",0,1)+'</span>':'')+'</div>';
-  h+='<div class="game-row">'+pickHTML(ch[2],seed(ch[2]),s2P,s2R,"finalFour",0,1,elim)+pickHTML(ch[3],seed(ch[3]),s2P,s2R,"finalFour",0,1,elim)+'</div></div>';
+  h+='<div class="game-row">'+pickHTML(ch[2],seed(ch[2]),s2P,s2R,"finalFour",0,1,elim,null,actual[2]&&actual[2]!==ch[2]?actual[2]:null)+pickHTML(ch[3],seed(ch[3]),s2P,s2R,"finalFour",0,1,elim,null,actual[3]&&actual[3]!==ch[3]?actual[3]:null)+'</div></div>';
+  // Championship: use actual F4 winners if available
+  var cAct1=s1R||s1P, cAct2=s2R||s2P;
   h+='<div class="rd-group"><div class="rd-label" style="color:var(--accent)">Championship <span class="rd-pts">320 pts</span>'+(getSchedule("finalFour",1,0)?' <span style="font-weight:400;opacity:0.5;font-size:9px">\u00b7 '+getSchedule("finalFour",1,0)+'</span>':'')+'</div>';
-  h+='<div class="game-row">'+pickHTML(s1P,seed(s1P),cP,cR,"finalFour",1,0,elim)+pickHTML(s2P,seed(s2P),cP,cR,"finalFour",1,0,elim)+'</div></div>';
-  if(cP)h+='<div class="champ-box"><div class="champ-label">'+(S.viewing||"Your")+' Champion</div><div class="champ-name">\u{1F3C6} '+seed(cP)+' '+cP+' \u{1F3C6}</div></div>';
-  // Tiebreaker
+  h+='<div class="game-row">'+pickHTML(s1P,seed(s1P),cP,cR,"finalFour",1,0,elim,null,cAct1&&cAct1!==s1P?cAct1:null)+pickHTML(s2P,seed(s2P),cP,cR,"finalFour",1,0,elim,null,cAct2&&cAct2!==s2P?cAct2:null)+'</div></div>';
+  if(cP){var cElim=elim.has(cP);h+='<div class="champ-box"'+(cElim?' style="opacity:0.3;text-decoration:line-through"':'')+'><div class="champ-label">'+(S.viewing||"Your")+' Champion</div><div class="champ-name">\u{1F3C6} '+seed(cP)+' '+cP+' \u{1F3C6}</div></div>';}
   if(!S.viewing){
     h+='<div class="tb-box"><div class="tbl">Tiebreaker: Combined Final Score</div>';
     h+='<input id="tbi" type="number" placeholder="Total" value="'+(S.tiebreaker||"")+'" min="1" max="500" onkeydown="if(event.key===\'Enter\')saveTB()">';
@@ -681,14 +685,17 @@ function deskRegion(rk,rtl){
 function deskFF(){
   var p=ap(),elim=getEliminated(S.results);
   var ch=RK.map(function(r){var rp=p[r]||{};return rp[3]&&rp[3][0]||null});
+  var actual=RK.map(function(r){var rr=S.results[r]||{};return rr[3]&&rr[3][0]||null});
   var ffP=p.finalFour||{},ffR=S.results.finalFour||{};
   var s1P=(ffP[0]||{})[0],s2P=(ffP[0]||{})[1],cP=(ffP[1]||{})[0];
   var s1R=(ffR[0]||{})[0],s2R=(ffR[0]||{})[1],cR=(ffR[1]||{})[0];
+  var cAct1=s1R||(actual[0]&&actual[0]!==ch[0]?actual[0]:null)||(actual[1]&&actual[1]!==ch[1]?actual[1]:null)||s1P;
+  var cAct2=s2R||(actual[2]&&actual[2]!==ch[2]?actual[2]:null)||(actual[3]&&actual[3]!==ch[3]?actual[3]:null)||s2P;
   var h='<div class="ff-center"><div class="ff-title">\u{1F3C6} Final Four</div>';
-  h+='<div class="ff-game"><div class="ff-game-label">East vs South \u00b7 160pts'+(getSchedule("finalFour",0,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,0)+'</span>':'')+'</div><div class="bg">'+dtr(ch[0],s1P,s1R,"finalFour",0,0,elim)+dtr(ch[1],s1P,s1R,"finalFour",0,0,elim)+'</div></div>';
-  h+='<div class="ff-game"><div class="ff-game-label">Championship \u00b7 320pts'+(getSchedule("finalFour",1,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",1,0)+'</span>':'')+'</div><div class="bg">'+dtr(s1P,cP,cR,"finalFour",1,0,elim)+dtr(s2P,cP,cR,"finalFour",1,0,elim)+'</div></div>';
-  h+='<div class="ff-game"><div class="ff-game-label">West vs Midwest \u00b7 160pts'+(getSchedule("finalFour",0,1)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,1)+'</span>':'')+'</div><div class="bg">'+dtr(ch[2],s2P,s2R,"finalFour",0,1,elim)+dtr(ch[3],s2P,s2R,"finalFour",0,1,elim)+'</div></div>';
-  if(cP)h+='<div class="champion-display"><div class="label">'+(S.viewing||"Your")+' Champion</div><div class="name">\u{1F3C6} '+seed(cP)+' '+cP+'</div></div>';
+  h+='<div class="ff-game"><div class="ff-game-label">East vs South \u00b7 160pts'+(getSchedule("finalFour",0,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,0)+'</span>':'')+'</div><div class="bg">'+dtr(ch[0],s1P,s1R,"finalFour",0,0,elim,null,actual[0]&&actual[0]!==ch[0]?actual[0]:null)+dtr(ch[1],s1P,s1R,"finalFour",0,0,elim,null,actual[1]&&actual[1]!==ch[1]?actual[1]:null)+'</div></div>';
+  h+='<div class="ff-game"><div class="ff-game-label">Championship \u00b7 320pts'+(getSchedule("finalFour",1,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",1,0)+'</span>':'')+'</div><div class="bg">'+dtr(s1P,cP,cR,"finalFour",1,0,elim,null,cAct1&&cAct1!==s1P?cAct1:null)+dtr(s2P,cP,cR,"finalFour",1,0,elim,null,cAct2&&cAct2!==s2P?cAct2:null)+'</div></div>';
+  h+='<div class="ff-game"><div class="ff-game-label">West vs Midwest \u00b7 160pts'+(getSchedule("finalFour",0,1)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,1)+'</span>':'')+'</div><div class="bg">'+dtr(ch[2],s2P,s2R,"finalFour",0,1,elim,null,actual[2]&&actual[2]!==ch[2]?actual[2]:null)+dtr(ch[3],s2P,s2R,"finalFour",0,1,elim,null,actual[3]&&actual[3]!==ch[3]?actual[3]:null)+'</div></div>';
+  if(cP){var cElim=elim.has(cP);h+='<div class="champion-display"'+(cElim?' style="opacity:0.3;text-decoration:line-through"':'')+'><div class="label">'+(S.viewing||"Your")+' Champion</div><div class="name">\u{1F3C6} '+seed(cP)+' '+cP+'</div></div>';}
   if(!S.viewing){h+='<div class="tb-box" style="margin-top:12px"><div class="tbl">Tiebreaker: Combined Final Score</div><input id="tbi2" type="number" placeholder="Total" value="'+(S.tiebreaker||"")+'" min="1" max="500" onkeydown="if(event.key===\'Enter\')saveTB2()"><button class="tb-btn" onclick="saveTB2()">Save</button></div>';}
   else{h+='<div class="tb-box" style="margin-top:12px"><div class="tbl">Tiebreaker Guess</div><div id="tbv2" style="font-family:var(--font-display);font-size:18px;color:var(--accent);margin-top:4px">...</div></div>';setTimeout(async function(){try{var tb=await $api("GET","/api/tiebreaker/"+encodeURIComponent(S.viewing));var el=document.getElementById("tbv2");if(el)el.textContent=tb.score||"Not set";}catch(e){}},100);}
   h+='</div>';return h;
