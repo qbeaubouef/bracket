@@ -550,13 +550,16 @@ function mobFF(){
   var h='<div class="sec-head"><div class="sec-emoji">\u{1F3C6}</div><div class="sec-title">Final Four</div></div>';
   h+='<div class="rd-group"><div class="rd-label" style="color:var(--accent)">Semifinals <span class="rd-pts">160 pts</span></div>';
   h+='<div class="ff-label">East vs South'+(getSchedule("finalFour",0,0)?' <span style="color:var(--muted);font-size:8px">\u00b7 '+getSchedule("finalFour",0,0)+'</span>':'')+'</div>';
-  h+='<div class="game-row">'+pickHTML(ch[0],seed(ch[0]),s1P,s1R,"finalFour",0,0,elim,null,actual[0]&&actual[0]!==ch[0]?actual[0]:null)+pickHTML(ch[1],seed(ch[1]),s1P,s1R,"finalFour",0,0,elim,null,actual[1]&&actual[1]!==ch[1]?actual[1]:null)+'</div>';
+  var lg1=getLiveGame(actual[0]||ch[0],actual[1]||ch[1]);
+  h+='<div class="game-row">'+pickHTML(ch[0],seed(ch[0]),s1P,s1R,"finalFour",0,0,elim,lg1,actual[0]&&actual[0]!==ch[0]?actual[0]:null)+pickHTML(ch[1],seed(ch[1]),s1P,s1R,"finalFour",0,0,elim,lg1,actual[1]&&actual[1]!==ch[1]?actual[1]:null)+'</div>';
   h+='<div class="ff-label">West vs Midwest'+(getSchedule("finalFour",0,1)?' <span style="color:var(--muted);font-size:8px">\u00b7 '+getSchedule("finalFour",0,1)+'</span>':'')+'</div>';
-  h+='<div class="game-row">'+pickHTML(ch[2],seed(ch[2]),s2P,s2R,"finalFour",0,1,elim,null,actual[2]&&actual[2]!==ch[2]?actual[2]:null)+pickHTML(ch[3],seed(ch[3]),s2P,s2R,"finalFour",0,1,elim,null,actual[3]&&actual[3]!==ch[3]?actual[3]:null)+'</div></div>';
+  var lg2=getLiveGame(actual[2]||ch[2],actual[3]||ch[3]);
+  h+='<div class="game-row">'+pickHTML(ch[2],seed(ch[2]),s2P,s2R,"finalFour",0,1,elim,lg2,actual[2]&&actual[2]!==ch[2]?actual[2]:null)+pickHTML(ch[3],seed(ch[3]),s2P,s2R,"finalFour",0,1,elim,lg2,actual[3]&&actual[3]!==ch[3]?actual[3]:null)+'</div></div>';
   // Championship: only show BUST once semifinal results are in
   var cAct1=s1R||null, cAct2=s2R||null;
+  var lgC=getLiveGame(s1R||s1P,s2R||s2P);
   h+='<div class="rd-group"><div class="rd-label" style="color:var(--accent)">Championship <span class="rd-pts">320 pts</span>'+(getSchedule("finalFour",1,0)?' <span style="font-weight:400;opacity:0.5;font-size:9px">\u00b7 '+getSchedule("finalFour",1,0)+'</span>':'')+'</div>';
-  h+='<div class="game-row">'+pickHTML(s1P,seed(s1P),cP,cR,"finalFour",1,0,elim,null,cAct1&&cAct1!==s1P?cAct1:null)+pickHTML(s2P,seed(s2P),cP,cR,"finalFour",1,0,elim,null,cAct2&&cAct2!==s2P?cAct2:null)+'</div></div>';
+  h+='<div class="game-row">'+pickHTML(s1P,seed(s1P),cP,cR,"finalFour",1,0,elim,lgC,cAct1&&cAct1!==s1P?cAct1:null)+pickHTML(s2P,seed(s2P),cP,cR,"finalFour",1,0,elim,lgC,cAct2&&cAct2!==s2P?cAct2:null)+'</div></div>';
   if(cP){var cElim=elim.has(cP);h+='<div class="champ-box"'+(cElim?' style="opacity:0.3;text-decoration:line-through"':'')+'><div class="champ-label">'+(S.viewing||"Your")+' Champion</div><div class="champ-name">\u{1F3C6} '+seed(cP)+' '+cP+' \u{1F3C6}</div></div>';}
   if(!S.viewing){
     h+='<div class="tb-box"><div class="tbl">Tiebreaker: Combined Final Score</div>';
@@ -691,10 +694,13 @@ function deskFF(){
   var s1R=(ffR[0]||{})[0],s2R=(ffR[0]||{})[1],cR=(ffR[1]||{})[0];
   var cAct1=s1R||null;
   var cAct2=s2R||null;
+  var lg1=getLiveGame(actual[0]||ch[0],actual[1]||ch[1]);
+  var lg2=getLiveGame(actual[2]||ch[2],actual[3]||ch[3]);
+  var lgC=getLiveGame(s1R||s1P,s2R||s2P);
   var h='<div class="ff-center"><div class="ff-title">\u{1F3C6} Final Four</div>';
-  h+='<div class="ff-game"><div class="ff-game-label">East vs South \u00b7 160pts'+(getSchedule("finalFour",0,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,0)+'</span>':'')+'</div><div class="bg">'+dtr(ch[0],s1P,s1R,"finalFour",0,0,elim,null,actual[0]&&actual[0]!==ch[0]?actual[0]:null)+dtr(ch[1],s1P,s1R,"finalFour",0,0,elim,null,actual[1]&&actual[1]!==ch[1]?actual[1]:null)+'</div></div>';
-  h+='<div class="ff-game"><div class="ff-game-label">Championship \u00b7 320pts'+(getSchedule("finalFour",1,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",1,0)+'</span>':'')+'</div><div class="bg">'+dtr(s1P,cP,cR,"finalFour",1,0,elim,null,cAct1&&cAct1!==s1P?cAct1:null)+dtr(s2P,cP,cR,"finalFour",1,0,elim,null,cAct2&&cAct2!==s2P?cAct2:null)+'</div></div>';
-  h+='<div class="ff-game"><div class="ff-game-label">West vs Midwest \u00b7 160pts'+(getSchedule("finalFour",0,1)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,1)+'</span>':'')+'</div><div class="bg">'+dtr(ch[2],s2P,s2R,"finalFour",0,1,elim,null,actual[2]&&actual[2]!==ch[2]?actual[2]:null)+dtr(ch[3],s2P,s2R,"finalFour",0,1,elim,null,actual[3]&&actual[3]!==ch[3]?actual[3]:null)+'</div></div>';
+  h+='<div class="ff-game"><div class="ff-game-label">East vs South \u00b7 160pts'+(getSchedule("finalFour",0,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,0)+'</span>':'')+'</div><div class="bg">'+dtr(ch[0],s1P,s1R,"finalFour",0,0,elim,lg1,actual[0]&&actual[0]!==ch[0]?actual[0]:null)+dtr(ch[1],s1P,s1R,"finalFour",0,0,elim,lg1,actual[1]&&actual[1]!==ch[1]?actual[1]:null)+'</div></div>';
+  h+='<div class="ff-game"><div class="ff-game-label">Championship \u00b7 320pts'+(getSchedule("finalFour",1,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",1,0)+'</span>':'')+'</div><div class="bg">'+dtr(s1P,cP,cR,"finalFour",1,0,elim,lgC,cAct1&&cAct1!==s1P?cAct1:null)+dtr(s2P,cP,cR,"finalFour",1,0,elim,lgC,cAct2&&cAct2!==s2P?cAct2:null)+'</div></div>';
+  h+='<div class="ff-game"><div class="ff-game-label">West vs Midwest \u00b7 160pts'+(getSchedule("finalFour",0,1)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,1)+'</span>':'')+'</div><div class="bg">'+dtr(ch[2],s2P,s2R,"finalFour",0,1,elim,lg2,actual[2]&&actual[2]!==ch[2]?actual[2]:null)+dtr(ch[3],s2P,s2R,"finalFour",0,1,elim,lg2,actual[3]&&actual[3]!==ch[3]?actual[3]:null)+'</div></div>';
   if(cP){var cElim=elim.has(cP);h+='<div class="champion-display"'+(cElim?' style="opacity:0.3;text-decoration:line-through"':'')+'><div class="label">'+(S.viewing||"Your")+' Champion</div><div class="name">\u{1F3C6} '+seed(cP)+' '+cP+'</div></div>';}
   if(!S.viewing){h+='<div class="tb-box" style="margin-top:12px"><div class="tbl">Tiebreaker: Combined Final Score</div><input id="tbi2" type="number" placeholder="Total" value="'+(S.tiebreaker||"")+'" min="1" max="500" onkeydown="if(event.key===\'Enter\')saveTB2()"><button class="tb-btn" onclick="saveTB2()">Save</button></div>';}
   else{h+='<div class="tb-box" style="margin-top:12px"><div class="tbl">Tiebreaker Guess</div><div id="tbv2" style="font-family:var(--font-display);font-size:18px;color:var(--accent);margin-top:4px">...</div></div>';setTimeout(async function(){try{var tb=await $api("GET","/api/tiebreaker/"+encodeURIComponent(S.viewing));var el=document.getElementById("tbv2");if(el)el.textContent=tb.score||"Not set";}catch(e){}},100);}
