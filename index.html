@@ -551,14 +551,26 @@ function mobFF(){
   h+='<div class="rd-group"><div class="rd-label" style="color:var(--accent)">Semifinals <span class="rd-pts">160 pts</span></div>';
   h+='<div class="ff-label">East vs South'+(getSchedule("finalFour",0,0)?' <span style="color:var(--muted);font-size:8px">\u00b7 '+getSchedule("finalFour",0,0)+'</span>':'')+'</div>';
   var lg1=getLiveGame(actual[0]||ch[0],actual[1]||ch[1]);
+  var lg1Live=lg1&&(lg1.status==="STATUS_IN_PROGRESS"||lg1.status==="STATUS_HALFTIME");
+  var lg1Sched=lg1&&(lg1.status==="STATUS_SCHEDULED"||lg1.status==="STATUS_PREGAME");
+  if(lg1Live&&!s1R){var st1=liveStatusText(lg1);if(lg1.broadcast)st1+=" \u00b7 "+lg1.broadcast;h+='<div style="font-size:9px;color:var(--green);font-weight:600;text-align:center;padding:1px 0;display:flex;align-items:center;justify-content:center;gap:4px"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.5s infinite"></span>'+st1+'</div>';}
+  else if(lg1Sched&&!s1R){var info1=lg1.periodLabel;if(lg1.broadcast)info1+=" \u00b7 "+lg1.broadcast;h+='<div style="font-size:9px;color:var(--muted);text-align:center;padding:1px 0">'+info1+'</div>';}
   h+='<div class="game-row">'+pickHTML(ch[0],seed(ch[0]),s1P,s1R,"finalFour",0,0,elim,lg1,actual[0]&&actual[0]!==ch[0]?actual[0]:null)+pickHTML(ch[1],seed(ch[1]),s1P,s1R,"finalFour",0,0,elim,lg1,actual[1]&&actual[1]!==ch[1]?actual[1]:null)+'</div>';
   h+='<div class="ff-label">West vs Midwest'+(getSchedule("finalFour",0,1)?' <span style="color:var(--muted);font-size:8px">\u00b7 '+getSchedule("finalFour",0,1)+'</span>':'')+'</div>';
   var lg2=getLiveGame(actual[2]||ch[2],actual[3]||ch[3]);
+  var lg2Live=lg2&&(lg2.status==="STATUS_IN_PROGRESS"||lg2.status==="STATUS_HALFTIME");
+  var lg2Sched=lg2&&(lg2.status==="STATUS_SCHEDULED"||lg2.status==="STATUS_PREGAME");
+  if(lg2Live&&!s2R){var st2=liveStatusText(lg2);if(lg2.broadcast)st2+=" \u00b7 "+lg2.broadcast;h+='<div style="font-size:9px;color:var(--green);font-weight:600;text-align:center;padding:1px 0;display:flex;align-items:center;justify-content:center;gap:4px"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.5s infinite"></span>'+st2+'</div>';}
+  else if(lg2Sched&&!s2R){var info2=lg2.periodLabel;if(lg2.broadcast)info2+=" \u00b7 "+lg2.broadcast;h+='<div style="font-size:9px;color:var(--muted);text-align:center;padding:1px 0">'+info2+'</div>';}
   h+='<div class="game-row">'+pickHTML(ch[2],seed(ch[2]),s2P,s2R,"finalFour",0,1,elim,lg2,actual[2]&&actual[2]!==ch[2]?actual[2]:null)+pickHTML(ch[3],seed(ch[3]),s2P,s2R,"finalFour",0,1,elim,lg2,actual[3]&&actual[3]!==ch[3]?actual[3]:null)+'</div></div>';
   // Championship: only show BUST once semifinal results are in
   var cAct1=s1R||null, cAct2=s2R||null;
   var lgC=getLiveGame(s1R||s1P,s2R||s2P);
+  var lgCLive=lgC&&(lgC.status==="STATUS_IN_PROGRESS"||lgC.status==="STATUS_HALFTIME");
+  var lgCSched=lgC&&(lgC.status==="STATUS_SCHEDULED"||lgC.status==="STATUS_PREGAME");
   h+='<div class="rd-group"><div class="rd-label" style="color:var(--accent)">Championship <span class="rd-pts">320 pts</span>'+(getSchedule("finalFour",1,0)?' <span style="font-weight:400;opacity:0.5;font-size:9px">\u00b7 '+getSchedule("finalFour",1,0)+'</span>':'')+'</div>';
+  if(lgCLive&&!cR){var stC=liveStatusText(lgC);if(lgC.broadcast)stC+=" \u00b7 "+lgC.broadcast;h+='<div style="font-size:9px;color:var(--green);font-weight:600;text-align:center;padding:1px 0;display:flex;align-items:center;justify-content:center;gap:4px"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.5s infinite"></span>'+stC+'</div>';}
+  else if(lgCSched&&!cR){var infoC=lgC.periodLabel;if(lgC.broadcast)infoC+=" \u00b7 "+lgC.broadcast;h+='<div style="font-size:9px;color:var(--muted);text-align:center;padding:1px 0">'+infoC+'</div>';}
   h+='<div class="game-row">'+pickHTML(s1P,seed(s1P),cP,cR,"finalFour",1,0,elim,lgC,cAct1&&cAct1!==s1P?cAct1:null)+pickHTML(s2P,seed(s2P),cP,cR,"finalFour",1,0,elim,lgC,cAct2&&cAct2!==s2P?cAct2:null)+'</div></div>';
   if(cP){var cElim=elim.has(cP);h+='<div class="champ-box"'+(cElim?' style="opacity:0.3;text-decoration:line-through"':'')+'><div class="champ-label">'+(S.viewing||"Your")+' Champion</div><div class="champ-name">\u{1F3C6} '+seed(cP)+' '+cP+' \u{1F3C6}</div></div>';}
   if(!S.viewing){
@@ -698,9 +710,24 @@ function deskFF(){
   var lg2=getLiveGame(actual[2]||ch[2],actual[3]||ch[3]);
   var lgC=getLiveGame(s1R||s1P,s2R||s2P);
   var h='<div class="ff-center"><div class="ff-title">\u{1F3C6} Final Four</div>';
-  h+='<div class="ff-game"><div class="ff-game-label">East vs South \u00b7 160pts'+(getSchedule("finalFour",0,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,0)+'</span>':'')+'</div><div class="bg">'+dtr(ch[0],s1P,s1R,"finalFour",0,0,elim,lg1,actual[0]&&actual[0]!==ch[0]?actual[0]:null)+dtr(ch[1],s1P,s1R,"finalFour",0,0,elim,lg1,actual[1]&&actual[1]!==ch[1]?actual[1]:null)+'</div></div>';
-  h+='<div class="ff-game"><div class="ff-game-label">Championship \u00b7 320pts'+(getSchedule("finalFour",1,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",1,0)+'</span>':'')+'</div><div class="bg">'+dtr(s1P,cP,cR,"finalFour",1,0,elim,lgC,cAct1&&cAct1!==s1P?cAct1:null)+dtr(s2P,cP,cR,"finalFour",1,0,elim,lgC,cAct2&&cAct2!==s2P?cAct2:null)+'</div></div>';
-  h+='<div class="ff-game"><div class="ff-game-label">West vs Midwest \u00b7 160pts'+(getSchedule("finalFour",0,1)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,1)+'</span>':'')+'</div><div class="bg">'+dtr(ch[2],s2P,s2R,"finalFour",0,1,elim,lg2,actual[2]&&actual[2]!==ch[2]?actual[2]:null)+dtr(ch[3],s2P,s2R,"finalFour",0,1,elim,lg2,actual[3]&&actual[3]!==ch[3]?actual[3]:null)+'</div></div>';
+  var lg1Live=lg1&&(lg1.status==="STATUS_IN_PROGRESS"||lg1.status==="STATUS_HALFTIME");
+  var lg1Sched=lg1&&(lg1.status==="STATUS_SCHEDULED"||lg1.status==="STATUS_PREGAME");
+  var sch1="";
+  if(lg1Live&&!s1R){var st1=liveStatusText(lg1);if(lg1.broadcast)st1+=" \u00b7 "+lg1.broadcast;sch1='<div style="font-size:7px;color:var(--green);text-align:center;font-weight:600;padding:2px 4px;border-bottom:1px solid rgba(74,222,128,0.15)">\u{25CF} '+st1+'</div>';}
+  else if(lg1Sched&&!s1R){var info1=lg1.periodLabel;if(lg1.broadcast)info1+=" \u00b7 "+lg1.broadcast;sch1='<div style="font-size:7px;color:var(--muted);text-align:center;padding:2px 4px;border-bottom:1px solid var(--border)">'+info1+'</div>';}
+  h+='<div class="ff-game"><div class="ff-game-label">East vs South \u00b7 160pts'+(getSchedule("finalFour",0,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,0)+'</span>':'')+'</div><div class="bg'+(lg1Live&&!s1R?" live":"")+'">'+sch1+dtr(ch[0],s1P,s1R,"finalFour",0,0,elim,lg1,actual[0]&&actual[0]!==ch[0]?actual[0]:null)+dtr(ch[1],s1P,s1R,"finalFour",0,0,elim,lg1,actual[1]&&actual[1]!==ch[1]?actual[1]:null)+'</div></div>';
+  var lgCLive=lgC&&(lgC.status==="STATUS_IN_PROGRESS"||lgC.status==="STATUS_HALFTIME");
+  var lgCSched=lgC&&(lgC.status==="STATUS_SCHEDULED"||lgC.status==="STATUS_PREGAME");
+  var schC="";
+  if(lgCLive&&!cR){var stC=liveStatusText(lgC);if(lgC.broadcast)stC+=" \u00b7 "+lgC.broadcast;schC='<div style="font-size:7px;color:var(--green);text-align:center;font-weight:600;padding:2px 4px;border-bottom:1px solid rgba(74,222,128,0.15)">\u{25CF} '+stC+'</div>';}
+  else if(lgCSched&&!cR){var infoC=lgC.periodLabel;if(lgC.broadcast)infoC+=" \u00b7 "+lgC.broadcast;schC='<div style="font-size:7px;color:var(--muted);text-align:center;padding:2px 4px;border-bottom:1px solid var(--border)">'+infoC+'</div>';}
+  h+='<div class="ff-game"><div class="ff-game-label">Championship \u00b7 320pts'+(getSchedule("finalFour",1,0)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",1,0)+'</span>':'')+'</div><div class="bg'+(lgCLive&&!cR?" live":"")+'">'+schC+dtr(s1P,cP,cR,"finalFour",1,0,elim,lgC,cAct1&&cAct1!==s1P?cAct1:null)+dtr(s2P,cP,cR,"finalFour",1,0,elim,lgC,cAct2&&cAct2!==s2P?cAct2:null)+'</div></div>';
+  var lg2Live=lg2&&(lg2.status==="STATUS_IN_PROGRESS"||lg2.status==="STATUS_HALFTIME");
+  var lg2Sched=lg2&&(lg2.status==="STATUS_SCHEDULED"||lg2.status==="STATUS_PREGAME");
+  var sch2="";
+  if(lg2Live&&!s2R){var st2=liveStatusText(lg2);if(lg2.broadcast)st2+=" \u00b7 "+lg2.broadcast;sch2='<div style="font-size:7px;color:var(--green);text-align:center;font-weight:600;padding:2px 4px;border-bottom:1px solid rgba(74,222,128,0.15)">\u{25CF} '+st2+'</div>';}
+  else if(lg2Sched&&!s2R){var info2=lg2.periodLabel;if(lg2.broadcast)info2+=" \u00b7 "+lg2.broadcast;sch2='<div style="font-size:7px;color:var(--muted);text-align:center;padding:2px 4px;border-bottom:1px solid var(--border)">'+info2+'</div>';}
+  h+='<div class="ff-game"><div class="ff-game-label">West vs Midwest \u00b7 160pts'+(getSchedule("finalFour",0,1)?' \u00b7 <span style="color:var(--muted)">'+getSchedule("finalFour",0,1)+'</span>':'')+'</div><div class="bg'+(lg2Live&&!s2R?" live":"")+'">'+sch2+dtr(ch[2],s2P,s2R,"finalFour",0,1,elim,lg2,actual[2]&&actual[2]!==ch[2]?actual[2]:null)+dtr(ch[3],s2P,s2R,"finalFour",0,1,elim,lg2,actual[3]&&actual[3]!==ch[3]?actual[3]:null)+'</div></div>';
   if(cP){var cElim=elim.has(cP);h+='<div class="champion-display"'+(cElim?' style="opacity:0.3;text-decoration:line-through"':'')+'><div class="label">'+(S.viewing||"Your")+' Champion</div><div class="name">\u{1F3C6} '+seed(cP)+' '+cP+'</div></div>';}
   if(!S.viewing){h+='<div class="tb-box" style="margin-top:12px"><div class="tbl">Tiebreaker: Combined Final Score</div><input id="tbi2" type="number" placeholder="Total" value="'+(S.tiebreaker||"")+'" min="1" max="500" onkeydown="if(event.key===\'Enter\')saveTB2()"><button class="tb-btn" onclick="saveTB2()">Save</button></div>';}
   else{h+='<div class="tb-box" style="margin-top:12px"><div class="tbl">Tiebreaker Guess</div><div id="tbv2" style="font-family:var(--font-display);font-size:18px;color:var(--accent);margin-top:4px">...</div></div>';setTimeout(async function(){try{var tb=await $api("GET","/api/tiebreaker/"+encodeURIComponent(S.viewing));var el=document.getElementById("tbv2");if(el)el.textContent=tb.score||"Not set";}catch(e){}},100);}
