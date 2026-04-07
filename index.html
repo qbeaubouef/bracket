@@ -256,6 +256,38 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .hof-enter{display:block;margin:30px auto;padding:14px 40px;border-radius:8px;border:1px solid rgba(255,215,0,0.3);background:transparent;color:#FFD700;font-family:var(--font-display);font-size:14px;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
 .hof-enter:hover{background:rgba(255,215,0,0.1);border-color:#FFD700}
 .hof-footer{text-align:center;padding:40px 20px;font-size:11px;color:rgba(255,255,255,0.12);letter-spacing:2px;position:relative;z-index:1}
+/* Mobile/Desktop toggle */
+.hof-mobile{display:block}
+.hof-desktop{display:none}
+@media(min-width:1100px){.hof-mobile{display:none!important}.hof-desktop{display:block!important}}
+/* Desktop HoF */
+.hof-desktop .hof-section{max-width:1200px}
+.hof-bracket-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 36px}
+.hof-bracket-grid .hof-region{background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:14px}
+.hof-bracket-grid .f4-span{grid-column:1/-1;max-width:480px;margin:0 auto;width:100%;background:rgba(255,215,0,0.02);border:1px solid rgba(255,215,0,0.12);border-radius:8px;padding:14px}
+.hof-semis{display:flex;justify-content:center;gap:36px;margin-bottom:32px}
+.hof-semi{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:12px 20px;min-width:240px;text-align:center}
+.hof-semi-label{font-family:var(--font-display);font-size:9px;letter-spacing:2px;color:#B8860B;text-transform:uppercase;margin-bottom:6px}
+.hof-semi-row{display:flex;justify-content:space-between;padding:3px 0;font-size:14px}
+.hof-semi-row.sw{color:var(--text);font-weight:700}
+.hof-semi-row.sl{color:var(--muted)}
+/* Desktop leaderboard table */
+.hof-table{width:100%;border-collapse:collapse;max-width:900px;margin:0 auto}
+.hof-table th{font-family:var(--font-display);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.1);text-align:left}
+.hof-table th.r{text-align:right}
+.hof-table th.c{text-align:center}
+.hof-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px}
+.hof-table td.r{text-align:right}
+.hof-table td.c{text-align:center}
+.hof-table tr.hof-1st{background:linear-gradient(135deg,rgba(255,203,5,0.06),transparent);border-left:3px solid #FFD700}
+.hof-table .t-rank{font-family:var(--font-display);font-size:16px;font-weight:700;text-align:center;width:40px}
+.hof-table .t-rank.g{color:#FFD700}
+.hof-table .t-rank.s{color:#C0C0C0}
+.hof-table .t-rank.b{color:#CD7F32}
+.hof-table .t-name{font-weight:600}
+.hof-table .t-champ{font-size:10px;color:var(--muted);font-weight:400}
+.hof-table .t-score{font-family:var(--font-display);font-size:16px;font-weight:700}
+.hof-table .t-tb-exact{color:var(--green);font-weight:700}
 </style>
 </head>
 <body>
@@ -969,8 +1001,59 @@ function hofScreen(){
   var cs=d.championshipScore;
   var combined=cs?(cs.t1score+cs.t2score):null;
   var tbMatch=w&&w.tb&&combined&&w.tb===combined;
+  var RN=["Round of 64","Round of 32","Sweet 16","Elite 8"];
+  var regNames={east:{n:"East",e:"\u{1F3DB}\uFE0F",c:"#4a90d9"},south:{n:"South",e:"\u{1F334}",c:"#c0392b"},west:{n:"West",e:"\u{1F335}",c:"#cc0033"},midwest:{n:"Midwest",e:"\u{1F3ED}",c:"#f0c040"}};
+  var res=d.results||{},wPicks=w.picks||{};
+  var ffr=res.finalFour||{},ffp=wPicks.finalFour||{};
 
-  // Reveal section
+  // Helper: render a region's bracket
+  function hofRegion(rk){
+    var rg=regNames[rk],rr=res[rk]||{},rp=wPicks[rk]||{};
+    var o='<div class="hof-rh" style="color:'+rg.c+'">'+rg.e+' '+rg.n+'</div>';
+    for(var rd=0;rd<4;rd++){
+      var rdr=rr[rd]||{},rdp=rp[rd]||{};
+      if(!Object.keys(rdr).length)continue;
+      o+='<div class="hof-rl">'+RN[rd]+'</div>';
+      var keys=Object.keys(rdr).sort(function(a,b){return parseInt(a)-parseInt(b)});
+      for(var gi=0;gi<keys.length;gi+=2){
+        var i=keys[gi],i2=keys[gi+1];
+        o+='<div class="hof-g">';
+        o+='<div class="t '+(rdp[i]===rdr[i]?"ok":"no")+'"><span class="sd">'+(rdp[i]?seed(rdp[i]):"")+'</span><span class="nm">'+(rdp[i]||"?")+'</span><span class="rs">'+(rdp[i]===rdr[i]?"\u2713":"\u2717")+'</span></div>';
+        if(i2!==undefined){o+='<div class="dv"></div><div class="t '+(rdp[i2]===rdr[i2]?"ok":"no")+'"><span class="sd">'+(rdp[i2]?seed(rdp[i2]):"")+'</span><span class="nm">'+(rdp[i2]||"?")+'</span><span class="rs">'+(rdp[i2]===rdr[i2]?"\u2713":"\u2717")+'</span></div>';}
+        o+='</div>';
+      }
+    }
+    return o;
+  }
+
+  // Helper: F4 picks
+  function hofF4(){
+    var o='<div class="hof-rh" style="color:#FFD700">\u{1F3C6} Final Four</div>';
+    if(ffr[0]){
+      o+='<div class="hof-rl">Semifinals</div>';
+      for(var i in ffr[0]){var pk=(ffp[0]||{})[i];o+='<div class="hof-g"><div class="t '+(pk===ffr[0][i]?"ok":"no")+'"><span class="nm">'+(pk||"?")+'</span><span class="rs">'+(pk===ffr[0][i]?"\u2713":"\u2717")+'</span></div></div>';}
+    }
+    if(ffr[1]){
+      o+='<div class="hof-rl">Championship</div>';
+      for(var i in ffr[1]){var pk2=(ffp[1]||{})[i];o+='<div class="hof-g"><div class="t '+(pk2===ffr[1][i]?"ok":"no")+'" style="'+(pk2===ffr[1][i]?"color:#FFCB05;font-weight:900":"")+'"><span class="nm">'+(pk2||"?")+(pk2===ffr[1][i]?" \u{1F3C6}":"")+'</span><span class="rs">'+(pk2===ffr[1][i]?"\u2713":"\u2717")+'</span></div></div>';}
+    }
+    return o;
+  }
+
+  // Helper: leaderboard ranking
+  function hofRanks(){
+    var ranks=[];var prevScore=-1,rank=0,skip=0;
+    for(var i=0;i<lb.length;i++){
+      var p=lb[i];
+      if(p.score!==prevScore){rank+=1+skip;skip=0;}else{skip++;}
+      prevScore=p.score;
+      var tied=(i>0&&lb[i-1].score===p.score)||(i<lb.length-1&&lb[i+1]&&lb[i+1].score===p.score);
+      ranks.push({rank:rank,text:tied?"T-"+rank:""+rank,cls:rank===1?"g":rank===2?"s":rank===3?"b":"",first:rank===1});
+    }
+    return ranks;
+  }
+
+  // === SHARED: Starfield + Reveal ===
   var h='<div class="hof"><div class="hof-stars">'+hofStars()+'</div>';
   h+='<div class="hof-reveal"><div class="hof-trophy">\u{1F3C6}</div>';
   h+='<div class="hof-year">Beaubouef Bracket '+d.year+'</div>';
@@ -982,7 +1065,7 @@ function hofScreen(){
   h+='</div>';
   h+='<div class="hof-scroll"><span>\u25BC Scroll to see more \u25BC</span></div></div>';
 
-  // Championship
+  // === SHARED: Championship Score ===
   if(cs){
     h+='<div class="hof-section"><div class="hof-sec-title">\u{1F3C0} The Championship</div>';
     h+='<div class="hof-sec-sub">'+d.year+'</div>';
@@ -990,66 +1073,57 @@ function hofScreen(){
     var wScore=Math.max(cs.t1score,cs.t2score), lScore=Math.min(cs.t1score,cs.t2score);
     h+='<div class="hof-final"><div class="hof-ft w"><div class="n">'+wTeam+'</div><div class="s">'+wScore+'</div></div>';
     h+='<div class="hof-vs">FINAL</div>';
-    h+='<div class="hof-ft l"><div class="n">'+lTeam+'</div><div class="s">'+lScore+'</div></div></div></div>';
+    h+='<div class="hof-ft l"><div class="n">'+lTeam+'</div><div class="s">'+lScore+'</div></div></div>';
   }
 
-  // Winner bracket
+  // Semifinal scores (shared but styled differently)
+  var ss=d.semiScores||{};
+  if(ss[0]||ss[1]){
+    h+='<div class="hof-semis">';
+    if(ss[0]){var s0=ss[0];var w0=s0.t1score>s0.t2score?0:1;h+='<div class="hof-semi"><div class="hof-semi-label">East vs South</div><div class="hof-semi-row '+(w0===0?"sw":"sl")+'"><span>'+s0.t1+'</span><span>'+s0.t1score+'</span></div><div class="hof-semi-row '+(w0===1?"sw":"sl")+'"><span>'+s0.t2+'</span><span>'+s0.t2score+'</span></div></div>';}
+    if(ss[1]){var s1=ss[1];var w1=s1.t1score>s1.t2score?0:1;h+='<div class="hof-semi"><div class="hof-semi-label">West vs Midwest</div><div class="hof-semi-row '+(w1===0?"sw":"sl")+'"><span>'+s1.t1+'</span><span>'+s1.t1score+'</span></div><div class="hof-semi-row '+(w1===1?"sw":"sl")+'"><span>'+s1.t2+'</span><span>'+s1.t2score+'</span></div></div>';}
+    h+='</div>';
+  }
+  if(cs)h+='</div>'; // close championship section
+
+  // === MOBILE: Bracket + Leaderboard ===
+  h+='<div class="hof-mobile">';
   h+='<div class="hof-section"><div class="hof-sec-title">Champion\'s Bracket</div>';
   h+='<div class="hof-sec-sub">'+w.name+' \u00b7 '+w.correct+'/'+w.total+' \u00b7 '+w.score.toLocaleString()+' pts</div>';
-  var RN=["Round of 64","Round of 32","Sweet 16","Elite 8"];
-  var regNames={east:{n:"East",e:"\u{1F3DB}\uFE0F",c:"#4a90d9"},south:{n:"South",e:"\u{1F334}",c:"#c0392b"},west:{n:"West",e:"\u{1F335}",c:"#cc0033"},midwest:{n:"Midwest",e:"\u{1F3ED}",c:"#f0c040"}};
-  var res=d.results||{};
-  var wPicks=w.picks||{};
-  ["east","south","west","midwest"].forEach(function(rk){
-    var rg=regNames[rk],rr=res[rk]||{},rp=wPicks[rk]||{};
-    h+='<div class="hof-region"><div class="hof-rh" style="color:'+rg.c+'">'+rg.e+' '+rg.n+'</div>';
-    for(var rd=0;rd<4;rd++){
-      var rdr=rr[rd]||{},rdp=rp[rd]||{};
-      if(!Object.keys(rdr).length)continue;
-      h+='<div class="hof-rl">'+RN[rd]+'</div>';
-      var keys=Object.keys(rdr).sort(function(a,b){return parseInt(a)-parseInt(b)});
-      for(var gi=0;gi<keys.length;gi+=2){
-        var i=keys[gi],i2=keys[gi+1];
-        h+='<div class="hof-g">';
-        h+='<div class="t '+(rdp[i]===rdr[i]?"ok":"no")+'"><span class="sd">'+(rdp[i]?seed(rdp[i]):"")+'</span><span class="nm">'+(rdp[i]||"?")+'</span><span class="rs">'+(rdp[i]===rdr[i]?"\u2713":"\u2717")+'</span></div>';
-        if(i2!==undefined){h+='<div class="dv"></div><div class="t '+(rdp[i2]===rdr[i2]?"ok":"no")+'"><span class="sd">'+(rdp[i2]?seed(rdp[i2]):"")+'</span><span class="nm">'+(rdp[i2]||"?")+'</span><span class="rs">'+(rdp[i2]===rdr[i2]?"\u2713":"\u2717")+'</span></div>';}
-        h+='</div>';
-      }
-    }
-    h+='</div>';
-  });
-  // F4 picks
-  var ffr=res.finalFour||{},ffp=wPicks.finalFour||{};
-  h+='<div class="hof-region"><div class="hof-rh" style="color:#FFD700">\u{1F3C6} Final Four</div>';
-  if(ffr[0]){
-    h+='<div class="hof-rl">Semifinals</div>';
-    for(var i in ffr[0]){var pk=(ffp[0]||{})[i];h+='<div class="hof-g"><div class="t '+(pk===ffr[0][i]?"ok":"no")+'"><span class="nm">'+(pk||"?")+'</span><span class="rs">'+(pk===ffr[0][i]?"\u2713":"\u2717")+'</span></div></div>';}
-  }
-  if(ffr[1]){
-    h+='<div class="hof-rl">Championship</div>';
-    for(var i in ffr[1]){var pk2=(ffp[1]||{})[i];h+='<div class="hof-g"><div class="t '+(pk2===ffr[1][i]?"ok":"no")+'" style="'+(pk2===ffr[1][i]?"color:#FFCB05;font-weight:900":"")+'"><span class="nm">'+(pk2||"?")+(pk2===ffr[1][i]?" \u{1F3C6}":"")+'</span><span class="rs">'+(pk2===ffr[1][i]?"\u2713":"\u2717")+'</span></div></div>';}
-  }
-  h+='</div></div>';
-
-  // Leaderboard
+  ["east","south","west","midwest"].forEach(function(rk){h+='<div class="hof-region">'+hofRegion(rk)+'</div>';});
+  h+='<div class="hof-region">'+hofF4()+'</div></div>';
+  // Mobile leaderboard
   h+='<div class="hof-section"><div class="hof-sec-title">Final Standings</div>';
   h+='<div class="hof-sec-sub">'+lb.length+' players \u00b7 '+d.champion+' wins it all</div>';
   h+='<div class="hof-lb"><div class="hof-lbh"><span>#</span><span>Player</span><span>Points</span><span>Correct</span><span>TB</span></div>';
-  var prevScore=-1,rank=0,skip=0;
+  var ranks=hofRanks();
   for(var i=0;i<lb.length;i++){
-    var p=lb[i];
-    if(p.score!==prevScore){rank+=1+skip;skip=0;}else{skip++;}
-    prevScore=p.score;
-    var rk=rank===1?"g":rank===2?"s":rank===3?"b":"";
-    var rkText=rank;
-    // Check ties
-    if(i>0&&lb[i-1].score===p.score)rkText="T-"+rank;
-    if(i<lb.length-1&&lb[i+1]&&lb[i+1].score===p.score)rkText="T-"+rank;
-    h+='<div class="hof-lbr'+(rank===1?" first":"")+'"><div class="rk '+rk+'">'+rkText+'</div><div class="nm">'+p.name+'<br><span class="ch">'+p.champ+(rank===1&&tbMatch?" \u2014 \u{1F3AF} EXACT TB":"")+'</span></div><div class="sc"'+(rank===1?' style="color:#FFD700"':'')+'>'+p.score.toLocaleString()+'</div><div class="cr">'+p.correct+'/'+p.total+'</div><div class="tb">'+(p.tb!=null?p.tb:"\u2014")+'</div></div>';
+    var p=lb[i],r=ranks[i];
+    h+='<div class="hof-lbr'+(r.first?" first":"")+'"><div class="rk '+r.cls+'">'+r.text+'</div><div class="nm">'+p.name+'<br><span class="ch">'+p.champ+(r.first&&tbMatch?" \u2014 \u{1F3AF} EXACT TB":"")+'</span></div><div class="sc"'+(r.first?' style="color:#FFD700"':'')+'>'+p.score.toLocaleString()+'</div><div class="cr">'+p.correct+'/'+p.total+'</div><div class="tb">'+(p.tb!=null?p.tb:"\u2014")+'</div></div>';
   }
-  h+='</div></div>';
+  h+='</div></div></div>';
 
-  // Year selector if multiple archives
+  // === DESKTOP: Bracket Grid + Table Leaderboard ===
+  h+='<div class="hof-desktop">';
+  h+='<div class="hof-section"><div class="hof-sec-title">Champion\'s Bracket</div>';
+  h+='<div class="hof-sec-sub">'+w.name+' \u00b7 '+w.correct+'/'+w.total+' \u00b7 '+w.score.toLocaleString()+' pts</div>';
+  h+='<div class="hof-bracket-grid">';
+  ["east","south","west","midwest"].forEach(function(rk){h+='<div class="hof-region">'+hofRegion(rk)+'</div>';});
+  h+='<div class="f4-span">'+hofF4()+'</div>';
+  h+='</div></div>';
+  // Desktop leaderboard table
+  h+='<div class="hof-section"><div class="hof-sec-title">Final Standings</div>';
+  h+='<div class="hof-sec-sub">'+lb.length+' players \u00b7 '+d.champion+' wins it all</div>';
+  h+='<table class="hof-table"><thead><tr><th class="c">#</th><th>Player</th><th>Champion Pick</th><th class="r">Points</th><th class="r">Correct</th><th class="r">TB</th><th class="r">TB Diff</th></tr></thead><tbody>';
+  for(var i=0;i<lb.length;i++){
+    var p=lb[i],r=ranks[i];
+    var tbDiff=p.tb!=null&&combined!=null?(p.tb>=combined?"+":"")+(p.tb-combined):"\u2014";
+    var champCol=r.first?'<span style="color:var(--maize);font-weight:700">'+p.champ+'</span> \u{1F3C6}'+(tbMatch?' <span class="t-tb-exact">\u{1F3AF} EXACT TB</span>':''):'<span class="t-champ">'+p.champ+'</span>';
+    h+='<tr class="'+(r.first?"hof-1st":"")+'"><td class="t-rank '+r.cls+'">'+r.text+'</td><td class="t-name">'+p.name+'</td><td>'+champCol+'</td><td class="r t-score"'+(r.first?' style="color:#FFD700"':'')+'>'+p.score.toLocaleString()+'</td><td class="r" style="color:var(--muted)">'+p.correct+'/'+p.total+'</td><td class="r'+(p.tb!=null&&combined!=null&&p.tb===combined?" t-tb-exact":"")+'">'+((p.tb!=null)?p.tb:"\u2014")+'</td><td class="r'+(tbDiff==="0"||tbDiff==="+0"?" t-tb-exact":"")+'">'+tbDiff+'</td></tr>';
+  }
+  h+='</tbody></table></div></div>';
+
+  // === SHARED: Year selector + Enter + Footer ===
   if(d.years&&d.years.length>1){
     h+='<div class="hof-section" style="padding-top:0"><div style="text-align:center">';
     d.years.forEach(function(y){h+='<button class="hof-enter" style="display:inline-block;margin:4px;padding:8px 20px;font-size:12px" onclick="viewHoF('+y+')">'+y+'</button>';});
