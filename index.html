@@ -194,6 +194,68 @@ button{font-family:inherit;cursor:pointer}input,select{font-family:inherit}
 .desk-nav-btn:hover{background:rgba(255,255,255,0.05);color:var(--text)}
 .desk-nav-btn.active{background:var(--accent);color:var(--accent2);border-color:var(--accent)}
 }
+/* === HALL OF FAME === */
+.hof{min-height:100vh;background:var(--bg);position:relative;overflow:hidden}
+.hof-stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.hof-star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:twinkle2 var(--d,3s) ease-in-out infinite var(--delay,0s)}
+.hof-star.big{width:3px;height:3px;box-shadow:0 0 6px 1px rgba(255,215,0,0.3)}
+@keyframes twinkle2{0%,100%{opacity:0.1;transform:scale(0.8)}50%{opacity:var(--peak,0.8);transform:scale(1.2)}}
+.hof-reveal{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;text-align:center}
+.hof-trophy{font-size:80px;opacity:0;animation:hofUp 1.5s ease-out 0.5s forwards}
+.hof-year{font-family:var(--font-display);font-size:14px;letter-spacing:8px;color:#B8860B;text-transform:uppercase;margin-top:16px;opacity:0;animation:hofUp 1s ease-out 1.2s forwards}
+.hof-congrats{font-family:var(--font-display);font-size:clamp(14px,3vw,18px);letter-spacing:6px;color:#FFD700;text-transform:uppercase;margin-top:32px;opacity:0;animation:hofUp 1s ease-out 1.8s forwards}
+.hof-name{font-family:var(--font-display);font-size:clamp(32px,8vw,64px);font-weight:700;color:#FFCB05;text-shadow:0 0 40px rgba(255,203,5,0.4),0 0 80px rgba(255,203,5,0.15);margin-top:8px;opacity:0;animation:hofReveal 2s ease-out 2.5s forwards;letter-spacing:2px}
+.hof-detail{font-size:14px;color:var(--muted);margin-top:16px;opacity:0;animation:hofUp 1s ease-out 4s forwards;line-height:1.8}
+.hof-detail .hl{color:#FFD700;font-weight:700}
+.hof-detail .perf{color:var(--green);font-weight:700}
+.hof-scroll{position:absolute;bottom:30px;font-size:12px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;opacity:0;animation:hofUp 1s ease-out 5.5s forwards}
+.hof-scroll span{display:block;text-align:center;animation:hofBob 2s ease-in-out infinite}
+@keyframes hofBob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+@keyframes hofUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes hofReveal{0%{opacity:0;transform:scale(0.8) translateY(30px);filter:blur(8px)}60%{opacity:1;transform:scale(1.05) translateY(-5px);filter:blur(0)}100%{opacity:1;transform:scale(1) translateY(0);filter:blur(0)}}
+.hof-section{position:relative;z-index:1;padding:60px 20px;max-width:640px;margin:0 auto}
+.hof-sec-title{font-family:var(--font-display);font-size:clamp(18px,4vw,24px);font-weight:700;color:#FFD700;letter-spacing:4px;text-transform:uppercase;text-align:center;margin-bottom:8px}
+.hof-sec-sub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:24px;letter-spacing:2px}
+.hof-final{display:flex;align-items:center;justify-content:center;gap:20px;margin:20px 0 40px;flex-wrap:wrap}
+.hof-ft{text-align:center}
+.hof-ft .n{font-family:var(--font-display);font-size:clamp(16px,3vw,22px);font-weight:700;letter-spacing:1px}
+.hof-ft .s{font-family:var(--font-display);font-size:clamp(36px,8vw,52px);font-weight:700;line-height:1}
+.hof-ft.w .n{color:#FFCB05}
+.hof-ft.w .s{color:#FFCB05;text-shadow:0 0 20px rgba(255,203,5,0.3)}
+.hof-ft.l .n,.hof-ft.l .s{color:var(--muted)}
+.hof-vs{font-family:var(--font-display);font-size:14px;color:var(--muted);letter-spacing:4px}
+.hof-region{margin-bottom:32px}
+.hof-rh{font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-align:center;padding:6px 0;margin-bottom:8px;border-bottom:1px solid rgba(255,215,0,0.15)}
+.hof-rl{font-family:var(--font-display);font-size:9px;letter-spacing:2px;color:#B8860B;text-transform:uppercase;margin:12px 0 4px;text-align:center}
+.hof-g{display:flex;background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:4px;margin:2px 0;font-size:11px}
+.hof-g .t{flex:1;padding:3px 8px;display:flex;align-items:center;gap:4px}
+.hof-g .t .sd{font-size:9px;color:var(--muted);min-width:14px;text-align:right}
+.hof-g .t .nm{flex:1}
+.hof-g .t .rs{font-size:10px;margin-left:auto}
+.hof-g .t.ok{color:var(--green);font-weight:700}
+.hof-g .t.no{color:var(--red);opacity:0.5}
+.hof-g .dv{width:1px;background:rgba(255,255,255,0.06)}
+.hof-lb{margin-bottom:16px}
+.hof-lbh{display:flex;padding:5px 12px;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.1);gap:8px}
+.hof-lbh span:nth-child(1){min-width:28px;text-align:center}
+.hof-lbh span:nth-child(2){flex:1}
+.hof-lbh span:nth-child(3){min-width:45px;text-align:right}
+.hof-lbh span:nth-child(4){min-width:38px;text-align:right}
+.hof-lbh span:nth-child(5){min-width:28px;text-align:right}
+.hof-lbr{display:flex;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.05);gap:8px;font-size:12px}
+.hof-lbr.first{background:linear-gradient(135deg,rgba(255,203,5,0.08),rgba(255,215,0,0.02));border-left:3px solid #FFD700}
+.hof-lbr .rk{font-family:var(--font-display);font-size:16px;font-weight:700;min-width:28px;text-align:center}
+.hof-lbr .rk.g{color:#FFD700}
+.hof-lbr .rk.s{color:#C0C0C0}
+.hof-lbr .rk.b{color:#CD7F32}
+.hof-lbr .nm{flex:1;font-weight:600}
+.hof-lbr .ch{font-size:10px;color:var(--muted)}
+.hof-lbr .sc{font-family:var(--font-display);font-size:14px;font-weight:700;min-width:45px;text-align:right}
+.hof-lbr .cr{font-size:10px;color:var(--muted);min-width:38px;text-align:right}
+.hof-lbr .tb{font-size:10px;min-width:28px;text-align:right}
+.hof-enter{display:block;margin:30px auto;padding:14px 40px;border-radius:8px;border:1px solid rgba(255,215,0,0.3);background:transparent;color:#FFD700;font-family:var(--font-display);font-size:14px;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+.hof-enter:hover{background:rgba(255,215,0,0.1);border-color:#FFD700}
+.hof-footer{text-align:center;padding:40px 20px;font-size:11px;color:rgba(255,255,255,0.12);letter-spacing:2px;position:relative;z-index:1}
 </style>
 </head>
 <body>
@@ -211,7 +273,7 @@ var RNS=["R64","R32","S16","E8"];
 var PTS=[10,20,40,80,160,320];
 var RDL=["R64","R32","S16","E8","F4","Champ"];
 
-var S={screen:"pin",user:null,viewing:null,viewPicks:{},picks:{},results:{},scores:{},ff:{},liveGames:[],tiebreaker:null,players:[],locked:false,isAdmin:false,tab:"east",deskTab:"bracket",saving:false,msg:"",lastSync:null};
+var S={screen:"pin",user:null,viewing:null,viewPicks:{},picks:{},results:{},scores:{},ff:{},liveGames:[],tiebreaker:null,players:[],locked:false,isAdmin:false,tab:"east",deskTab:"bracket",saving:false,msg:"",lastSync:null,hofData:null};
 var FF_SLOTS=[
   {slot:"UMBC/Howard",teams:["UMBC","Howard"],region:"midwest",gameIdx:0,seed:16},
   {slot:"Miami OH/SMU",teams:["Miami OH","SMU"],region:"midwest",gameIdx:4,seed:11},
@@ -354,13 +416,15 @@ async function init(){
   try{S.scores=await $api("GET","/api/scores");}catch(e){S.scores={};}
   try{S.ff=await $api("GET","/api/first-four");}catch(e){S.ff={};}
   var st=await $api("GET","/api/state");S.locked=st.locked||false;
-  if(sessionStorage.getItem("bp")==="1")S.screen="login";
+  // Check HoF
+  if(st.hofActive){try{S.hofData=await $api("GET","/api/hall-of-fame");if(S.hofData&&S.hofData.active)S.screen="hof";}catch(e){}}
+  if(sessionStorage.getItem("bp")==="1"&&S.screen!=="hof")S.screen="login";
   if(sessionStorage.getItem("ba")==="1")S.isAdmin=true;
   var su=sessionStorage.getItem("bu");
   if(su&&S.players.indexOf(su)>=0){
     S.user=su;S.picks=await $api("GET","/api/picks/"+encodeURIComponent(su));
     try{var tb=await $api("GET","/api/tiebreaker/"+encodeURIComponent(su));S.tiebreaker=tb.score;}catch(e){}
-    S.screen="app";
+    if(S.screen!=="hof")S.screen="app";
   }
   render();
   // Auto-lock at first R64 tip: March 19 2026 12:15 PM ET
@@ -887,9 +951,121 @@ async function viewArchive(year){
 }
 
 // MAIN RENDER
+// === HALL OF FAME ===
+function hofStars(){var h='';for(var i=0;i<120;i++){var big=Math.random()>0.92?' big':'';h+='<div class="hof-star'+big+'" style="left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*4+'s;--peak:'+(0.3+Math.random()*0.7)+'"></div>';}return h;}
+
+async function viewHoF(year){
+  try{S.hofData=await $api("GET","/api/hall-of-fame"+(year?"?year="+year:""));S.screen="hof";render();}catch(e){S.msg="Could not load Hall of Fame";render();}
+}
+function enterFromHoF(){
+  if(S.user){S.screen="app";render();return;}
+  if(sessionStorage.getItem("bp")==="1"){S.screen="login";render();return;}
+  S.screen="pin";render();
+}
+
+function hofScreen(){
+  if(!S.hofData||!S.hofData.active)return'<div class="hof"><div class="hof-reveal"><div class="hof-trophy">\u{1F3C6}</div><div class="hof-year">No archives yet</div><button class="hof-enter" onclick="enterFromHoF()">Enter Bracket \u2192</button></div></div>';
+  var d=S.hofData,w=d.winner,lb=d.leaderboard||[];
+  var cs=d.championshipScore;
+  var combined=cs?(cs.t1score+cs.t2score):null;
+  var tbMatch=w&&w.tb&&combined&&w.tb===combined;
+
+  // Reveal section
+  var h='<div class="hof"><div class="hof-stars">'+hofStars()+'</div>';
+  h+='<div class="hof-reveal"><div class="hof-trophy">\u{1F3C6}</div>';
+  h+='<div class="hof-year">Beaubouef Bracket '+d.year+'</div>';
+  h+='<div class="hof-congrats">Congratulations</div>';
+  h+='<div class="hof-name">'+w.name+'</div>';
+  h+='<div class="hof-detail"><span class="hl">'+w.score.toLocaleString()+' points</span> \u00b7 '+w.correct+' of '+w.total+' correct<br>';
+  h+='Champion pick: <span class="hl">'+w.champ+' \u{1F3C6}</span><br>';
+  if(w.tb!=null){h+='Tiebreaker: '+(tbMatch?'<span class="perf">'+w.tb+' \u2014 EXACT MATCH</span>':'<span class="hl">'+w.tb+'</span>');if(combined)h+='<br><span style="font-size:11px;color:var(--muted)">('+cs.t2+' '+cs.t2score+', '+cs.t1+' '+cs.t1score+' \u2014 combined '+combined+')</span>';}
+  h+='</div>';
+  h+='<div class="hof-scroll"><span>\u25BC Scroll to see more \u25BC</span></div></div>';
+
+  // Championship
+  if(cs){
+    h+='<div class="hof-section"><div class="hof-sec-title">\u{1F3C0} The Championship</div>';
+    h+='<div class="hof-sec-sub">'+d.year+'</div>';
+    var wTeam=cs.t1score>cs.t2score?cs.t1:cs.t2, lTeam=cs.t1score>cs.t2score?cs.t2:cs.t1;
+    var wScore=Math.max(cs.t1score,cs.t2score), lScore=Math.min(cs.t1score,cs.t2score);
+    h+='<div class="hof-final"><div class="hof-ft w"><div class="n">'+wTeam+'</div><div class="s">'+wScore+'</div></div>';
+    h+='<div class="hof-vs">FINAL</div>';
+    h+='<div class="hof-ft l"><div class="n">'+lTeam+'</div><div class="s">'+lScore+'</div></div></div></div>';
+  }
+
+  // Winner bracket
+  h+='<div class="hof-section"><div class="hof-sec-title">Champion\'s Bracket</div>';
+  h+='<div class="hof-sec-sub">'+w.name+' \u00b7 '+w.correct+'/'+w.total+' \u00b7 '+w.score.toLocaleString()+' pts</div>';
+  var RN=["Round of 64","Round of 32","Sweet 16","Elite 8"];
+  var regNames={east:{n:"East",e:"\u{1F3DB}\uFE0F",c:"#4a90d9"},south:{n:"South",e:"\u{1F334}",c:"#c0392b"},west:{n:"West",e:"\u{1F335}",c:"#cc0033"},midwest:{n:"Midwest",e:"\u{1F3ED}",c:"#f0c040"}};
+  var res=d.results||{};
+  var wPicks=w.picks||{};
+  ["east","south","west","midwest"].forEach(function(rk){
+    var rg=regNames[rk],rr=res[rk]||{},rp=wPicks[rk]||{};
+    h+='<div class="hof-region"><div class="hof-rh" style="color:'+rg.c+'">'+rg.e+' '+rg.n+'</div>';
+    for(var rd=0;rd<4;rd++){
+      var rdr=rr[rd]||{},rdp=rp[rd]||{};
+      if(!Object.keys(rdr).length)continue;
+      h+='<div class="hof-rl">'+RN[rd]+'</div>';
+      var keys=Object.keys(rdr).sort(function(a,b){return parseInt(a)-parseInt(b)});
+      for(var gi=0;gi<keys.length;gi+=2){
+        var i=keys[gi],i2=keys[gi+1];
+        h+='<div class="hof-g">';
+        h+='<div class="t '+(rdp[i]===rdr[i]?"ok":"no")+'"><span class="sd">'+(rdp[i]?seed(rdp[i]):"")+'</span><span class="nm">'+(rdp[i]||"?")+'</span><span class="rs">'+(rdp[i]===rdr[i]?"\u2713":"\u2717")+'</span></div>';
+        if(i2!==undefined){h+='<div class="dv"></div><div class="t '+(rdp[i2]===rdr[i2]?"ok":"no")+'"><span class="sd">'+(rdp[i2]?seed(rdp[i2]):"")+'</span><span class="nm">'+(rdp[i2]||"?")+'</span><span class="rs">'+(rdp[i2]===rdr[i2]?"\u2713":"\u2717")+'</span></div>';}
+        h+='</div>';
+      }
+    }
+    h+='</div>';
+  });
+  // F4 picks
+  var ffr=res.finalFour||{},ffp=wPicks.finalFour||{};
+  h+='<div class="hof-region"><div class="hof-rh" style="color:#FFD700">\u{1F3C6} Final Four</div>';
+  if(ffr[0]){
+    h+='<div class="hof-rl">Semifinals</div>';
+    for(var i in ffr[0]){var pk=(ffp[0]||{})[i];h+='<div class="hof-g"><div class="t '+(pk===ffr[0][i]?"ok":"no")+'"><span class="nm">'+(pk||"?")+'</span><span class="rs">'+(pk===ffr[0][i]?"\u2713":"\u2717")+'</span></div></div>';}
+  }
+  if(ffr[1]){
+    h+='<div class="hof-rl">Championship</div>';
+    for(var i in ffr[1]){var pk2=(ffp[1]||{})[i];h+='<div class="hof-g"><div class="t '+(pk2===ffr[1][i]?"ok":"no")+'" style="'+(pk2===ffr[1][i]?"color:#FFCB05;font-weight:900":"")+'"><span class="nm">'+(pk2||"?")+(pk2===ffr[1][i]?" \u{1F3C6}":"")+'</span><span class="rs">'+(pk2===ffr[1][i]?"\u2713":"\u2717")+'</span></div></div>';}
+  }
+  h+='</div></div>';
+
+  // Leaderboard
+  h+='<div class="hof-section"><div class="hof-sec-title">Final Standings</div>';
+  h+='<div class="hof-sec-sub">'+lb.length+' players \u00b7 '+d.champion+' wins it all</div>';
+  h+='<div class="hof-lb"><div class="hof-lbh"><span>#</span><span>Player</span><span>Points</span><span>Correct</span><span>TB</span></div>';
+  var prevScore=-1,rank=0,skip=0;
+  for(var i=0;i<lb.length;i++){
+    var p=lb[i];
+    if(p.score!==prevScore){rank+=1+skip;skip=0;}else{skip++;}
+    prevScore=p.score;
+    var rk=rank===1?"g":rank===2?"s":rank===3?"b":"";
+    var rkText=rank;
+    // Check ties
+    if(i>0&&lb[i-1].score===p.score)rkText="T-"+rank;
+    if(i<lb.length-1&&lb[i+1]&&lb[i+1].score===p.score)rkText="T-"+rank;
+    h+='<div class="hof-lbr'+(rank===1?" first":"")+'"><div class="rk '+rk+'">'+rkText+'</div><div class="nm">'+p.name+'<br><span class="ch">'+p.champ+(rank===1&&tbMatch?" \u2014 \u{1F3AF} EXACT TB":"")+'</span></div><div class="sc"'+(rank===1?' style="color:#FFD700"':'')+'>'+p.score.toLocaleString()+'</div><div class="cr">'+p.correct+'/'+p.total+'</div><div class="tb">'+(p.tb!=null?p.tb:"\u2014")+'</div></div>';
+  }
+  h+='</div></div>';
+
+  // Year selector if multiple archives
+  if(d.years&&d.years.length>1){
+    h+='<div class="hof-section" style="padding-top:0"><div style="text-align:center">';
+    d.years.forEach(function(y){h+='<button class="hof-enter" style="display:inline-block;margin:4px;padding:8px 20px;font-size:12px" onclick="viewHoF('+y+')">'+y+'</button>';});
+    h+='</div></div>';
+  }
+
+  h+='<button class="hof-enter" onclick="enterFromHoF()">Enter Bracket \u2192</button>';
+  h+='<div class="hof-footer">Beaubouef Bracket \u00b7 bracket.beaubouef.com \u00b7 '+d.year+'</div>';
+  h+='</div>';
+  return h;
+}
+
 function render(){
   applyColors();
-  if(S.screen==="pin"){document.getElementById("app").innerHTML='<div class="gate"><div class="gate-emoji">\u{1F3C0}</div><div class="gate-sub">2026 NCAA Tournament</div><div class="gate-title">BEAUBOUEF BRACKET</div><input id="pi" type="tel" inputmode="numeric" maxlength="4" placeholder="Enter PIN" style="letter-spacing:8px;font-size:20px" onkeydown="if(event.key===\'Enter\')checkPin()" autofocus><button class="gate-btn" onclick="checkPin()">Enter</button><div id="pe" class="gate-err"></div></div>';return;}
+  if(S.screen==="hof"){document.getElementById("app").innerHTML=hofScreen();return;}
+  if(S.screen==="pin"){document.getElementById("app").innerHTML='<div class="gate"><div class="gate-emoji">\u{1F3C0}</div><div class="gate-sub">2026 NCAA Tournament</div><div class="gate-title">BEAUBOUEF BRACKET</div><input id="pi" type="tel" inputmode="numeric" maxlength="4" placeholder="Enter PIN" style="letter-spacing:8px;font-size:20px" onkeydown="if(event.key===\'Enter\')checkPin()" autofocus><button class="gate-btn" onclick="checkPin()">Enter</button><div id="pe" class="gate-err"></div>'+(S.hofData&&S.hofData.active?'<button style="margin-top:16px;background:none;border:1px solid rgba(255,215,0,0.3);color:#FFD700;padding:8px 20px;border-radius:6px;cursor:pointer;font-family:var(--font-display);font-size:11px;letter-spacing:2px" onclick="S.screen=\'hof\';render()">\u{1F3C6} Hall of Fame</button>':'')+'</div>';return;}
   if(S.screen==="login"){var pb="";if(S.players.length){pb='<div class="player-list">';S.players.forEach(function(p){pb+='<button class="player-btn" onclick="loginExisting(\''+esc(p)+'\')">'+p+'<span class="arrow">\u2192</span></button>';});pb+='</div>';}document.getElementById("app").innerHTML='<div class="gate"><div class="gate-emoji">\u{1F3C0}</div><div class="gate-sub">Welcome</div><div class="gate-title">WHO ARE YOU?</div>'+(S.players.length?'<div style="color:var(--muted);font-size:13px;margin-bottom:8px">Returning? Tap your name:</div>'+pb+'<div class="gate-divider">or new player</div>':'<div style="color:var(--muted);font-size:13px;margin-bottom:8px">Enter your name to get started</div>')+'<input id="fn" placeholder="First name" autocapitalize="words"><input id="ln" placeholder="Last name" autocapitalize="words" onkeydown="if(event.key===\'Enter\')loginNew()"><button class="gate-btn" onclick="loginNew()">Join</button><div id="le" class="gate-err"></div></div>';return;}
 
   var cnt=countPicks(ap()),pct=Math.round(cnt/63*100);
@@ -904,7 +1080,7 @@ function render(){
 
   var dc="";if(S.deskTab==="bracket")dc='<div class="bracket-wrap"><div class="bracket-side">'+deskRegion("east",false)+deskRegion("south",false)+'</div><div class="bracket-center">'+deskFF()+'</div><div class="bracket-side">'+deskRegion("west",true)+deskRegion("midwest",true)+'</div></div>';else if(S.deskTab==="admin")dc='<div style="max-width:500px;margin:20px auto;padding:0 16px">'+mobAdmin()+'</div>';else if(S.deskTab==="board")dc='<div id="db" style="max-width:500px;margin:20px auto;padding:0 16px"><div style="text-align:center;padding:20px;color:var(--muted)">Loading...</div></div>';
 
-  document.getElementById("app").innerHTML='<div class="topbar"><div><div class="topbar-brand">Beaubouef Bracket \'26</div><div class="topbar-user">'+S.user+'</div></div><div class="topbar-right">'+badges+'<button class="btn-sm" onclick="exportMyPicks()" title="Export my picks">\u{1F4E5}</button><button class="btn-sm" onclick="importMyPicks()" title="Import picks">\u{1F4E4}</button><button class="btn-sm" onclick="switchUser()">Switch</button></div></div>'+(S.msg?'<div class="msg-bar">'+S.msg+'</div>':"")+nagBannerHTML()+firstFourHTML()+scoreStripHTML()+viewChipsHTML()+'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><div class="mobile-view"><div class="mob-tabs">'+mt+'</div><div class="mob-content" id="tc">'+mc+'</div></div><div class="desktop-bracket"><div class="desk-nav">'+dn+'<button class="desk-nav-btn" onclick="doSync()" style="margin-left:20px">\u{1F504} ESPN</button></div>'+dc+'</div><div class="footer">'+cnt+'/63 ('+pct+'%)'+(S.viewing?" \u2014 "+S.viewing:"")+'</div>';
+  document.getElementById("app").innerHTML='<div class="topbar"><div><div class="topbar-brand">Beaubouef Bracket \'26</div><div class="topbar-user">'+S.user+'</div></div><div class="topbar-right">'+badges+(S.hofData&&S.hofData.active?'<button class="btn-sm" onclick="viewHoF()" title="Hall of Fame">\u{1F3C6}</button>':'')+'<button class="btn-sm" onclick="exportMyPicks()" title="Export my picks">\u{1F4E5}</button><button class="btn-sm" onclick="importMyPicks()" title="Import picks">\u{1F4E4}</button><button class="btn-sm" onclick="switchUser()">Switch</button></div></div>'+(S.msg?'<div class="msg-bar">'+S.msg+'</div>':"")+nagBannerHTML()+firstFourHTML()+scoreStripHTML()+viewChipsHTML()+'<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><div class="mobile-view"><div class="mob-tabs">'+mt+'</div><div class="mob-content" id="tc">'+mc+'</div></div><div class="desktop-bracket"><div class="desk-nav">'+dn+'<button class="desk-nav-btn" onclick="doSync()" style="margin-left:20px">\u{1F504} ESPN</button></div>'+dc+'</div><div class="footer">'+cnt+'/63 ('+pct+'%)'+(S.viewing?" \u2014 "+S.viewing:"")+'</div>';
 
   if(S.tab==="board")renderBoard("tc");
   if(S.deskTab==="board")renderBoard("db");
