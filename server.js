@@ -186,10 +186,52 @@ app.get("/api/export-all", (q,r) => { const players=R("players.json",[]),ap={},a
 app.post("/api/import-all", (q,r) => { const d=q.body; if(d.players)W("players.json",d.players); if(d.results)W("results.json",d.results); if(d.scores)W("game_scores.json",d.scores); if(d.firstFour)W("first_four.json",d.firstFour); if(d.state)W("state.json",d.state); if(d.picks){for(const[n,p] of Object.entries(d.picks))W("picks_"+n+".json",p);} if(d.tiebreakers){for(const[n,t] of Object.entries(d.tiebreakers))W("tb_"+n+".json",t);} r.json({ok:true}); });
 
 // Archive
-app.post("/api/archive", (q,r) => { const year=q.body.year||new Date().getFullYear(); fs.mkdirSync(path.join(D,"archives"),{recursive:true}); const players=R("players.json",[]),ap={},at={}; for(const n of players){ap[n]=R("picks_"+n+".json",{});at[n]=R("tb_"+n+".json",{score:null});} fs.writeFileSync(path.join(D,"archives",year+".json"),JSON.stringify({year,archivedAt:new Date().toISOString(),players,picks:ap,tiebreakers:at,results:R("results.json",{}),scores:R("game_scores.json",{}),firstFour:R("first_four.json",{}),state:R("state.json",{locked:false})},null,2)); r.json({ok:true,year}); });
+app.post("/api/archive", (q,r) => { const year=q.body.year||new Date().getFullYear(); fs.mkdirSync(path.join(D,"archives"),{recursive:true}); const players=R("players.json",[]),ap={},at={}; for(const n of players){ap[n]=R("picks_"+n+".json",{});at[n]=R("tb_"+n+".json",{score:null});} fs.writeFileSync(path.join(D,"archives",year+".json"),JSON.stringify({year,archivedAt:new Date().toISOString(),players,picks:ap,tiebreakers:at,results:R("results.json",{}),scores:R("game_scores.json",{}),firstFour:R("first_four.json",{}),state:R("state.json",{locked:false})},null,2)); const st=R("state.json",{locked:false}); st.hofActive=true; st.hofYear=year; W("state.json",st); r.json({ok:true,year}); });
 app.get("/api/archives", (q,r) => { try{r.json(fs.readdirSync(path.join(D,"archives")).filter(f=>f.endsWith(".json")).map(f=>parseInt(f)).filter(n=>!isNaN(n)).sort((a,b)=>b-a));}catch{r.json([]);} });
 app.get("/api/archive/:year", (q,r) => { try{r.json(JSON.parse(fs.readFileSync(path.join(D,"archives",q.params.year+".json"),"utf8")));}catch{r.status(404).json({error:"Not found"});} });
-app.post("/api/new-year", (q,r) => { const players=R("players.json",[]); for(const n of players){try{fs.unlinkSync(path.join(D,"picks_"+n+".json"));}catch{} try{fs.unlinkSync(path.join(D,"tb_"+n+".json"));}catch{}} W("players.json",[]); W("results.json",{}); W("game_scores.json",{}); W("first_four.json",{}); W("state.json",{locked:false}); r.json({ok:true}); });
+app.post("/api/new-year", (q,r) => { const players=R("players.json",[]); for(const n of players){try{fs.unlinkSync(path.join(D,"picks_"+n+".json"));}catch{} try{fs.unlinkSync(path.join(D,"tb_"+n+".json"));}catch{}} W("players.json",[]); W("results.json",{}); W("game_scores.json",{}); W("first_four.json",{}); W("state.json",{locked:false,hofActive:false}); r.json({ok:true}); });
+
+// Hall of Fame — compute from archive
+app.get("/api/hall-of-fame", (q,r) => {
+  try {
+    const years = fs.readdirSync(path.join(D,"archives")).filter(f=>f.endsWith(".json")).map(f=>parseInt(f)).filter(n=>!isNaN(n)).sort((a,b)=>b-a);
+    if (!years.length) return r.json({active:false});
+    const year = parseInt(q.query.year) || years[0];
+    const archive = JSON.parse(fs.readFileSync(path.join(D,"archives",year+".json"),"utf8"));
+    const PTS = [10,20,40,80,160,320];
+    const results = archive.results || {};
+    const scores = archive.scores || {};
+    const board = [];
+    for (const p of (archive.players||[])) {
+      const picks = (archive.picks||{})[p] || {};
+      const champ = ((picks.finalFour||{})[1]||{})[0] || "—";
+      const tb = ((archive.tiebreakers||{})[p]||{}).score || null;
+      let total = 0, correct = 0;
+      for (const rk of ["east","south","west","midwest"]) {
+        const rr = results[rk]||{}, rp = picks[rk]||{};
+        for (let rd=0;rd<4;rd++) { const rdp=rp[rd]||{}, rdr=rr[rd]||{}; for (const i in rdr) { if(rdp[i]===rdr[i]){total+=PTS[rd];correct++;} } }
+      }
+      const ffr=results.finalFour||{}, ffp=picks.finalFour||{};
+      for (let rd=0;rd<2;rd++) { const rdp=ffp[rd]||{}, rdr=ffr[rd]||{}; for (const i in rdr) { if(rdp[i]===rdr[i]){total+=PTS[rd+4];correct++;} } }
+      board.push({name:p,score:total,correct,total:63,champ,tb,picks});
+    }
+    board.sort((a,b)=>b.score-a.score);
+    // Championship score
+    const champScore = ((scores.finalFour||{})[1]||{})[0] || null;
+    const champResult = ((results.finalFour||{})[1]||{})[0] || null;
+    // Semi scores
+    const semiScores = (scores.finalFour||{})[0] || {};
+    r.json({
+      active:true, year, years,
+      champion: champResult,
+      championshipScore: champScore,
+      semiScores,
+      results, scores,
+      winner: board[0] || null,
+      leaderboard: board
+    });
+  } catch(e) { r.status(500).json({error:e.message}); }
+});
 
 // === CONFIG, NAME MAP, DIAGNOSTICS ===
 app.get("/api/config", (q,r) => r.json({ year:2026, teamColors, seeds:SEEDS, firstFour:FIRST_FOUR, nameMapSize:Object.keys(ESPN_NAME_MAP).length, colorsLoaded:Object.keys(teamColors).length }));
